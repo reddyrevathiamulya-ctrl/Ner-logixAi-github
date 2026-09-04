@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NER-LogixAI GIS Map</title>
+
+    <!-- Leaflet CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* =========================
+           TITLE
+           ========================= */
+
+        .title {
+            position: absolute;
+            z-index: 1000;
+            top: 15px;
+            left: 15px;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           ROUTE SEARCH BOX
+           ========================= */
+
+        .route-box {
+            position: absolute;
+            z-index: 1000;
+            top: 85px;
+            left: 15px;
+            width: 280px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+        }
+
+        .route-box h3 {
+            margin: 0 0 12px 0;
+            font-size: 18px;
+        }
+
+        .route-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .route-box button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #1976d2;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .route-box button:hover {
+            background: #125ca5;
+        }
+
+        /* =========================
+           ANALYSIS RESULT
+           ========================= */
+
+        #result {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 7px;
+            background: #f5f5f5;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .safe {
+            color: green;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        .danger {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         TITLE
+         ========================= -->
+
+    <div class="title">
+        NER-LogixAI – North Eastern India
+    </div>
+
+
+    <!-- =========================
+         ROUTE SEARCH
+         ========================= -->
+
+    <div class="route-box">
+
+        <h3>Safety Route Analysis</h3>
+
+        <input
+            id="start"
+            type="text"
+            placeholder="From village / town"
+        >
+
+        <input
+            id="destination"
+            type="text"
+            placeholder="To village / town"
+        >
+
+        <button id="analyzeBtn">
+            Analyze Route
+        </button>
+
+        <div id="result"></div>
+
+    </div>
+
+
+    <!-- =========================
+         MAP
+         ========================= -->
+
+    <div id="map"></div>
+
+
+    <!-- Leaflet JS -->
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+    <script>
+
+        // =====================================================
+        // CREATE MAP
+        // =====================================================
+
+        const map = L.map("map").setView([25.5, 93.5], 7);
+
+
+        // =====================================================
+        // STREET MAP
+        // =====================================================
+
+        const osmLayer = L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: "&copy; OpenStreetMap contributors"
+            }
+        ).addTo(map);
+
+
+        // =====================================================
+        // SATELLITE MAP
+        // =====================================================
+
+        const satelliteMap = L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+                attribution: "Tiles &copy; Esri"
+            }
+        );
+
+
+        // =====================================================
+        // LAYER CONTROL
+        // =====================================================
+
+        L.control.layers(
+            {
+                "Street Map": osmLayer,
+                "Satellite": satelliteMap
+            }
+        ).addTo(map);
+
+
+        // =====================================================
+        // LOAD INDIA GEOJSON
+        // =====================================================
+
+        fetch("http://127.0.0.1:8000/geojson")
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("GeoJSON request failed");
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                console.log("GeoJSON loaded:", data);
+
+                L.geoJSON(data, {
+
+                    style: {
+                        color: "#3388ff",
+                        weight: 2,
+                        fillOpacity: 0.1
+                    },
+
+                    onEachFeature: function(feature, layer) {
+
+                        if (feature.properties) {
+
+                            const name =
+                                feature.properties.ST_NM || "State";
+
+                            layer.bindPopup(
+                                "<b>" +
+                                name +
+                                "</b><br>Click to view details"
+                            );
+
+                        }
+
+                    }
+
+                }).addTo(map);
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "GeoJSON loading error:",
+                    error
+                );
+
+            });
+
+
+        // =====================================================
+        // NER STATES API
+        // =====================================================
+
+        fetch("http://127.0.0.1:8000/ner/states")
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error(
+                        "NER States API request failed"
+                    );
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                console.log("NER States API:", data);
+
+                if (data.states) {
+
+                    data.states.forEach(state => {
+
+                        console.log(
+                            state.name,
+                            state.capital
+                        );
+
+                    });
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "NER API error:",
+                    error
+                );
+
+            });
+
+
+        // =====================================================
+        // ROUTE ANALYSIS
+        // =====================================================
+
+        const analyzeButton =
+            document.getElementById("analyzeBtn");
+
+        const resultBox =
+            document.getElementById("result");
+
+
+        analyzeButton.addEventListener("click", async function() {
+
+            const start =
+                document.getElementById("start").value.trim();
+
+            const destination =
+                document.getElementById("destination").value.trim();
+
+
+            // -----------------------------------------------
+            // CHECK INPUT
+            // -----------------------------------------------
+
+            if (!start || !destination) {
+
+                resultBox.style.display = "block";
+
+                resultBox.innerHTML =
+                    "<span class='warning'>" +
+                    "Please enter both starting and destination locations." +
+                    "</span>";
+
+                return;
+            }
+
+
+            // -----------------------------------------------
+            // SHOW LOADING
+            // -----------------------------------------------
+
+            resultBox.style.display = "block";
+
+            resultBox.innerHTML =
+                "Analyzing route...";
+
+
+            try {
+
+                // -------------------------------------------
+                // SEND ROUTE TO BACKEND
+                // -------------------------------------------
+
+                const response = await fetch(
+                    "http://127.0.0.1:8000/route/analyze",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            start: start,
+                            destination: destination
+                        })
+                    }
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Route analysis API request failed"
+                    );
+
+                }
+
+
+                const data = await response.json();
+
+
+                console.log(
+                    "Route Analysis:",
+                    data
+                );
+
+
+                // -------------------------------------------
+                // DISPLAY RESULT
+                // -------------------------------------------
+
+                const score =
+                    data.safety_score !== undefined
+                        ? data.safety_score
+                        : null;
+
+
+                const hazards =
+                    data.hazards || [];
+
+
+                let scoreClass = "safe";
+
+
+                if (score !== null) {
+
+                    if (score < 40) {
+                        scoreClass = "danger";
+                    }
+                    else if (score < 70) {
+                        scoreClass = "warning";
+                    }
+
+                }
+
+
+                let html = "";
+
+
+                html +=
+                    "<b>Route</b><br>" +
+                    start +
+                    " → " +
+                    destination +
+                    "<br><br>";
+
+
+                if (score !== null) {
+
+                    html +=
+                        "<b>Safety Score:</b> " +
+                        "<span class='" +
+                        scoreClass +
+                        "'>" +
+                        score +
+                        "/100</span><br>";
+
+                }
+
+
+                if (hazards.length > 0) {
+
+                    html +=
+                        "<br><b>Detected Risks:</b><br>";
+
+                    hazards.forEach(hazard => {
+
+                        html +=
+                            "⚠️ " +
+                            hazard +
+                            "<br>";
+
+                    });
+
+                }
+                else {
+
+                    html +=
+                        "<br><span class='safe'>" +
+                        "No hazards reported." +
+                        "</span>";
+
+                }
+
+
+                if (data.alternate_route) {
+
+                    html +=
+                        "<br><b>Suggested Alternate Route:</b><br>" +
+                        data.alternate_route;
+
+                }
+
+
+                resultBox.innerHTML = html;
+
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Route analysis error:",
+                    error
+                );
+
+
+                resultBox.innerHTML =
+                    "<span class='danger'>" +
+                    "Route analysis service is not available yet." +
+                    "</span><br><br>" +
+                    "Your map is working correctly. " +
+                    "The backend route-analysis endpoint needs to be implemented next.";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
