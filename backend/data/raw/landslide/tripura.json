@@ -1,0 +1,88 @@
+{
+  "hazard_type": "landslide",
+  "source": "NASA Global Landslide Catalog",
+  "state": "Tripura",
+  "observation_count": 3,
+  "observations": [
+    {
+      "hazard_type": "landslide",
+      "source": "NASA Global Landslide Catalog",
+      "event_id": "6513",
+      "event_date": "08/14/2014 11:00:00 PM",
+      "state": "Tripura",
+      "latitude": 23.0137,
+      "longitude": 91.7174,
+      "landslide_size": "medium",
+      "severity": 3.0,
+      "landslide_score": 75.0,
+      "trigger": "downpour",
+      "fatalities": 3.0,
+      "fatality_count": 3.0,
+      "raw": {
+        "event_id": "6513",
+        "event_date": "08/14/2014 11:00:00 PM",
+        "latitude": "23.0137",
+        "longitude": "91.7174",
+        "country": "India",
+        "state": "Tripura",
+        "landslide_size": "medium",
+        "landslide_trigger": "downpour",
+        "fatality_count": "3"
+      }
+    },
+    {
+      "hazard_type": "landslide",
+      "source": "NASA Global Landslide Catalog",
+      "event_id": "1935",
+      "event_date": "06/03/2010 12:00:00 AM",
+      "state": "Tripura",
+      "latitude": 23.8986,
+      "longitude": 91.7599,
+      "landslide_size": "medium",
+      "severity": 2.0,
+      "landslide_score": 50.0,
+      "trigger": "downpour",
+      "fatalities": 0.0,
+      "fatality_count": 0.0,
+      "raw": {
+        "event_id": "1935",
+        "event_date": "06/03/2010 12:00:00 AM",
+        "latitude": "23.8986",
+        "longitude": "91.7599",
+        "country": "India",
+        "state": "Tripura",
+        "landslide_size": "medium",
+        "landslide_trigger": "downpour",
+        "fatality_count": "0"
+      }
+    },
+    {
+      "hazard_type": "landslide",
+      "source": "NASA Global Landslide Catalog",
+      "event_id": "4848",
+      "event_date": "05/08/2013 12:00:00 AM",
+      "state": "Tripura",
+      "latitude": 24.0896,
+      "longitude": 91.4663,
+      "landslide_size": "medium",
+      "severity": 3.0,
+      "landslide_score": 75.0,
+      "trigger": "rain",
+      "fatalities": 1.0,
+      "fatality_count": 1.0,
+      "raw": {
+        "event_id": "4848",
+        "event_date": "05/08/2013 12:00:00 AM",
+        "latitude": "24.0896",
+        "longitude": "91.4663",
+        "country": "India",
+        "state": "Tripura",
+        "landslide_size": "medium",
+        "landslide_trigger": "rain",
+        "fatality_count": "1"
+      }
+    }
+  ],
+  "average_severity": 2.67,
+  "total_fatalities": 4.0
+}

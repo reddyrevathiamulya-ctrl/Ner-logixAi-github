@@ -1,17 +1,82 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from pathlib import Path
+from datetime import datetime, timedelta, timezone
 import requests
+import ollama
 import math
+import os
+# ============================================================
+# LIVE ROAD DATA - OPENSTREETMAP
+# ============================================================
+
+OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+
+
+def get_live_road_data(lat: float, lon: float):
+    query = f"""
+    [out:json][timeout:8];
+    way(around:1000,{lat},{lon})["highway"];
+    out tags center;
+    """
+
+    try:
+        response = requests.post(
+            OVERPASS_URL,
+            data=query,
+            timeout=10,
+            headers={"User-Agent": "NER-LogixAI/1.0"}
+        )
+
+        response.raise_for_status()
+
+        elements = response.json().get("elements", [])
+
+        roads = []
+
+        for road in elements:
+            tags = road.get("tags", {})
+
+            roads.append({
+                "name": tags.get("name", "Unnamed road"),
+                "highway": tags.get("highway", "unknown"),
+                "surface": tags.get("surface", "unknown"),
+                "lanes": tags.get("lanes", "unknown"),
+                "maxspeed": tags.get("maxspeed", "unknown"),
+                "lit": tags.get("lit", "unknown"),
+                "smoothness": tags.get("smoothness", "unknown")
+            })
+
+        return {
+            "source": "OpenStreetMap",
+            "road_count": len(roads),
+            "roads": roads[:20]
+        }
+
+    except requests.RequestException as error:
+        return {
+            "source": "OpenStreetMap",
+            "road_count": 0,
+            "roads": [],
+            "error": str(error)
+        }
 
 
 # =========================================================
 # APP SETUP
 # =========================================================
 
-app = FastAPI(title="NER-LogixAI API")
+app = FastAPI(
+    title="NER-LogixAI Logistics Accessibility Intelligence API",
+    description=(
+        "SIH-aligned decision support for essential-goods logistics, route "
+        "accessibility, hazard evidence, field reports, and emergency response "
+        "across North Eastern India."
+    ),
+)
+ENABLE_AI_EXPLANATION = os.getenv("NER_LOGIX_ENABLE_AI", "false").lower() == "true"
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -39,6 +104,57 @@ GEOJSON_FILE = BACKEND_DIR / "gis" / "india_states.geojson"
 # =========================================================
 
 from backend.gis.ner_states import NER_STATES
+from backend.services.data_status import get_data_status
+from backend.services.route_risk import (
+    analyze_route_geometry,
+    analyze_location,
+    load_current_incident_hazards,
+    load_historical_hazards,
+)
+from backend.services.incident_reports import (
+    PHOTO_DIR,
+    create_report,
+    list_reports,
+    save_photo,
+    verify_report,
+)
+from backend.services.satellite_layers import get_satellite_layers
+from backend.services.alerts import get_active_alerts
+from backend.services.source_registry import get_source_registry
+from backend.services.vehicle_tracking import (
+    list_vehicle_positions,
+    update_vehicle_position,
+)
+from backend.services.district_accessibility import get_district_accessibility
+
+
+class IncidentReportRequest(BaseModel):
+    incident_type: str
+    severity: str
+    latitude: float
+    longitude: float
+    description: str = ""
+    photo_url: str | None = None
+    reported_at: str | None = None
+    offline_id: str | None = None
+    source: str = "field_app"
+
+
+class VehiclePositionRequest(BaseModel):
+    latitude: float
+    longitude: float
+    cargo_type: str = "other"
+    cargo_description: str = ""
+    origin: str = ""
+    destination: str = ""
+    status: str = "unknown"
+    delivery_id: str | None = None
+    observed_at: str | None = None
+    source: str = "gps_device"
+
+
+class LocationRiskRequest(BaseModel):
+    location: str
 
 
 # =========================================================
@@ -47,7 +163,7 @@ from backend.gis.ner_states import NER_STATES
 
 @app.get("/")
 def home():
-    index_file = BASE_DIR / "index.html"
+    index_file = BASE_DIR / "mobile" / "web" / "ml" / "gis" / "index.html"
 
     if not index_file.exists():
         raise HTTPException(
@@ -74,6 +190,88 @@ def get_ner_states():
     }
 
 
+@app.get("/data/status")
+def data_status():
+    return get_data_status()
+
+
+@app.post("/location/analyze")
+def analyze_location_risk(request: LocationRiskRequest):
+    if not request.location.strip():
+        raise HTTPException(status_code=400, detail="Location is required")
+
+    place = geocode_place(request.location.strip())
+    weather = get_weather(place["lat"], place["lon"])
+    weather_score, weather_risk, weather_hazards = calculate_weather_risk(weather)
+    hazards = load_historical_hazards() + load_current_incident_hazards()
+    result = analyze_location(
+        place["lat"],
+        place["lon"],
+        weather_score,
+        hazards,
+        f"{request.location} {place['name']}",
+    )
+    result["place"] = place
+    result["weather"] = {
+        "score": weather_score,
+        "risk": weather_risk,
+        "hazards": weather_hazards,
+        "observed_at": weather.get("time"),
+    }
+    return result
+
+
+@app.get("/satellite/layers")
+def satellite_layers():
+    return get_satellite_layers()
+
+
+@app.get("/alerts")
+def alerts():
+    return get_active_alerts()
+
+
+@app.get("/sources")
+def sources():
+    return get_source_registry()
+
+
+@app.post("/vehicles/{vehicle_id}/location", status_code=201)
+def update_vehicle(vehicle_id: str, request: VehiclePositionRequest):
+    try:
+        return update_vehicle_position(vehicle_id, request.model_dump())
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/vehicles")
+def vehicles():
+    positions = list_vehicle_positions()
+    return {"count": len(positions), "vehicles": positions}
+
+
+@app.get("/vehicles.geojson")
+def vehicles_geojson():
+    return {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [position["longitude"], position["latitude"]],
+                },
+                "properties": {
+                    key: value
+                    for key, value in position.items()
+                    if key not in {"latitude", "longitude"}
+                },
+            }
+            for position in list_vehicle_positions()
+        ],
+    }
+
+
 @app.get("/geojson")
 def geojson():
     if not GEOJSON_FILE.exists():
@@ -85,6 +283,110 @@ def geojson():
     return FileResponse(GEOJSON_FILE)
 
 
+@app.post("/reports", status_code=201)
+def submit_incident_report(request: IncidentReportRequest):
+    try:
+        return create_report(request.model_dump())
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/sync/reports")
+def sync_incident_reports(requests: list[IncidentReportRequest]):
+    created = []
+    already_synced = []
+    rejected = []
+    for request in requests[:200]:
+        try:
+            was_synced = bool(
+                request.offline_id
+                and any(
+                    item.get("offline_id") == request.offline_id
+                    for item in list_reports(500)
+                )
+            )
+            report = create_report(request.model_dump())
+            if was_synced:
+                already_synced.append(report)
+            else:
+                created.append(report)
+        except (TypeError, ValueError) as error:
+            rejected.append({"offline_id": request.offline_id, "error": str(error)})
+    return {
+        "accepted_count": len(created),
+        "already_synced_count": len(already_synced),
+        "rejected_count": len(rejected),
+        "created": created,
+        "already_synced": already_synced,
+        "rejected": rejected,
+    }
+
+
+@app.get("/reports")
+def get_incident_reports(limit: int = 100):
+    reports = list_reports(limit)
+    return {
+        "count": len(reports),
+        "reports": reports,
+    }
+
+
+@app.get("/reports.geojson")
+def incident_reports_geojson(limit: int = 500):
+    reports = list_reports(limit)
+    return {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [report["longitude"], report["latitude"]],
+                },
+                "properties": {
+                    key: value
+                    for key, value in report.items()
+                    if key not in {"latitude", "longitude"}
+                },
+            }
+            for report in reports
+        ],
+    }
+
+
+@app.post("/reports/photos", status_code=201)
+async def upload_incident_photo(file: UploadFile = File(...)):
+    try:
+        content = await file.read()
+        filename = save_photo(content, file.content_type)
+        return {
+            "filename": filename,
+            "url": f"/reports/photos/{filename}",
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/reports/photos/{filename}")
+def get_incident_photo(filename: str):
+    if Path(filename).name != filename:
+        raise HTTPException(status_code=400, detail="Invalid photo filename")
+    photo_path = PHOTO_DIR / filename
+    if not photo_path.is_file():
+        raise HTTPException(status_code=404, detail="Photo not found")
+    return FileResponse(photo_path)
+
+
+@app.patch("/reports/{report_id}/verification")
+def review_incident_report(report_id: str, status: str):
+    try:
+        return verify_report(report_id, status.strip().lower())
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+
+
 # =========================================================
 # ROUTE REQUEST MODEL
 # =========================================================
@@ -92,6 +394,8 @@ def geojson():
 class RouteRequest(BaseModel):
     start: str
     destination: str
+    cargo_type: str = "other"
+    priority: str = "standard"
 
 
 # =========================================================
@@ -102,34 +406,43 @@ def geocode_place(place: str):
 
     url = "https://nominatim.openstreetmap.org/search"
 
-    params = {
-        "q": f"{place}, India",
-        "format": "jsonv2",
-        "limit": 1,
-        "countrycodes": "in"
-    }
-
     headers = {
         "User-Agent": "NER-LogixAI/1.0"
     }
 
-    try:
-        response = requests.get(
-            url,
-            params=params,
-            headers=headers,
-            timeout=15
-        )
+    queries = [place]
+    if "," in place:
+        queries.append(place.split(",", 1)[0].strip())
+    first_phrase = " ".join(place.split()[:2]).strip()
+    if first_phrase and first_phrase not in queries:
+        queries.append(first_phrase)
+    first_token = place.split()[0].strip() if place.split() else ""
+    if first_token and first_token not in queries:
+        queries.append(first_token)
 
-        response.raise_for_status()
-
-    except requests.RequestException as error:
-        raise HTTPException(
-            status_code=502,
-            detail=f"Location service unavailable: {error}"
-        )
-
-    results = response.json()
+    results = []
+    for query in queries:
+        try:
+            response = requests.get(
+                url,
+                params={
+                    "q": f"{query}, India",
+                    "format": "jsonv2",
+                    "limit": 1,
+                    "countrycodes": "in"
+                },
+                headers=headers,
+                timeout=15
+            )
+            response.raise_for_status()
+            results = response.json()
+        except requests.RequestException as error:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Location service unavailable: {error}"
+            ) from error
+        if results:
+            break
 
     if not results:
         raise HTTPException(
@@ -385,6 +698,85 @@ def format_duration(seconds):
 # =========================================================
 # ROUTE ANALYSIS
 # =========================================================
+# ============================================================
+# SAR DATA
+# ============================================================
+
+import os
+import json
+
+
+SAR_DATA_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "gis",
+    "data",
+    "sar_data.json"
+)
+
+
+def get_sar_data(lat: float, lon: float):
+    """
+    Retrieve SAR observation data relevant to the requested location.
+    Uses the local SAR dataset downloaded for the project.
+    """
+
+    try:
+        if not os.path.exists(SAR_DATA_PATH):
+            return {
+                "source": "SAR dataset",
+                "available": False,
+                "observations": [],
+                "message": "SAR data file not found."
+            }
+
+        with open(SAR_DATA_PATH, "r", encoding="utf-8") as file:
+            sar_data = json.load(file)
+
+        # Support either a list directly or {"observations": [...]}
+        observations = (
+            sar_data
+            if isinstance(sar_data, list)
+            else sar_data.get("observations", [])
+        )
+
+        # Return nearby observations.
+        # If the downloaded dataset contains coordinates, use them.
+        nearby = []
+
+        for observation in observations:
+            obs_lat = observation.get("latitude", observation.get("lat"))
+            obs_lon = observation.get("longitude", observation.get("lon"))
+
+            if obs_lat is None or obs_lon is None:
+                continue
+
+            try:
+                distance = (
+                    (float(obs_lat) - lat) ** 2
+                    + (float(obs_lon) - lon) ** 2
+                ) ** 0.5
+
+                if distance <= 1.0:
+                    nearby.append(observation)
+
+            except (TypeError, ValueError):
+                continue
+
+        return {
+            "source": "SAR dataset",
+            "available": True,
+            "observation_count": len(nearby),
+            "observations": nearby[:20]
+        }
+
+    except Exception as error:
+        return {
+            "source": "SAR dataset",
+            "available": False,
+            "observations": [],
+            "error": str(error)
+        }
+
 
 @app.post("/route/analyze")
 def analyze_route(request: RouteRequest):
@@ -410,6 +802,18 @@ def analyze_route(request: RouteRequest):
             status_code=400,
             detail="Starting location and destination cannot be the same."
         )
+
+    valid_cargo_types = {
+        "medicine", "food", "agricultural_produce",
+        "construction_material", "emergency_supply", "other",
+    }
+    valid_priorities = {"standard", "urgent", "emergency", "perishable"}
+    cargo_type = request.cargo_type.strip().lower()
+    priority = request.priority.strip().lower()
+    if cargo_type not in valid_cargo_types:
+        raise HTTPException(status_code=400, detail="Unsupported cargo type.")
+    if priority not in valid_priorities:
+        raise HTTPException(status_code=400, detail="Unsupported delivery priority.")
 
     # -----------------------------------------------------
     # 1. FIND START LOCATION
@@ -536,9 +940,110 @@ def analyze_route(request: RouteRequest):
             )
         })
 
-    # -----------------------------------------------------
+    historical_hazards = load_historical_hazards()
+    current_incidents = load_current_incident_hazards()
+    route_hazards = historical_hazards + current_incidents
+    for route_result in route_results:
+        route_result["segment_risk"] = analyze_route_geometry(
+            route_result.get("geometry", {}),
+            safety_score,
+            route_hazards,
+        )
+
+    fastest_duration = min(
+        (route.get("duration") or 0 for route in route_results),
+        default=0,
+    )
+    for route_result in route_results:
+        segments = route_result.get("segment_risk", {}).get("segments", [])
+        highest_segment_score = max(
+            (segment.get("risk_score", 50) for segment in segments),
+            default=50,
+        )
+        duration = route_result.get("duration") or fastest_duration or 1
+        time_penalty = max(0.0, (duration - fastest_duration) / duration) * 30
+        route_result["route_risk_score"] = round(highest_segment_score, 1)
+        risk_weight = {
+            "standard": 0.7,
+            "urgent": 0.75,
+            "emergency": 0.85,
+            "perishable": 0.55,
+        }[priority]
+        time_weight = 1.0 - risk_weight
+        route_result["optimization_score"] = round(
+            highest_segment_score * risk_weight + time_penalty * (time_weight / 0.3),
+            1,
+        )
+        route_result["optimization_basis"] = (
+            f"{round(risk_weight * 100)}% route risk, "
+            f"{round(time_weight * 100)}% travel-time preference for {priority} delivery"
+        )
+
+    route_results.sort(key=lambda route: route["optimization_score"])
+    recommended_route = route_results[0]
+    recommended_segments = recommended_route.get("segment_risk", {}).get("segments", [])
+    danger_segments = [
+        segment for segment in recommended_segments
+        if segment.get("risk_score", 0) >= 50
+    ]
+    evidence_summary = recommended_route.get("segment_risk", {}).get(
+        "evidence_summary", {}
+    )
+    if evidence_summary.get("current_closure_confirmed"):
+        safety_decision = "avoid_verified_incident"
+        safety_decision_text = "Avoid this route until the verified incident is cleared."
+    elif safety_score < 40 or danger_segments:
+        safety_decision = "high_caution"
+        safety_decision_text = "Use caution and verify local road conditions before departure."
+    else:
+        safety_decision = "no_verified_closure"
+        safety_decision_text = "No verified closure was found; this is not a guarantee of safe travel."
+    recommendation_reason = (
+        "Recommended because it has the lowest combined route-risk and "
+        "travel-time score among available alternatives."
+    )
+
+    ai_message = "Deterministic route analysis returned."
+    if ENABLE_AI_EXPLANATION:
+        try:
+            ai_response = ollama.chat(
+                model="qwen2.5:7b",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"""
+You are a route safety assistant.
+
+Start: {request.start}
+Destination: {request.destination}
+
+Route information:
+{route_results}
+
+Weather:
+Start weather: {start_weather}
+Destination weather: {destination_weather}
+
+Hazards:
+{hazards}
+
+Safety score: {safety_score}
+Risk level: {risk_level}
+
+Explain the route safety in simple language.
+Mention important hazards, weather concerns, and whether the route is safe.
+Give practical advice to the traveller.
+"""
+                    }
+                ]
+            )
+            ai_message = ai_response["message"]["content"]
+        except Exception:
+            ai_message = "AI explanation unavailable; deterministic analysis is shown."
+
+    # --------------------------------------------------
     # 9. FINAL RESPONSE
-    # -----------------------------------------------------
+    # --------------------------------------------------
 
     return {
 
@@ -556,9 +1061,27 @@ def analyze_route(request: RouteRequest):
             "lon": destination["lon"]
         },
 
-        "route": route_results[0],
+        "route": recommended_route,
 
         "alternative_routes": route_results[1:],
+
+        "route_recommendation": {
+            "route_number": recommended_route["route_number"],
+            "reason": recommendation_reason,
+            "optimization_basis": recommended_route["optimization_basis"],
+            "alternatives_considered": len(route_results),
+            "cargo_type": cargo_type,
+            "priority": priority,
+        },
+        "safety_decision": {
+            "status": safety_decision,
+            "message": safety_decision_text,
+            "danger_segment_count": len(danger_segments),
+            "verified_incident_count": evidence_summary.get(
+                "verified_current_incident_count", 0
+            ),
+            "checked_route_segments": len(recommended_segments),
+        },
 
         "safety_score": safety_score,
 
@@ -571,8 +1094,15 @@ def analyze_route(request: RouteRequest):
             "destination": destination_weather
         },
 
+        "ai_explanation": ai_message,
+
         "message": (
             "Route analyzed using real road routing "
             "and current weather data."
         )
     }
+
+
+@app.get("/districts/accessibility")
+def district_accessibility():
+    return get_district_accessibility()

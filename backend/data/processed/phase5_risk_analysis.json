@@ -1,0 +1,270 @@
+{
+  "phase": 5,
+  "generated_at": "2026-09-05T20:36:52.569778",
+  "data_sources": {
+    "weather_records": 52,
+    "rainfall_records": 8,
+    "flood_records": 3923,
+    "landslide_records": 140
+  },
+  "states": [
+    {
+      "state": "Arunachal Pradesh",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.1
+      },
+      "flood": {
+        "records": 460,
+        "score": 50.49,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 22,
+        "score": 42.86,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 28.05,
+        "risk": "LOW"
+      }
+    },
+    {
+      "state": "Assam",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.1
+      },
+      "flood": {
+        "records": 2749,
+        "score": 46.07,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 13,
+        "score": 50.0,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 28.87,
+        "risk": "LOW"
+      }
+    },
+    {
+      "state": "Manipur",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.0
+      },
+      "flood": {
+        "records": 67,
+        "score": 46.59,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 13,
+        "score": 43.75,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 27.1,
+        "risk": "LOW"
+      }
+    },
+    {
+      "state": "Meghalaya",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.0
+      },
+      "flood": {
+        "records": 172,
+        "score": 57.46,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 19,
+        "score": 41.67,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 29.74,
+        "risk": "LOW"
+      }
+    },
+    {
+      "state": "Mizoram",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.2
+      },
+      "flood": {
+        "records": 82,
+        "score": 63.89,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 13,
+        "score": 43.75,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 32.39,
+        "risk": "LOW"
+      }
+    },
+    {
+      "state": "Nagaland",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.2
+      },
+      "flood": {
+        "records": 55,
+        "score": 47.22,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 16,
+        "score": 65.0,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 33.77,
+        "risk": "LOW"
+      }
+    },
+    {
+      "state": "Sikkim",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.2
+      },
+      "flood": {
+        "records": 193,
+        "score": 54.3,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 37,
+        "score": 54.17,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 32.64,
+        "risk": "LOW"
+      }
+    },
+    {
+      "state": "Tripura",
+      "data_available": true,
+      "weather": {
+        "records": 1,
+        "score": 0.0
+      },
+      "rainfall": {
+        "records": 1,
+        "average_mm": 0.0
+      },
+      "flood": {
+        "records": 145,
+        "score": 59.9,
+        "risk": "MODERATE",
+        "source": "observed"
+      },
+      "landslide": {
+        "records": 7,
+        "score": 25.0,
+        "risk": "LOW",
+        "source": "observed"
+      },
+      "overall": {
+        "score": 25.47,
+        "risk": "LOW"
+      }
+    }
+  ],
+  "summary": {
+    "total_states": 8,
+    "data_available_states": 8,
+    "high_risk_states": [],
+    "moderate_risk_states": [],
+    "low_risk_states": [
+      "Arunachal Pradesh",
+      "Assam",
+      "Manipur",
+      "Meghalaya",
+      "Mizoram",
+      "Nagaland",
+      "Sikkim",
+      "Tripura"
+    ],
+    "high_risk_count": 0,
+    "moderate_risk_count": 0
+  },
+  "analysis": {
+    "method": "integrated_weather_rainfall_flood_landslide",
+    "flood_data_available": true,
+    "landslide_data_available": true,
+    "derived_indicators_used": false
+  },
+  "phase5_status": {
+    "local_data_integrated": true,
+    "weather_integrated": true,
+    "rainfall_integrated": true,
+    "flood_risk_component": true,
+    "landslide_risk_component": true,
+    "state_level_analysis": true,
+    "gis_output": true,
+    "machine_readable_output": true
+  }
+}

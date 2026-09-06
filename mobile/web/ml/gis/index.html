@@ -2,526 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>NER-LogixAI GIS Map</title>
-
-    <!-- Leaflet CSS -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
+    <title>NER-LogixAI Operations Console</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        #map {
-            width: 100%;
-            height: 100vh;
-        }
-
-        /* =========================
-           TITLE
-           ========================= */
-
-        .title {
-            position: absolute;
-            z-index: 1000;
-            top: 15px;
-            left: 15px;
-            background: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        /* =========================
-           ROUTE SEARCH BOX
-           ========================= */
-
-        .route-box {
-            position: absolute;
-            z-index: 1000;
-            top: 85px;
-            left: 15px;
-            width: 280px;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-        }
-
-        .route-box h3 {
-            margin: 0 0 12px 0;
-            font-size: 18px;
-        }
-
-        .route-box input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 10px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .route-box button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            background: #1976d2;
-            color: white;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .route-box button:hover {
-            background: #125ca5;
-        }
-
-        /* =========================
-           ANALYSIS RESULT
-           ========================= */
-
-        #result {
-            display: none;
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 7px;
-            background: #f5f5f5;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .safe {
-            color: green;
-            font-weight: bold;
-        }
-
-        .warning {
-            color: #d97706;
-            font-weight: bold;
-        }
-
-        .danger {
-            color: red;
-            font-weight: bold;
-        }
+        :root { --ink:#17252b; --muted:#617078; --paper:#f5f1e8; --panel:#fffdf8; --teal:#0d6b68; --orange:#d56b3f; --line:#d9ddd5; }
+        * { box-sizing:border-box; }
+        body { margin:0; color:var(--ink); background:var(--paper); font-family:Georgia,serif; }
+        #map { height:100vh; width:100%; }
+        .panel { position:absolute; z-index:1000; top:18px; left:18px; width:min(380px,calc(100vw - 36px)); max-height:calc(100vh - 36px); overflow:auto; padding:20px; background:rgba(255,253,248,.96); border:1px solid var(--line); box-shadow:0 14px 40px rgba(23,37,43,.18); }
+        h1 { margin:0; font-size:25px; } h2 { margin:22px 0 8px; font-size:16px; color:var(--teal); }
+        p { color:var(--muted); line-height:1.4; margin:6px 0 14px; }
+        label { display:block; margin:8px 0 5px; color:var(--muted); font:12px Arial,sans-serif; text-transform:uppercase; }
+        input,button { width:100%; min-height:40px; border:1px solid var(--line); padding:9px 11px; font:14px Arial,sans-serif; }
+        input { margin-bottom:8px; background:#fff; } button { margin-top:8px; cursor:pointer; color:white; background:var(--teal); border-color:var(--teal); font-weight:700; }
+        .result { margin-top:12px; padding:12px; background:#f0f4ef; font:13px Arial,sans-serif; line-height:1.5; }
+        .risk { display:inline-block; padding:3px 7px; color:white; background:var(--orange); font-weight:700; }
+        .metric { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:8px; } .metric div { padding:8px; background:white; border:1px solid var(--line); }
+        .metric strong { display:block; font-size:15px; } .small { color:var(--muted); font-size:11px; }
+        .alert { border-left:4px solid var(--orange); padding:7px 9px; margin-top:7px; background:#fff7ed; font:12px Arial,sans-serif; }
+        @media (max-width:600px) { .panel { top:10px; left:10px; width:calc(100vw - 20px); max-height:72vh; } }
     </style>
 </head>
-
 <body>
-
-    <!-- =========================
-         TITLE
-         ========================= -->
-
-    <div class="title">
-        NER-LogixAI – North Eastern India
-    </div>
-
-
-    <!-- =========================
-         ROUTE SEARCH
-         ========================= -->
-
-    <div class="route-box">
-
-        <h3>Safety Route Analysis</h3>
-
-        <input
-            id="start"
-            type="text"
-            placeholder="From village / town"
-        >
-
-        <input
-            id="destination"
-            type="text"
-            placeholder="To village / town"
-        >
-
-        <button id="analyzeBtn">
-            Analyze Route
-        </button>
-
-        <div id="result"></div>
-
-    </div>
-
-
-    <!-- =========================
-         MAP
-         ========================= -->
-
+    <aside class="panel">
+        <h1>NER-LogixAI</h1>
+        <p>Decision support for essential-goods movement, emergency access, and safer travel across the North Eastern Region.</p>
+        <h2>Check a location</h2>
+        <label for="location">Place, village, or district</label>
+        <input id="location" placeholder="Shillong, Meghalaya">
+        <button id="locationBtn">Assess location risk</button>
+        <div id="locationResult" class="result" hidden></div>
+        <h2>Analyze a delivery route</h2>
+        <input id="start" placeholder="From: Guwahati">
+        <input id="destination" placeholder="To: Shillong">
+        <select id="cargoType" aria-label="Cargo type">
+            <option value="other">Other cargo</option>
+            <option value="medicine">Medicines</option>
+            <option value="emergency_supply">Emergency supplies</option>
+            <option value="food">Food supplies</option>
+            <option value="agricultural_produce">Agricultural produce</option>
+            <option value="construction_material">Construction materials</option>
+        </select>
+        <select id="priority" aria-label="Delivery priority">
+            <option value="standard">Standard delivery</option>
+            <option value="urgent">Urgent delivery</option>
+            <option value="emergency">Emergency response</option>
+            <option value="perishable">Perishable cargo</option>
+        </select>
+        <button id="routeBtn">Analyze route</button>
+        <div id="routeResult" class="result" hidden></div>
+        <h2>Live operations</h2>
+        <div id="status" class="small">Loading source status...</div>
+        <div id="alerts"></div>
+        <div id="districts" class="small"></div>
+    </aside>
     <div id="map"></div>
-
-
-    <!-- Leaflet JS -->
-    <script
-        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-    </script>
-
-
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-
-        // =====================================================
-        // CREATE MAP
-        // =====================================================
-
         const map = L.map("map").setView([25.5, 93.5], 7);
-
-
-        // =====================================================
-        // STREET MAP
-        // =====================================================
-
-        const osmLayer = L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                attribution: "&copy; OpenStreetMap contributors"
-            }
-        ).addTo(map);
-
-
-        // =====================================================
-        // SATELLITE MAP
-        // =====================================================
-
-        const satelliteMap = L.tileLayer(
-            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            {
-                attribution: "Tiles &copy; Esri"
-            }
-        );
-
-
-        // =====================================================
-        // LAYER CONTROL
-        // =====================================================
-
-        L.control.layers(
-            {
-                "Street Map": osmLayer,
-                "Satellite": satelliteMap
-            }
-        ).addTo(map);
-
-
-        // =====================================================
-        // LOAD INDIA GEOJSON
-        // =====================================================
-
-        fetch("http://127.0.0.1:8000/geojson")
-
-            .then(response => {
-
-                if (!response.ok) {
-                    throw new Error("GeoJSON request failed");
-                }
-
-                return response.json();
-
-            })
-
-            .then(data => {
-
-                console.log("GeoJSON loaded:", data);
-
-                L.geoJSON(data, {
-
-                    style: {
-                        color: "#3388ff",
-                        weight: 2,
-                        fillOpacity: 0.1
-                    },
-
-                    onEachFeature: function(feature, layer) {
-
-                        if (feature.properties) {
-
-                            const name =
-                                feature.properties.ST_NM || "State";
-
-                            layer.bindPopup(
-                                "<b>" +
-                                name +
-                                "</b><br>Click to view details"
-                            );
-
-                        }
-
-                    }
-
-                }).addTo(map);
-
-            })
-
-            .catch(error => {
-
-                console.error(
-                    "GeoJSON loading error:",
-                    error
-                );
-
-            });
-
-
-        // =====================================================
-        // NER STATES API
-        // =====================================================
-
-        fetch("http://127.0.0.1:8000/ner/states")
-
-            .then(response => {
-
-                if (!response.ok) {
-                    throw new Error(
-                        "NER States API request failed"
-                    );
-                }
-
-                return response.json();
-
-            })
-
-            .then(data => {
-
-                console.log("NER States API:", data);
-
-                if (data.states) {
-
-                    data.states.forEach(state => {
-
-                        console.log(
-                            state.name,
-                            state.capital
-                        );
-
-                    });
-
-                }
-
-            })
-
-            .catch(error => {
-
-                console.error(
-                    "NER API error:",
-                    error
-                );
-
-            });
-
-
-        // =====================================================
-        // ROUTE ANALYSIS
-        // =====================================================
-
-        const analyzeButton =
-            document.getElementById("analyzeBtn");
-
-        const resultBox =
-            document.getElementById("result");
-
-
-        analyzeButton.addEventListener("click", async function() {
-
-            const start =
-                document.getElementById("start").value.trim();
-
-            const destination =
-                document.getElementById("destination").value.trim();
-
-
-            // -----------------------------------------------
-            // CHECK INPUT
-            // -----------------------------------------------
-
-            if (!start || !destination) {
-
-                resultBox.style.display = "block";
-
-                resultBox.innerHTML =
-                    "<span class='warning'>" +
-                    "Please enter both starting and destination locations." +
-                    "</span>";
-
-                return;
-            }
-
-
-            // -----------------------------------------------
-            // SHOW LOADING
-            // -----------------------------------------------
-
-            resultBox.style.display = "block";
-
-            resultBox.innerHTML =
-                "Analyzing route...";
-
-
-            try {
-
-                // -------------------------------------------
-                // SEND ROUTE TO BACKEND
-                // -------------------------------------------
-
-                const response = await fetch(
-                    "http://127.0.0.1:8000/route/analyze",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
-                        body: JSON.stringify({
-                            start: start,
-                            destination: destination
-                        })
-                    }
-                );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Route analysis API request failed"
-                    );
-
-                }
-
-
-                const data = await response.json();
-
-
-                console.log(
-                    "Route Analysis:",
-                    data
-                );
-
-
-                // -------------------------------------------
-                // DISPLAY RESULT
-                // -------------------------------------------
-
-                const score =
-                    data.safety_score !== undefined
-                        ? data.safety_score
-                        : null;
-
-
-                const hazards =
-                    data.hazards || [];
-
-
-                let scoreClass = "safe";
-
-
-                if (score !== null) {
-
-                    if (score < 40) {
-                        scoreClass = "danger";
-                    }
-                    else if (score < 70) {
-                        scoreClass = "warning";
-                    }
-
-                }
-
-
-                let html = "";
-
-
-                html +=
-                    "<b>Route</b><br>" +
-                    start +
-                    " → " +
-                    destination +
-                    "<br><br>";
-
-
-                if (score !== null) {
-
-                    html +=
-                        "<b>Safety Score:</b> " +
-                        "<span class='" +
-                        scoreClass +
-                        "'>" +
-                        score +
-                        "/100</span><br>";
-
-                }
-
-
-                if (hazards.length > 0) {
-
-                    html +=
-                        "<br><b>Detected Risks:</b><br>";
-
-                    hazards.forEach(hazard => {
-
-                        html +=
-                            "⚠️ " +
-                            hazard +
-                            "<br>";
-
-                    });
-
-                }
-                else {
-
-                    html +=
-                        "<br><span class='safe'>" +
-                        "No hazards reported." +
-                        "</span>";
-
-                }
-
-
-                if (data.alternate_route) {
-
-                    html +=
-                        "<br><b>Suggested Alternate Route:</b><br>" +
-                        data.alternate_route;
-
-                }
-
-
-                resultBox.innerHTML = html;
-
-
-            }
-            catch (error) {
-
-                console.error(
-                    "Route analysis error:",
-                    error
-                );
-
-
-                resultBox.innerHTML =
-                    "<span class='danger'>" +
-                    "Route analysis service is not available yet." +
-                    "</span><br><br>" +
-                    "Your map is working correctly. " +
-                    "The backend route-analysis endpoint needs to be implemented next.";
-
-            }
-
-        });
-
+        const street = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution:"© OpenStreetMap contributors" }).addTo(map);
+        const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { attribution:"© Esri" });
+        L.control.layers({ "Street map":street, "Satellite":satellite }).addTo(map);
+        let routeLayer;
+        const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char]));
+        async function getJson(path, options) { const response = await fetch(path, options); if (!response.ok) throw new Error(`${response.status}: ${await response.text()}`); return response.json(); }
+        async function loadMapData() {
+            try { const states = await getJson("/geojson"); L.geoJSON(states, { style:{ color:"#0d6b68", weight:1.5, fillOpacity:.04 } }).addTo(map); } catch (error) { console.warn(error); }
+            try { const reports = await getJson("/reports.geojson"); L.geoJSON(reports, { pointToLayer:(feature, latlng) => L.circleMarker(latlng, { radius:7, color:"#d56b3f", fillOpacity:.85 }), onEachFeature:(feature, layer) => layer.bindPopup(`<b>${escapeHtml(feature.properties.incident_type)}</b><br>${escapeHtml(feature.properties.description)}<br>Status: ${escapeHtml(feature.properties.status)}`) }).addTo(map); } catch (error) { console.warn(error); }
+            try { const vehicles = await getJson("/vehicles.geojson"); L.geoJSON(vehicles, { pointToLayer:(feature, latlng) => L.circleMarker(latlng, { radius:6, color:"#2356a3", fillColor:"#6ea1e6", fillOpacity:.9 }), onEachFeature:(feature, layer) => layer.bindPopup(`<b>Vehicle ${escapeHtml(feature.properties.vehicle_id)}</b><br>${escapeHtml(feature.properties.cargo_type)}<br>${escapeHtml(feature.properties.status)}<br>${escapeHtml(feature.properties.origin)} → ${escapeHtml(feature.properties.destination)}`) }).addTo(map); } catch (error) { console.warn(error); }
+        }
+        async function loadOperations() {
+            try { const data = await getJson("/data/status"); const sources = Object.values(data.sources).map(source => `${escapeHtml(source.name)}: ${escapeHtml(source.freshness)}`).join(" · "); document.getElementById("status").innerHTML = `Checked ${escapeHtml(data.generated_at)}<br>${sources}`; } catch (error) { document.getElementById("status").textContent = "Source status unavailable"; }
+            try { const data = await getJson("/alerts"); document.getElementById("alerts").innerHTML = data.alerts.length ? data.alerts.map(alert => `<div class="alert"><b>${escapeHtml(alert.title)}</b><br>${escapeHtml(alert.message)}<br><span class="small">${escapeHtml(alert.severity)} · ${escapeHtml(alert.status)}</span></div>`).join("") : "<div class='small'>No active alerts.</div>"; } catch (error) { document.getElementById("alerts").textContent = "Alerts unavailable"; }
+            try { const data = await getJson("/districts/accessibility"); const attention = data.states.filter(state => state.risk_level === "High" || state.risk_level === "Very High").slice(0, 4); document.getElementById("districts").innerHTML = `<h2>District watch</h2>${attention.length ? attention.map(state => `${escapeHtml(state.state)}: ${escapeHtml(state.risk_level)} · accessibility ${escapeHtml(state.accessibility_score)}`).join("<br>") : "No high-risk district evidence currently matched."}<br><span class="small">${escapeHtml(data.warning)}</span>`; } catch (error) { document.getElementById("districts").textContent = "District status unavailable"; }
+        }
+        document.getElementById("locationBtn").onclick = async () => {
+            const location = document.getElementById("location").value.trim(); const output = document.getElementById("locationResult"); output.hidden = false; output.textContent = "Assessing weather, terrain, and nearby evidence...";
+            try { const data = await getJson("/location/analyze", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ location }) }); map.setView([data.place.lat, data.place.lon], 11); L.marker([data.place.lat, data.place.lon]).addTo(map).bindPopup(escapeHtml(data.place.name)).openPopup(); const metrics = Object.entries(data.risks).map(([name,item]) => `<div><strong>${escapeHtml(item.risk)} · ${escapeHtml(item.score)}</strong>${escapeHtml(name.replaceAll("_"," "))}</div>`).join(""); const terrain = data.terrain?.local_relief_m == null ? "Terrain relief unavailable" : `Local relief: ${escapeHtml(data.terrain.local_relief_m)} m`; const coverage = data.data_coverage || {}; output.innerHTML = `<b>${escapeHtml(data.place.name)}</b><br><span class="risk">${escapeHtml(data.overall_risk)} · ${escapeHtml(data.overall_score)} / 100</span><div class="metric">${metrics}</div><p class="small">${terrain}<br>Confidence: ${Math.round(data.confidence * 100)}% · Matched evidence: ${data.nearby_evidence_count}<br>Catalog coverage: ${escapeHtml(coverage.catalog_record_count || 0)} records · ${escapeHtml(coverage.point_record_count || 0)} point-located</p><p class="small">${data.warnings.map(escapeHtml).join("<br>")}</p>`; } catch (error) { output.innerHTML = `<span class="risk">Unable to assess</span><br>${escapeHtml(error.message)}`; }
+        };
+        document.getElementById("routeBtn").onclick = async () => {
+            const output = document.getElementById("routeResult"); output.hidden = false; output.textContent = "Analyzing route segments...";
+            try { const data = await getJson("/route/analyze", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ start:document.getElementById("start").value.trim(), destination:document.getElementById("destination").value.trim(), cargo_type:document.getElementById("cargoType").value, priority:document.getElementById("priority").value }) }); if (routeLayer) map.removeLayer(routeLayer); routeLayer = L.geoJSON(data.route.geometry, { style:{ color:"#d56b3f", weight:5 } }).addTo(map); map.fitBounds(routeLayer.getBounds()); const segment = data.route.segment_risk?.highest_risk; const evidence = data.route.segment_risk?.evidence_summary; const evidenceText = evidence ? `Historical evidence: ${escapeHtml(evidence.historical_hazard_count)} · Current reports: ${escapeHtml(evidence.current_incident_count)} · Verified incidents: ${escapeHtml(evidence.verified_current_incident_count)}<br>${evidence.current_closure_confirmed ? "Verified current incident found; avoid until cleared." : "No verified current closure found; verify locally before departure."}` : "Evidence summary unavailable"; const recommendation = data.route_recommendation?.reason || "Best available route selected."; const decision = data.safety_decision || {}; output.innerHTML = `<b>${escapeHtml(data.start.name)} → ${escapeHtml(data.destination.name)}</b><br><span class="risk">${escapeHtml(decision.status || "Route assessed")}</span><br>${escapeHtml(decision.message || "Review the evidence before departure.")}<br><span class="risk">Recommended route</span><br>${escapeHtml(data.route_recommendation.priority)} ${escapeHtml(data.route_recommendation.cargo_type)}<br>${escapeHtml(recommendation)}<br>Weather safety: ${escapeHtml(data.safety_score)} / 100<br>Risk estimate: ${escapeHtml(data.risk_level)}<br>Checked segments: ${escapeHtml(decision.checked_route_segments || 0)} · Danger segments: ${escapeHtml(decision.danger_segment_count || 0)}<br>Distance: ${escapeHtml(data.route.distance_text)} · ${escapeHtml(data.route.duration_text)}<br>${evidenceText}<br>${segment ? `Highest segment: ${escapeHtml(segment.risk_level)} (${escapeHtml(segment.risk_score)})<br>${segment.evidence.map(escapeHtml).join(" · ")}` : "Segment analysis unavailable"}`; } catch (error) { output.innerHTML = `<span class="risk">Route unavailable</span><br>${escapeHtml(error.message)}`; }
+        };
+        loadMapData(); loadOperations(); setInterval(loadOperations, 300000);
     </script>
-
 </body>
 </html>

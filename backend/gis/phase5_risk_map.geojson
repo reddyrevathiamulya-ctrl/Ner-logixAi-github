@@ -1,0 +1,189 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Arunachal Pradesh",
+        "overall_score": 28.05,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.1,
+        "flood_score": 50.49,
+        "flood_risk": "MODERATE",
+        "landslide_score": 42.86,
+        "landslide_risk": "MODERATE",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          94.7278,
+          28.218
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Assam",
+        "overall_score": 28.87,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.1,
+        "flood_score": 46.07,
+        "flood_risk": "MODERATE",
+        "landslide_score": 50.0,
+        "landslide_risk": "MODERATE",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.9376,
+          26.2006
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Manipur",
+        "overall_score": 27.1,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.0,
+        "flood_score": 46.59,
+        "flood_risk": "MODERATE",
+        "landslide_score": 43.75,
+        "landslide_risk": "MODERATE",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          93.9063,
+          24.6637
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Meghalaya",
+        "overall_score": 29.74,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.0,
+        "flood_score": 57.46,
+        "flood_risk": "MODERATE",
+        "landslide_score": 41.67,
+        "landslide_risk": "MODERATE",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.3662,
+          25.467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Mizoram",
+        "overall_score": 32.39,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.2,
+        "flood_score": 63.89,
+        "flood_risk": "MODERATE",
+        "landslide_score": 43.75,
+        "landslide_risk": "MODERATE",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.9376,
+          23.1645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Nagaland",
+        "overall_score": 33.77,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.2,
+        "flood_score": 47.22,
+        "flood_risk": "MODERATE",
+        "landslide_score": 65.0,
+        "landslide_risk": "MODERATE",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          94.5624,
+          26.1584
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Sikkim",
+        "overall_score": 32.64,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.2,
+        "flood_score": 54.3,
+        "flood_risk": "MODERATE",
+        "landslide_score": 54.17,
+        "landslide_risk": "MODERATE",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.5122,
+          27.533
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "state": "Tripura",
+        "overall_score": 25.47,
+        "overall_risk": "LOW",
+        "weather_score": 0.0,
+        "rainfall_mm": 0.0,
+        "flood_score": 59.9,
+        "flood_risk": "MODERATE",
+        "landslide_score": 25.0,
+        "landslide_risk": "LOW",
+        "flood_source": "observed",
+        "landslide_source": "observed"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.9882,
+          23.9408
+        ]
+      }
+    }
+  ]
+}

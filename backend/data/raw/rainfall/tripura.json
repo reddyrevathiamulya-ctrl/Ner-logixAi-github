@@ -1,0 +1,15 @@
+{
+  "source": "Open-Meteo",
+  "source_type": "live_rainfall",
+  "state": "Tripura",
+  "latitude": 23.9408,
+  "longitude": 91.9882,
+  "retrieved_at": "2026-09-05T08:15:49.780249+00:00",
+  "data_available": true,
+  "rainfall": 0.0,
+  "precipitation": 0.0,
+  "rain": 0.0,
+  "showers": 0.0,
+  "weather_code": 3,
+  "time": "2026-09-05T13:45"
+}

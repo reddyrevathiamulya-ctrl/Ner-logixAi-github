@@ -1,0 +1,15 @@
+{
+  "source": "Open-Meteo",
+  "source_type": "live_rainfall",
+  "state": "Assam",
+  "latitude": 26.1445,
+  "longitude": 91.7362,
+  "retrieved_at": "2026-09-05T08:15:36.856518+00:00",
+  "data_available": true,
+  "rainfall": 0.1,
+  "precipitation": 0.1,
+  "rain": 0.0,
+  "showers": 0.1,
+  "weather_code": 95,
+  "time": "2026-09-05T13:45"
+}

@@ -1,0 +1,352 @@
+event_id,event_date,latitude,longitude,country,state,landslide_size,landslide_trigger,fatality_count
+2164,07/29/2010 11:00:00 PM,25.3098633,94.48214677,India,Manipur,medium,downpour,0
+5122,07/17/2013 12:00:00 AM,25.7658,93.9413,India,Nagaland,medium,rain,0
+5123,07/17/2013 12:00:00 AM,25.7131,94.0885,India,Nagaland,medium,rain,0
+5084,07/12/2013 11:00:00 PM,25.616,94.1167,India,Nagaland,medium,downpour,0
+2566,10/08/2010 12:00:00 AM,25.4769,94.1351,India,Nagaland,medium,downpour,0
+1109,08/20/2009 12:00:00 AM,25.5215,93.1645,India,Assam,medium,downpour,0
+1961,06/09/2010 02:15:00 PM,25.8833,91.2,India,Meghalaya,medium,downpour,0
+2578,10/09/2010 12:00:00 AM,25.3179,94.0462,India,Nagaland,medium,downpour,0
+322,10/21/2007 12:00:00 AM,24.75,93.4333,India,Assam,medium,rain,0
+7370,08/01/2015 12:00:00 AM,24.1419,94.1078,India,Manipur,medium,continuous_rain,0
+5552,09/24/2013 12:00:00 AM,25.0985,94.3619,India,Manipur,medium,unknown,0
+7031,05/24/2015 12:00:00 AM,27.6163,88.6586,India,Sikkim,medium,unknown,0
+2025,06/28/2010 12:00:00 AM,25.5728,91.885,India,Meghalaya,medium,downpour,1
+9405,04/19/2016 12:00:00 AM,26.7223,95.0243,India,Nagaland,medium,continuous_rain,0
+5343,08/17/2013 11:00:00 PM,24.7625,93.4341,India,Assam,medium,continuous_rain,0
+6971,06/09/2015 12:00:00 AM,27.0987,93.816,India,Arunachal Pradesh,medium,continuous_rain,2
+1611,04/01/2010 12:00:00 AM,25.1553,93.028,India,Assam,medium,downpour,3
+4382,06/03/2012 12:00:00 AM,25.1175,92.8573,India,Assam,medium,downpour,0
+1112,08/20/2009 12:00:00 AM,27.1761,88.5287,India,Sikkim,medium,downpour,0
+2424,09/13/2010 12:00:00 AM,23.591,92.9296,India,Mizoram,medium,downpour,0
+78,05/23/2007 12:00:00 AM,27.3383,88.6069,India,Sikkim,medium,rain,0
+5431,09/01/2013 12:00:00 AM,24.9829,93.5063,India,Assam,medium,continuous_rain,0
+3672,06/29/2011 12:00:00 AM,25.5125,93.3613,India,Assam,medium,downpour,0
+2253,08/15/2010 11:00:00 PM,25.31006064,94.48265093,India,Manipur,medium,downpour,0
+1108,08/20/2009 12:00:00 AM,24.9925,93.5,India,Assam,medium,downpour,0
+6105,06/26/2014 11:00:00 PM,28.9205,95.3429,India,Arunachal Pradesh,medium,continuous_rain,0
+9168,06/12/2016 11:00:00 PM,27.6438,93.871,India,Arunachal Pradesh,medium,downpour,0
+3560,05/31/2011 02:30:00 PM,24.8286,93.5935,India,Manipur,medium,downpour,2
+587,06/15/2008 12:00:00 AM,27.2298,94.0989,India,Assam,medium,downpour,17
+8012,09/06/2015 03:00:00 PM,25.9703,91.8584,India,Meghalaya,medium,unknown,0
+7335,08/18/2015 09:00:00 AM,25.5145,90.2023,India,Meghalaya,medium,continuous_rain,0
+141,07/26/2007 12:00:00 AM,25.38,91.88,India,Meghalaya,medium,rain,0
+3983,09/23/2011 12:00:00 AM,26.1548,91.7351,India,Assam,large,downpour,4
+148,07/30/2007 12:00:00 AM,22.479,92.967,India,Mizoram,medium,downpour,0
+1775,04/21/2010 12:00:00 AM,27.8965,96.1779,India,Arunachal Pradesh,medium,downpour,12
+3663,06/28/2011 12:00:00 AM,25.6682,94.1099,India,Nagaland,medium,downpour,0
+7385,08/01/2015 12:00:00 AM,24.004,93.9815,India,Manipur,medium,continuous_rain,0
+2575,10/09/2010 12:00:00 AM,25.5242,92.9914,India,Assam,medium,downpour,0
+3840,07/25/2011 12:00:00 AM,24.6869,93.9157,India,Manipur,medium,downpour,0
+6015,05/08/2014 12:00:00 AM,27.9032,96.174,India,Arunachal Pradesh,medium,rain,0
+3741,07/07/2011 12:00:00 AM,25.4191,94.1079,India,Nagaland,medium,rain,0
+2106,07/20/2010 12:00:00 AM,26.8716,94.9921,India,Nagaland,medium,downpour,0
+9051,07/19/2016 09:00:00 AM,26.09748244,91.8744337,India,Meghalaya,medium,unknown,0
+870,10/29/2008 12:00:00 AM,27.4,92.35,India,Arunachal Pradesh,medium,downpour,12
+2392,09/04/2010 12:00:00 AM,27.3702,88.7334,India,Sikkim,medium,downpour,0
+3830,07/22/2011 12:00:00 AM,24.3527,94.3429,India,Manipur,small,downpour,0
+4906,06/07/2013 12:00:00 AM,26.0977,94.7499,India,Nagaland,medium,unknown,0
+3269,03/22/2011 12:00:00 AM,28.0791,96.5242,India,Arunachal Pradesh,medium,downpour,0
+1755,04/17/2010 03:00:00 PM,27.3341,88.6083,India,Sikkim,small,downpour,0
+6990,06/24/2015 12:00:00 AM,26.0319,94.5466,India,Nagaland,medium,continuous_rain,0
+6222,10/01/2014 11:00:00 AM,27.1249,93.7706,India,Arunachal Pradesh,small,unknown,5
+9169,06/12/2016 12:00:00 AM,26.1677,94.2442,India,Nagaland,unknown,continuous_rain,0
+4435,06/25/2012 12:00:00 AM,27.174,95.8011,India,Arunachal Pradesh,large,downpour,0
+4313,04/08/2012 12:00:00 AM,28.4659,95.86,India,Arunachal Pradesh,medium,downpour,0
+2344,08/27/2010 04:30:00 PM,24.7505,93.4221,India,Assam,medium,downpour,0
+7263,07/22/2015 12:00:00 AM,25.4477,94.0489,India,Manipur,medium,continuous_rain,0
+5271,08/04/2013 12:00:00 AM,26.284,94.5808,India,Nagaland,medium,continuous_rain,0
+3525,05/22/2011 12:00:00 AM,25.0672,93.4093,India,Assam,medium,downpour,0
+7369,08/01/2015 12:00:00 AM,24.1988,94.1016,India,Manipur,medium,continuous_rain,0
+4424,06/20/2012 12:00:00 AM,26.149,91.7351,India,Assam,medium,downpour,0
+4892,06/01/2013 12:00:00 AM,27.8776,94.25,India,Arunachal Pradesh,large,downpour,0
+4377,06/02/2012 12:00:00 AM,26.1475,91.7356,India,Assam,large,downpour,0
+5430,09/01/2013 12:00:00 AM,24.9037,93.487,India,Manipur,medium,continuous_rain,0
+7264,07/22/2015 12:00:00 AM,25.4538,93.9827,India,Manipur,medium,continuous_rain,0
+5006,07/01/2013 12:00:00 AM,26.1147,94.3864,India,Nagaland,medium,downpour,0
+256,09/10/2007 12:00:00 AM,27.3425,88.6236,India,Sikkim,medium,rain,0
+9335,05/18/2016 08:00:00 AM,24.5202,92.7239,India,Assam,unknown,continuous_rain,2
+7279,07/24/2015 12:00:00 AM,24.9818,93.5142,India,Manipur,medium,monsoon,0
+6288,09/22/2014 12:00:00 AM,26.1985,91.7998,India,Assam,small,rain,0
+5087,07/12/2013 12:00:00 AM,25.6269,94.1139,India,Nagaland,medium,downpour,0
+5338,08/16/2013 12:00:00 AM,26.8727,94.9275,India,Assam,medium,rain,0
+2411,09/10/2010 12:00:00 AM,27.0011,93.7273,India,Arunachal Pradesh,medium,downpour,0
+6143,07/14/2014 06:00:00 PM,23.7327,92.7463,India,Mizoram,medium,downpour,1
+4908,06/08/2013 05:00:00 PM,27.3721,88.708,India,Sikkim,medium,downpour,0
+9124,07/19/2016 12:00:00 AM,25.203,90.5573,India,Meghalaya,large,continuous_rain,0
+2282,08/19/2010 06:30:00 AM,26.1984,94.8158,India,Nagaland,medium,downpour,0
+9338,05/18/2016 08:00:00 AM,24.4638,92.4943,India,Assam,medium,continuous_rain,5
+2421,09/13/2010 09:00:00 AM,23.75406693,92.74128531,India,Mizoram,medium,downpour,0
+2249,08/14/2010 12:00:00 AM,26.0814,94.803,India,Nagaland,medium,downpour,0
+8901,07/10/2016 12:00:00 AM,25.7902,94.1318,India,Nagaland,medium,downpour,0
+2283,08/19/2010 12:00:00 AM,24.8961,93.4957,India,Manipur,medium,downpour,0
+4552,09/14/2012 12:00:00 AM,27.0377,88.3603,India,Sikkim,medium,downpour,0
+6016,05/09/2014 11:00:00 PM,24.8669,92.3576,India,Assam,small,rain,7
+7780,08/26/2015 12:00:00 AM,23.3572,92.7878,India,Mizoram,medium,continuous_rain,1
+2281,08/19/2010 06:00:00 PM,25.61560252,94.11603493,India,Nagaland,medium,downpour,0
+1996,06/17/2010 07:30:00 PM,26.4333,94.8833,India,Nagaland,medium,downpour,0
+6283,09/22/2014 12:00:00 AM,26.1314,91.7548,India,Assam,small,rain,0
+8930,07/11/2016 11:00:00 PM,26.1699,94.4922,India,Nagaland,large,unknown,0
+869,10/29/2008 12:00:00 AM,27.2333,94.1167,India,Assam,medium,downpour,0
+285,09/29/2007 12:00:00 AM,24.1293,92.6921,India,Mizoram,medium,rain,0
+3662,06/28/2011 12:00:00 AM,25.03561729,94.0144205,India,Manipur,medium,rain,0
+5427,08/15/2013 12:00:00 AM,25.3833,94.1884,India,Nagaland,medium,downpour,0
+8339,09/23/2015 12:00:00 AM,26.1666,91.7042,India,Assam,medium,continuous_rain,0
+4905,06/07/2013 12:00:00 AM,26.0977,94.7031,India,Nagaland,medium,unknown,0
+9186,07/25/2016 12:30:00 PM,25.48,94.1383,India,Manipur,medium,continuous_rain,0
+5107,07/15/2013 12:00:00 AM,25.6269,94.1139,India,Nagaland,medium,rain,0
+7253,07/22/2015 12:00:00 AM,24.7979,92.9974,India,Assam,medium,continuous_rain,5
+594,06/19/2008 12:00:00 AM,24.9336,93.8275,India,Manipur,medium,monsoon,0
+5337,08/16/2013 12:00:00 AM,26.4205,94.9731,India,Nagaland,medium,rain,0
+3881,08/05/2011 12:00:00 AM,27.1034,93.6885,India,Arunachal Pradesh,medium,downpour,0
+3925,08/15/2011 12:00:00 AM,27.4888,93.0153,India,Arunachal Pradesh,medium,downpour,0
+7383,08/01/2015 12:00:00 AM,23.899,94.1434,India,Manipur,medium,rain,0
+8900,07/07/2016 12:00:00 AM,25.0118,94.3136,India,Manipur,large,monsoon,0
+4757,02/18/2013 12:00:00 AM,28.1193,95.1645,India,Arunachal Pradesh,medium,rain,3
+7666,08/11/2015 12:00:00 AM,25.1019,93.3729,India,Manipur,medium,continuous_rain,0
+2113,07/21/2010 08:00:00 AM,27.3773,88.559,India,Sikkim,medium,downpour,0
+2045,07/06/2010 12:00:00 AM,26.2363,94.8133,India,Nagaland,medium,monsoon,0
+7701,08/19/2015 03:00:00 PM,25.6278,94.1051,India,Nagaland,medium,continuous_rain,0
+215,08/28/2007 12:00:00 AM,25.7428,93.9136,India,Nagaland,medium,rain,1
+2422,09/13/2010 12:00:00 AM,23.74182634,92.7141905,India,Mizoram,medium,downpour,0
+6513,08/14/2014 11:00:00 PM,23.0137,91.7174,India,Tripura,medium,downpour,3
+4990,06/27/2013 11:00:00 PM,27.3765,88.7628,India,Sikkim,medium,downpour,0
+2248,08/14/2010 12:00:00 AM,26.222,94.9152,India,Nagaland,medium,downpour,0
+5268,08/04/2013 12:00:00 AM,26.0137,94.5163,India,Nagaland,medium,continuous_rain,0
+6106,06/26/2014 11:00:00 PM,26.1407,91.7645,India,Assam,small,continuous_rain,3
+3965,09/06/2011 08:00:00 AM,24.808,93.117,India,Assam,medium,rain,3
+6969,06/16/2015 06:15:00 AM,25.5114,90.215,India,Meghalaya,medium,downpour,4
+2044,07/06/2010 12:00:00 AM,25.8877,94.7861,India,Nagaland,medium,monsoon,0
+2587,10/10/2010 06:00:00 AM,25.6623,94.1072,India,Nagaland,medium,downpour,0
+8684,07/07/2016 12:00:00 AM,25.9611,91.3681,India,Assam,medium,continuous_rain,2
+1596,03/27/2010 08:00:00 PM,24.7339,93.9161,India,Manipur,medium,downpour,0
+1771,04/20/2010 12:00:00 AM,26.1978,91.7665,India,Assam,medium,downpour,0
+6968,06/13/2015 12:00:00 AM,25.463,92.2121,India,Meghalaya,medium,continuous_rain,4
+7373,08/01/2015 12:00:00 AM,24.9111,94.4759,India,Manipur,medium,continuous_rain,0
+4570,09/19/2012 12:00:00 AM,27.8458,95.2253,India,Arunachal Pradesh,medium,downpour,0
+1935,06/03/2010 12:00:00 AM,23.8986,91.7599,India,Tripura,medium,downpour,0
+2577,10/09/2010 12:00:00 AM,25.5265,93.8673,India,Nagaland,medium,downpour,0
+7276,07/25/2015 09:00:00 AM,26.1062,91.8717,India,Assam,medium,continuous_rain,2
+7364,07/31/2015 09:00:00 AM,24.819,94.3551,India,Manipur,medium,continuous_rain,0
+2576,10/09/2010 12:00:00 AM,25.4788,94.1399,India,Nagaland,medium,downpour,0
+6293,10/20/2014 12:00:00 AM,25.5006,90.0896,India,Meghalaya,medium,rain,6
+4858,05/11/2013 09:00:00 AM,26.1662,91.7138,India,Assam,medium,rain,0
+5269,08/04/2013 12:00:00 AM,25.8376,94.5234,India,Nagaland,medium,continuous_rain,0
+5270,08/04/2013 12:00:00 AM,26.0481,94.4619,India,Nagaland,medium,continuous_rain,0
+6284,09/22/2014 12:00:00 AM,26.1324,91.8342,India,Assam,small,rain,0
+4394,06/07/2012 04:30:00 AM,27.1748,88.6458,India,Sikkim,large,rain,7
+9251,07/28/2016 11:00:00 PM,25.8702,94.7844,India,Nagaland,medium,downpour,0
+7699,08/19/2015 12:00:00 AM,26.0214,94.5224,India,Nagaland,medium,continuous_rain,0
+7664,08/11/2015 12:00:00 AM,24.7459,93.4251,India,Manipur,medium,continuous_rain,0
+7589,08/19/2015 12:00:00 AM,25.2568,92.3825,India,Meghalaya,medium,rain,0
+7887,08/16/2015 12:00:00 AM,27.8835,96.9262,India,Arunachal Pradesh,medium,continuous_rain,0
+9404,05/01/2016 12:00:00 AM,28.0822,96.5316,India,Arunachal Pradesh,medium,downpour,0
+6287,09/22/2014 12:00:00 AM,26.1295,91.7056,India,Assam,small,rain,0
+2296,08/20/2010 12:00:00 AM,27.167,88.3652,India,Sikkim,medium,downpour,0
+5273,08/04/2013 12:00:00 AM,26.1807,94.5497,India,Nagaland,medium,monsoon,0
+1125,08/26/2009 12:00:00 AM,27.3746,88.7648,India,Sikkim,medium,rain,0
+2304,08/21/2010 06:00:00 PM,25.5718,94.1211,India,Nagaland,medium,downpour,0
+8995,07/14/2016 12:00:00 AM,26.1963,91.8074,India,Assam,small,monsoon,1
+2567,10/08/2010 12:00:00 AM,25.6633,94.4703,India,Manipur,medium,downpour,0
+3794,07/17/2011 12:00:00 AM,26.99195749,88.42280921,India,Sikkim,medium,rain,0
+6285,09/22/2014 12:00:00 AM,26.159,91.8178,India,Assam,small,rain,0
+868,10/29/2008 12:00:00 AM,26.3333,91.25,India,Assam,medium,downpour,7
+5005,07/01/2013 12:00:00 AM,26.72,95.029,India,Nagaland,medium,downpour,0
+3860,07/29/2011 12:00:00 AM,25.4192,94.108,India,Nagaland,medium,rain,0
+5476,09/07/2013 03:00:00 PM,27.3736,88.7323,India,Sikkim,medium,rain,0
+1127,08/27/2009 12:00:00 AM,25.1718,93.123,India,Assam,medium,downpour,0
+5603,10/13/2013 07:30:00 PM,25.426,94.6024,India,Manipur,medium,downpour,0
+2042,07/06/2010 12:00:00 AM,26.0093,94.5238,India,Nagaland,medium,monsoon,0
+5442,09/02/2013 12:00:00 AM,27.1614,93.7525,India,Arunachal Pradesh,large,downpour,0
+7933,09/01/2015 12:00:00 AM,26.1868,91.6739,India,Assam,medium,rain,2
+3637,06/21/2011 12:00:00 AM,25.51614662,94.2341227,India,Nagaland,medium,rain,0
+3837,07/24/2011 12:30:00 PM,26.5836,93.0038,India,Assam,medium,downpour,0
+220,08/31/2007 12:00:00 AM,25.1333,93.9667,India,Manipur,medium,rain,0
+7372,07/31/2015 11:00:00 PM,25.0634,94.3415,India,Manipur,medium,continuous_rain,0
+2570,10/08/2010 12:00:00 AM,24.837,93.9128,India,Manipur,medium,downpour,0
+126,07/16/2007 12:00:00 AM,27.1499,88.38,India,Sikkim,medium,rain,0
+1168,09/17/2009 12:00:00 AM,27.1954,88.6115,India,Sikkim,medium,rain,0
+3806,07/19/2011 12:00:00 AM,27.1032,93.6884,India,Arunachal Pradesh,medium,downpour,3
+2026,06/28/2010 12:00:00 AM,25.4916,91.2698,India,Meghalaya,medium,downpour,0
+714,08/14/2008 12:00:00 AM,27.163,94.0,India,Assam,medium,rain,0
+6110,06/27/2014 12:00:00 AM,26.1619,91.7697,India,Assam,small,rain,3
+247,09/08/2007 12:00:00 AM,25.0604,93.9877,India,Manipur,medium,rain,0
+3789,07/16/2011 12:00:00 AM,27.2743,92.9064,India,Arunachal Pradesh,medium,downpour,0
+545,05/20/2008 12:00:00 AM,24.9849,92.8411,India,Assam,medium,mining,5
+7265,07/22/2015 12:00:00 AM,25.5007,93.9854,India,Manipur,medium,continuous_rain,0
+4407,06/13/2012 12:00:00 AM,25.0951,92.3567,India,Assam,medium,downpour,0
+2436,09/16/2010 03:00:00 AM,24.3069,93.125,India,Mizoram,medium,downpour,0
+7727,08/20/2015 06:00:00 PM,25.6263,94.1057,India,Nagaland,medium,continuous_rain,0
+7334,08/18/2015 12:00:00 AM,28.1737,94.7596,India,Arunachal Pradesh,medium,unknown,1
+6200,08/17/2014 12:00:00 AM,27.0869,93.6086,India,Arunachal Pradesh,large,downpour,0
+212,08/26/2007 12:00:00 AM,25.5576,91.8506,India,Meghalaya,medium,rain,0
+7778,08/26/2015 12:00:00 AM,23.8447,93.0514,India,Mizoram,medium,continuous_rain,0
+6290,09/23/2014 03:00:00 AM,25.5772,91.8666,India,Meghalaya,small,continuous_rain,8
+4408,06/13/2012 12:00:00 AM,25.5498,92.0757,India,Meghalaya,medium,downpour,0
+4403,06/10/2012 12:00:00 AM,24.8142,93.5444,India,Manipur,very_large,downpour,0
+5429,09/01/2013 06:00:00 PM,27.3425,88.2426,India,Sikkim,medium,downpour,5
+2140,07/25/2010 12:00:00 AM,25.0477,92.801,India,Assam,medium,downpour,0
+2243,08/13/2010 12:00:00 AM,25.70223725,94.04619681,India,Nagaland,medium,downpour,0
+6292,09/23/2014 12:00:00 AM,25.7238,89.9032,India,Assam,small,continuous_rain,1
+9142,06/14/2016 08:00:00 AM,26.3185,94.5247,India,Nagaland,medium,continuous_rain,0
+6107,06/26/2014 11:00:00 PM,26.1844,91.7896,India,Assam,small,continuous_rain,1
+255,09/10/2007 12:00:00 AM,24.2451,94.0691,India,Manipur,medium,rain,0
+7660,08/12/2015 12:00:00 AM,25.6237,94.1136,India,Nagaland,medium,continuous_rain,0
+4556,09/16/2012 12:00:00 AM,27.1675,88.3651,India,Sikkim,medium,downpour,0
+7389,08/01/2015 12:00:00 AM,24.4072,94.0644,India,Manipur,medium,continuous_rain,0
+2437,09/16/2010 12:00:00 AM,23.7527,92.694,India,Mizoram,medium,downpour,0
+731,08/19/2008 12:00:00 AM,26.138,94.25,India,Nagaland,medium,downpour,4
+7371,08/01/2015 12:00:00 AM,23.9939,94.0573,India,Manipur,medium,continuous_rain,0
+7923,09/01/2015 12:00:00 AM,26.49349035,91.72137514,India,Assam,medium,rain,2
+760,08/29/2008 12:00:00 AM,25.67,94.1066,India,Nagaland,medium,downpour,0
+258,09/11/2007 12:00:00 AM,24.4279,94.0564,India,Manipur,medium,rain,3
+2182,07/31/2010 09:00:00 AM,24.9356,93.8443,India,Manipur,medium,rain,0
+1954,06/07/2010 12:00:00 AM,24.7543,93.5039,India,Manipur,medium,rain,0
+6963,06/19/2015 12:00:00 AM,23.7131,92.7362,India,Mizoram,medium,rain,0
+5336,08/16/2013 12:00:00 AM,26.3897,94.9439,India,Nagaland,medium,rain,0
+7590,08/19/2015 12:00:00 AM,25.1416,92.3807,India,Meghalaya,small,rain,0
+1222,10/05/2009 12:00:00 AM,23.73478778,92.72124394,India,Mizoram,medium,downpour,3
+8222,06/22/2016 12:00:00 PM,26.1961,91.7825,India,Assam,medium,downpour,1
+7706,08/19/2015 12:00:00 AM,25.0728,92.3636,India,Meghalaya,medium,rain,0
+9620,10/15/2016 12:00:00 AM,27.172,88.5292,India,Sikkim,medium,downpour,0
+8224,09/14/2015 01:30:00 AM,23.7313,92.7187,India,Mizoram,medium,downpour,0
+4241,03/04/2012 12:00:00 AM,25.1604,93.6795,India,Manipur,medium,unknown,0
+755,08/28/2008 12:00:00 AM,27.337,88.609,India,Sikkim,medium,downpour,0
+1756,04/17/2010 12:00:00 AM,27.322,88.6087,India,Sikkim,small,downpour,0
+1930,05/31/2010 12:00:00 AM,28.4298,95.8776,India,Arunachal Pradesh,medium,downpour,0
+9334,05/18/2016 08:00:00 AM,24.5204,92.7264,India,Assam,unknown,continuous_rain,2
+8237,07/01/2016 12:00:00 AM,27.0136,92.6351,India,Arunachal Pradesh,large,downpour,5
+585,06/14/2008 12:00:00 AM,27.0998,93.6287,India,Arunachal Pradesh,large,rain,21
+6286,09/22/2014 12:00:00 AM,26.1044,91.7082,India,Assam,small,rain,0
+4859,05/11/2013 12:00:00 AM,26.1771,91.7599,India,Assam,medium,rain,0
+4436,06/25/2012 12:00:00 AM,26.9986,95.4993,India,Arunachal Pradesh,medium,downpour,0
+3916,08/13/2011 08:00:00 AM,25.7713,93.8067,India,Assam,medium,downpour,0
+5250,08/01/2013 12:00:00 AM,27.8837,93.0515,India,Arunachal Pradesh,medium,rain,0
+3805,07/19/2011 12:00:00 AM,27.05374234,88.42572376,India,Sikkim,medium,rain,0
+3738,07/06/2011 12:00:00 AM,24.8063,93.9482,India,Manipur,medium,downpour,6
+2426,09/13/2010 12:00:00 AM,22.7176,92.8416,India,Mizoram,medium,downpour,0
+1084,08/12/2009 12:00:00 AM,27.7,92.8,India,Arunachal Pradesh,medium,downpour,0
+7266,07/22/2015 12:00:00 AM,25.5098,93.8794,India,Manipur,medium,continuous_rain,0
+1129,08/30/2009 12:00:00 AM,24.8628,94.4182,India,Manipur,medium,downpour,0
+2166,07/29/2010 12:00:00 AM,24.9786,93.5027,India,Assam,medium,downpour,0
+213,08/26/2007 12:00:00 AM,25.2946,92.8339,India,Assam,medium,rain,0
+4426,06/22/2012 12:00:00 AM,26.1226,91.7162,India,Assam,medium,downpour,3
+8366,09/23/2015 03:00:00 PM,25.583,91.893,India,Meghalaya,medium,downpour,2
+1934,06/03/2010 05:00:00 AM,24.6005,92.3814,India,Assam,medium,downpour,2
+7655,04/22/2016 02:30:00 AM,27.5799,91.8569,India,Arunachal Pradesh,medium,continuous_rain,17
+9464,08/05/2016 12:00:00 AM,27.5754,91.9754,India,Arunachal Pradesh,medium,downpour,0
+3912,08/12/2011 12:00:00 AM,27.44,92.2833,India,Arunachal Pradesh,medium,rain,0
+5272,08/04/2013 12:00:00 AM,26.2083,94.5438,India,Nagaland,medium,monsoon,0
+580,06/09/2008 12:00:00 AM,24.6596,93.9784,India,Manipur,medium,monsoon,0
+5575,10/05/2013 11:00:00 PM,25.8266,94.1497,India,Nagaland,medium,continuous_rain,0
+8996,07/14/2016 12:00:00 AM,26.1768,91.7702,India,Assam,small,monsoon,1
+1613,04/02/2010 11:00:00 PM,27.8997,93.3497,India,Arunachal Pradesh,large,downpour,12
+7138,07/07/2015 12:00:00 AM,27.0816,88.4397,India,Sikkim,small,continuous_rain,0
+4857,05/11/2013 09:00:00 AM,23.7281,92.7175,India,Mizoram,large,rain,15
+6945,06/19/2015 12:00:00 AM,25.16,93.686,India,Manipur,medium,monsoon,0
+2743,11/22/2010 12:00:00 AM,27.5798729,91.85672387,India,Arunachal Pradesh,medium,unknown,0
+1857,05/11/2010 09:00:00 AM,25.3433,92.2897,India,Meghalaya,medium,downpour,0
+4860,05/11/2013 12:00:00 AM,26.1016,91.6906,India,Assam,medium,rain,0
+4845,05/07/2013 12:00:00 AM,24.2315,92.6755,India,Mizoram,medium,rain,0
+1770,04/20/2010 12:00:00 AM,26.1965,91.763,India,Assam,medium,downpour,0
+7728,08/22/2015 09:00:00 AM,26.1028,91.8806,India,Assam,medium,continuous_rain,0
+5274,08/04/2013 12:00:00 AM,26.0838,94.564,India,Nagaland,medium,rain,0
+7836,08/27/2015 12:00:00 AM,24.042,92.6724,India,Mizoram,medium,downpour,0
+3776,07/15/2011 06:00:00 PM,27.125,93.7145,India,Arunachal Pradesh,small,downpour,0
+4798,04/07/2013 12:00:00 AM,28.8254,96.1509,India,Arunachal Pradesh,medium,rain,0
+7388,08/01/2015 12:00:00 AM,24.416,94.0984,India,Manipur,medium,continuous_rain,0
+5421,08/30/2013 12:00:00 AM,26.4205,94.9731,India,Nagaland,medium,unknown,0
+2343,08/27/2010 04:30:00 PM,25.4786,94.1327,India,Nagaland,medium,downpour,0
+3683,07/01/2011 12:00:00 AM,25.8782,94.1739,India,Nagaland,medium,downpour,0
+9619,10/15/2016 12:00:00 AM,27.1695,88.3664,India,Sikkim,medium,rain,0
+7591,03/19/2015 12:00:00 AM,25.0318,92.4584,India,Assam,small,rain,0
+5441,09/02/2013 12:00:00 AM,28.611,94.9829,India,Arunachal Pradesh,large,downpour,0
+9232,07/28/2016 11:00:00 PM,23.5397,93.3783,India,Mizoram,medium,continuous_rain,2
+4434,06/25/2012 06:00:00 PM,26.1049,91.7369,India,Assam,large,downpour,1
+4378,06/02/2012 12:00:00 AM,28.8254,96.1517,India,Arunachal Pradesh,medium,downpour,0
+7214,07/15/2015 08:00:00 AM,27.36,93.0385,India,Arunachal Pradesh,medium,monsoon,3
+5582,10/06/2013 12:45:00 PM,26.1309,91.8383,India,Assam,medium,downpour,1
+2405,09/09/2010 11:00:00 PM,28.3036,95.4112,India,Arunachal Pradesh,medium,downpour,10
+3556,05/31/2011 02:00:00 PM,25.1555,93.8474,India,Manipur,small,continuous_rain,0
+2569,10/08/2010 12:00:00 AM,25.2745,94.0212,India,Nagaland,medium,downpour,0
+2423,09/13/2010 12:00:00 AM,23.73504471,92.71060943,India,Mizoram,medium,downpour,0
+3532,05/24/2011 12:00:00 AM,25.0888,92.8551,India,Assam,medium,downpour,0
+2345,08/27/2010 06:00:00 PM,27.3392,88.6188,India,Sikkim,medium,downpour,0
+7956,09/05/2015 12:00:00 AM,26.048,91.8695,India,Meghalaya,medium,unknown,0
+2425,09/13/2010 12:00:00 AM,23.3439,93.0748,India,Mizoram,medium,downpour,0
+6970,06/16/2015 12:00:00 AM,25.5084,90.2191,India,Meghalaya,small,downpour,1
+5312,08/11/2013 11:00:00 PM,26.7103,94.693,India,Assam,very_large,downpour,0
+1929,05/31/2010 11:00:00 PM,27.3543,88.6428,India,Sikkim,medium,downpour,0
+2568,10/08/2010 12:00:00 AM,24.7679,93.4108,India,Assam,medium,downpour,0
+7409,08/02/2015 12:00:00 AM,25.72,94.6219,India,Nagaland,medium,continuous_rain,0
+9219,07/26/2016 11:00:00 PM,26.0101,94.5282,India,Nagaland,medium,downpour,0
+2579,10/09/2010 12:00:00 AM,25.682,94.1076,India,Nagaland,medium,downpour,0
+8223,09/14/2015 03:10:00 AM,23.7348,92.7187,India,Mizoram,large,downpour,0
+7336,08/19/2015 09:00:00 AM,25.2193,90.5549,India,Meghalaya,medium,continuous_rain,0
+9252,07/28/2016 12:00:00 AM,27.5748,91.8644,India,Arunachal Pradesh,medium,monsoon,0
+5300,08/09/2013 12:00:00 AM,25.318,94.0441,India,Nagaland,large,downpour,0
+7665,08/11/2015 12:00:00 AM,24.7016,93.5291,India,Manipur,medium,continuous_rain,0
+1994,06/16/2010 12:00:00 AM,25.0633,92.8025,India,Assam,medium,downpour,0
+3760,07/11/2011 09:00:00 AM,25.6703,94.1095,India,Nagaland,medium,downpour,0
+692,08/07/2008 12:00:00 AM,25.705,94.04,India,Nagaland,medium,downpour,0
+3633,06/20/2011 12:00:00 AM,26.3186,94.5121,India,Nagaland,medium,downpour,0
+7374,08/01/2015 12:00:00 AM,25.1122,94.3591,India,Manipur,medium,continuous_rain,0
+4446,07/05/2012 12:00:00 AM,28.9986,94.8885,India,Arunachal Pradesh,large,downpour,0
+2098,07/19/2010 06:00:00 AM,26.7215,95.0283,India,Nagaland,medium,downpour,0
+269,09/18/2007 12:00:00 AM,27.2872,88.2816,India,Sikkim,medium,rain,0
+2205,08/06/2010 12:00:00 AM,23.7365,92.7146,India,Mizoram,medium,downpour,0
+4610,11/11/2012 12:00:00 AM,23.7705,92.5217,India,Mizoram,medium,downpour,4
+5275,08/04/2013 12:00:00 AM,26.1498,94.6055,India,Nagaland,medium,monsoon,0
+2247,08/14/2010 12:00:00 AM,26.148,94.8422,India,Nagaland,medium,downpour,0
+3927,08/16/2011 08:00:00 AM,25.5144,90.2167,India,Meghalaya,medium,downpour,6
+259,09/11/2007 12:00:00 AM,25.52,91.27,India,Meghalaya,medium,rain,0
+6112,06/28/2014 09:00:00 AM,26.1964,91.7652,India,Assam,medium,rain,0
+7390,08/01/2015 12:00:00 AM,24.4265,94.1913,India,Manipur,medium,continuous_rain,0
+2420,09/13/2010 12:00:00 AM,23.72988966,92.71495623,India,Mizoram,medium,downpour,1
+264,09/13/2007 12:00:00 AM,26.1833,91.8,India,Assam,medium,rain,0
+251,09/09/2007 12:00:00 AM,27.1667,88.35,India,Sikkim,medium,rain,1
+6214,10/05/2014 05:45:00 PM,25.9702,91.8587,India,Meghalaya,medium,rain,1
+4411,06/14/2012 04:00:00 AM,27.339,88.6065,India,Sikkim,medium,downpour,0
+252,09/09/2007 12:00:00 AM,25.4993,94.1192,India,Nagaland,medium,rain,0
+142,07/27/2007 12:00:00 AM,25.5212,90.232,India,Meghalaya,large,rain,8
+7384,08/01/2015 12:00:00 AM,23.9278,94.0906,India,Manipur,medium,rain,0
+211,08/26/2007 12:00:00 AM,24.9667,93.55,India,Manipur,medium,continuous_rain,1
+4384,06/03/2012 12:00:00 AM,25.1775,93.0123,India,Assam,medium,downpour,0
+4383,06/03/2012 12:00:00 AM,25.3056,93.1265,India,Assam,medium,downpour,0
+7375,08/01/2015 12:00:00 AM,25.1941,94.4481,India,Manipur,medium,continuous_rain,0
+2163,07/29/2010 12:00:00 AM,25.4196,94.1054,India,Nagaland,medium,downpour,0
+3932,08/18/2011 12:00:00 AM,25.83,94.13,India,Nagaland,medium,monsoon,0
+4861,05/12/2013 12:00:00 AM,24.9926,93.4946,India,Assam,medium,rain,0
+7972,08/28/2015 01:45:00 AM,23.4495,92.8112,India,Mizoram,large,downpour,0
+3831,07/22/2011 12:00:00 AM,24.7992,93.948,India,Manipur,medium,downpour,0
+5584,10/06/2013 12:00:00 AM,26.1665,91.7049,India,Assam,medium,downpour,0
+1986,06/15/2010 12:00:00 AM,26.3335,94.5512,India,Nagaland,medium,downpour,0
+7387,08/01/2015 12:00:00 AM,24.954,94.2156,India,Manipur,small,continuous_rain,0
+2573,10/09/2010 12:00:00 AM,25.1796,93.0083,India,Assam,medium,downpour,1
+319,10/19/2007 12:00:00 AM,25.4379,94.1162,India,Nagaland,medium,rain,0
+313,10/16/2007 12:00:00 AM,25.7055,94.0132,India,Nagaland,large,rain,0
+9010,07/16/2016 12:00:00 AM,27.3034,93.804,India,Arunachal Pradesh,medium,downpour,1
+2539,10/03/2010 12:00:00 AM,28.3092,95.4149,India,Arunachal Pradesh,medium,downpour,10
+6331,09/08/2014 12:00:00 AM,25.9466,94.6279,India,Nagaland,medium,unknown,0
+1987,06/15/2010 12:00:00 AM,25.2269,93.1658,India,Assam,medium,downpour,0
+2043,07/06/2010 12:00:00 AM,26.7225,95.0281,India,Nagaland,medium,monsoon,0
+7910,08/01/2015 12:00:00 AM,24.3481,94.1146,India,Manipur,medium,unknown,0
+6775,02/14/2015 12:00:00 AM,26.1468,91.6469,India,Assam,small,mining,1
+1776,04/21/2010 12:00:00 AM,25.3612,92.2845,India,Meghalaya,medium,downpour,0
+6786,02/19/2015 11:00:00 PM,24.6108,92.562,India,Assam,medium,mining,2
+6291,09/21/2014 12:00:00 AM,25.7354,90.3852,India,Meghalaya,large,continuous_rain,0
+6213,09/24/2014 12:00:00 AM,25.8143,90.5763,India,Meghalaya,large,continuous_rain,0
+2415,09/12/2010 12:00:00 AM,25.63961883,94.11112157,India,Nagaland,medium,downpour,0
+9336,05/18/2016 08:00:00 AM,24.5308,92.5121,India,Assam,small,continuous_rain,1
+7837,08/27/2015 12:00:00 AM,23.7269,92.7265,India,Mizoram,medium,downpour,0
+9604,10/12/2016 12:00:00 AM,27.2676,88.2891,India,Sikkim,medium,continuous_rain,0
+7267,07/22/2015 12:00:00 AM,25.3908,94.0926,India,Manipur,small,continuous_rain,0
+4848,05/08/2013 12:00:00 AM,24.0896,91.4663,India,Tripura,medium,rain,1
+9122,07/20/2016 12:00:00 AM,26.1966,91.802,India,Assam,medium,rain,0
+2574,10/09/2010 12:00:00 AM,25.4749,93.1477,India,Assam,medium,downpour,0
+6282,09/22/2014 12:00:00 AM,26.1097,91.7747,India,Assam,small,rain,1
+2263,08/17/2010 12:00:00 AM,26.2753,94.6654,India,Nagaland,medium,downpour,0
+6289,09/22/2014 12:00:00 AM,26.1001,91.6849,India,Assam,small,rain,0
+9087,07/19/2016 12:00:00 AM,28.235,94.9612,India,Arunachal Pradesh,medium,downpour,0
+147,07/30/2007 12:00:00 AM,22.533,92.899,India,Mizoram,medium,downpour,0
+130,07/19/2007 12:00:00 AM,26.1699,91.7986,India,Assam,medium,rain,6
