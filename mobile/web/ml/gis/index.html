@@ -66,7 +66,7 @@
         L.control.layers({ "Street map":street, "Satellite":satellite }).addTo(map);
         let routeLayer;
         const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char]));
-        async function getJson(path, options) { const response = await fetch(path, options); if (!response.ok) throw new Error(`${response.status}: ${await response.text()}`); return response.json(); }
+        async function getJson(path, options) { const response = await fetch(`http://127.0.0.1:8000${path}`, options); if (!response.ok) throw new Error(`${response.status}: ${await response.text()}`); return response.json(); }
         async function loadMapData() {
             try { const states = await getJson("/geojson"); L.geoJSON(states, { style:{ color:"#0d6b68", weight:1.5, fillOpacity:.04 } }).addTo(map); } catch (error) { console.warn(error); }
             try { const reports = await getJson("/reports.geojson"); L.geoJSON(reports, { pointToLayer:(feature, latlng) => L.circleMarker(latlng, { radius:7, color:"#d56b3f", fillOpacity:.85 }), onEachFeature:(feature, layer) => layer.bindPopup(`<b>${escapeHtml(feature.properties.incident_type)}</b><br>${escapeHtml(feature.properties.description)}<br>Status: ${escapeHtml(feature.properties.status)}`) }).addTo(map); } catch (error) { console.warn(error); }
