@@ -204,12 +204,15 @@ def analyze_location_risk(request: LocationRiskRequest):
     weather = get_weather(place["lat"], place["lon"])
     weather_score, weather_risk, weather_hazards = calculate_weather_risk(weather)
     hazards = load_historical_hazards() + load_current_incident_hazards()
+    river_flood = fetch_river_flood(place["lat"], place["lon"])
     result = analyze_location(
         place["lat"],
         place["lon"],
         weather_score,
         hazards,
         f"{request.location} {place['name']}",
+        rainfall_24h_mm=weather.get("rainfall_24h_mm"),
+        river_flood=river_flood,
     )
     result["place"] = place
     result["weather"] = {
@@ -217,6 +220,8 @@ def analyze_location_risk(request: LocationRiskRequest):
         "risk": weather_risk,
         "hazards": weather_hazards,
         "observed_at": weather.get("time"),
+        "rainfall_24h_mm": weather.get("rainfall_24h_mm"),
+        "river_flood": river_flood,
     }
     return result
 
@@ -399,10 +404,44 @@ class RouteRequest(BaseModel):
 
 
 # =========================================================
+# ============================================================
 # GEOCODING
-# =========================================================
+# ============================================================
+
+from backend.gis.ner_places import lookup_place
+
+
+def _prefer_town_result(results: list[dict]) -> dict | None:
+    """Prefer a populated-place result over an administrative centroid.
+
+    Nominatim sometimes returns only the administrative boundary centroid
+    (e.g. Mangan district), which puts the map pin far from the actual
+    town. Town/village/city results, when present, are much better.
+    """
+    for result in results:
+        if result.get("type") in {"town", "village", "city", "hamlet"}:
+            return result
+    return None
+
 
 def geocode_place(place: str):
+    """Resolve a place name to coordinates.
+
+    Order of preference:
+      1. Curated NER reference table (district HQs like Mangan town that
+         Nominatim cannot return as a populated place).
+      2. Nominatim populated-place result (town/village/city).
+      3. Nominatim best result (administrative centroid fallback).
+    """
+
+    curated = lookup_place(place)
+    if curated:
+        return {
+            "name": curated["name"],
+            "lat": curated["lat"],
+            "lon": curated["lon"],
+            "source": curated.get("source", "curated NER reference table"),
+        }
 
     url = "https://nominatim.openstreetmap.org/search"
 
@@ -428,7 +467,7 @@ def geocode_place(place: str):
                 params={
                     "q": f"{query}, India",
                     "format": "jsonv2",
-                    "limit": 1,
+                    "limit": 5,
                     "countrycodes": "in"
                 },
                 headers=headers,
@@ -450,14 +489,40 @@ def geocode_place(place: str):
             detail=f"Location not found: {place}"
         )
 
+    # Second chance: for district names, ask for the district HQ town
+    # explicitly (e.g. "Mangan town") so we don't pin the district centroid.
+    if not _prefer_town_result(results):
+        for suffix in ("town", "city"):
+            try:
+                response = requests.get(
+                    url,
+                    params={
+                        "q": f"{place} {suffix}, India",
+                        "format": "jsonv2",
+                        "limit": 3,
+                        "countrycodes": "in"
+                    },
+                    headers=headers,
+                    timeout=15
+                )
+                response.raise_for_status()
+                town_results = response.json()
+            except requests.RequestException:
+                town_results = []
+            town_match = _prefer_town_result(town_results)
+            if town_match:
+                results = [town_match]
+                break
+
+    chosen = _prefer_town_result(results) or results[0]
     return {
-        "name": results[0]["display_name"],
-        "lat": float(results[0]["lat"]),
-        "lon": float(results[0]["lon"])
+        "name": chosen["display_name"],
+        "lat": float(chosen["lat"]),
+        "lon": float(chosen["lon"]),
+        "source": "Nominatim (OpenStreetMap)",
     }
 
 
-# =========================================================
 # WEATHER
 # =========================================================
 
@@ -484,6 +549,7 @@ def get_weather(lat: float, lon: float):
             "weather_code,"
             "wind_speed_10m"
         ),
+        "past_days": 1,
         "forecast_days": 1,
         "timezone": "auto"
     }
@@ -494,18 +560,42 @@ def get_weather(lat: float, lon: float):
             params=params,
             timeout=15
         )
-
         response.raise_for_status()
-
     except requests.RequestException as error:
-        raise HTTPException(
-            status_code=502,
-            detail=f"Weather service unavailable: {error}"
-        )
+        # The past-days lookback is optional; if it trips the upstream
+        # service, retry with a plain one-day forecast so the core
+        # location analysis still works.
+        if "past_days" in params:
+            try:
+                fallback_params = {key: value for key, value in params.items() if key != "past_days"}
+                response = requests.get(url, params=fallback_params, timeout=15)
+                response.raise_for_status()
+            except requests.RequestException as fallback_error:
+                raise HTTPException(
+                    status_code=502,
+                    detail=f"Weather service unavailable: {fallback_error}"
+                ) from fallback_error
+        else:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Weather service unavailable: {error}"
+            ) from error
 
     data = response.json()
 
     current = data.get("current", {})
+    hourly = data.get("hourly", {})
+
+    # Live 24-hour rainfall accumulation (past observed + near-term
+    # forecast) used by the rainfall-triggered risk model.
+    rainfall_24h_mm = None
+    if isinstance(hourly.get("time"), list) and isinstance(hourly.get("rain"), list):
+        recent = [
+            value for value in hourly["rain"][-24:]
+            if isinstance(value, (int, float))
+        ]
+        if recent:
+            rainfall_24h_mm = round(sum(recent), 1)
 
     return {
         "temperature": current.get("temperature_2m"),
@@ -514,8 +604,76 @@ def get_weather(lat: float, lon: float):
         "rain": current.get("rain"),
         "weather_code": current.get("weather_code"),
         "wind_speed": current.get("wind_speed_10m"),
-        "time": current.get("time")
+        "time": current.get("time"),
+        "rainfall_24h_mm": rainfall_24h_mm
     }
+
+
+# =========================================================
+# RIVER FLOOD (GloFAS via Open-Meteo Flood API)
+# =========================================================
+
+import time as _time
+
+_RIVER_FLOOD_CACHE: dict[tuple[float, float], tuple[float, dict]] = {}
+_RIVER_FLOOD_TTL_SECONDS = 30 * 60
+
+
+def fetch_river_flood(lat: float, lon: float) -> dict | None:
+    """Live river-discharge signal from the GloFAS flood model.
+
+    Returns today's discharge and historical percentile thresholds
+    (p90/p98/p99) computed from the last 120 days at the nearest river
+    cell, or None when the upstream service is unavailable. Never raises.
+    """
+    cache_key = (round(lat, 3), round(lon, 3))
+    cached = _RIVER_FLOOD_CACHE.get(cache_key)
+    if cached is not None and _time.time() - cached[0] < _RIVER_FLOOD_TTL_SECONDS:
+        return cached[1]
+
+    try:
+        response = requests.get(
+            "https://flood-api.open-meteo.com/v1/flood",
+            params={
+                "latitude": lat,
+                "longitude": lon,
+                "daily": "river_discharge",
+                "past_days": 120,
+                "forecast_days": 5,
+            },
+            timeout=15,
+            headers={"User-Agent": "NER-LogixAI/1.0"},
+        )
+        response.raise_for_status()
+        data = response.json()
+        daily = data.get("daily", {})
+        times = daily.get("time", [])
+        discharge = daily.get("river_discharge", [])
+        if not isinstance(times, list) or not isinstance(discharge, list) or not times:
+            return None
+        values = [v for v in discharge if isinstance(v, (int, float)) and v is not None]
+        if len(values) < 30:
+            return None
+        ordered = sorted(values)
+        def percentile(pct: float) -> float:
+            idx = min(len(ordered) - 1, int(len(ordered) * pct / 100))
+            return ordered[idx]
+        today_index = len(times) // 2
+        today_value = discharge[today_index] if 0 <= today_index < len(discharge) else None
+        result = {
+            "source": "GloFAS via Open-Meteo Flood API",
+            "river_latitude": data.get("latitude"),
+            "river_longitude": data.get("longitude"),
+            "discharge_today_m3s": today_value,
+            "discharge_history_days": len(values),
+            "p90_m3s": percentile(90),
+            "p98_m3s": percentile(98),
+            "p99_m3s": percentile(99),
+        }
+        _RIVER_FLOOD_CACHE[cache_key] = (_time.time(), result)
+        return result
+    except (requests.RequestException, ValueError, TypeError, KeyError):
+        return None
 
 
 # =========================================================

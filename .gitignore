@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Freebuff runtime logs (server output, not project files)
+.freebuff/*.log*

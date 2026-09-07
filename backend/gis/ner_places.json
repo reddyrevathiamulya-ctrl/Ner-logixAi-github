@@ -1,0 +1,1013 @@
+{
+  "_note": "Curated reference coordinates for the 8 North Eastern Region states: one entry per district, at the district headquarters town. Coordinates were resolved from OpenStreetMap for each HQ town (with state disambiguation) and cross-checked against state government district lists; entries where Nominatim returns an administrative centroid instead of the town carry an explicit curated override (e.g. Mangan town per SSDMA, Mon town per OSM town node). Used as a geocoding fallback and as spatial anchors for district-level flood/landslide records that lack coordinates.",
+  "places": {
+    "arunachal pradesh": {
+      "anjaw": {
+        "lat": 27.8843894,
+        "lon": 96.8124468,
+        "name": "Hawai (Anjaw district HQ)",
+        "town": "Hawai",
+        "district": "Anjaw",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "changlang": {
+        "lat": 27.2698797,
+        "lon": 96.0602442,
+        "name": "Changlang (Changlang district HQ)",
+        "town": "Changlang",
+        "district": "Changlang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "dibang valley": {
+        "lat": 28.796932,
+        "lon": 95.9044795,
+        "name": "Anini (Dibang Valley district HQ)",
+        "town": "Anini",
+        "district": "Dibang Valley",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "east kameng": {
+        "lat": 27.3594183,
+        "lon": 93.0406098,
+        "name": "Seppa (East Kameng district HQ)",
+        "town": "Seppa",
+        "district": "East Kameng",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "east siang": {
+        "lat": 28.0589676,
+        "lon": 95.3324944,
+        "name": "Pasighat (East Siang district HQ)",
+        "town": "Pasighat",
+        "district": "East Siang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kamle": {
+        "lat": 27.7968313,
+        "lon": 94.0692973,
+        "name": "Raga (Kamle district HQ)",
+        "town": "Raga",
+        "district": "Kamle",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kra daadi": {
+        "lat": 27.7579726,
+        "lon": 93.584581,
+        "name": "Jamin (Kra Daadi district HQ)",
+        "town": "Jamin",
+        "district": "Kra Daadi",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kurung kumey": {
+        "lat": 27.9054828,
+        "lon": 93.3536693,
+        "name": "Koloriang (Kurung Kumey district HQ)",
+        "town": "Koloriang",
+        "district": "Kurung Kumey",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lepa rada": {
+        "lat": 27.9831179,
+        "lon": 94.6879423,
+        "name": "Basar (Lepa Rada district HQ)",
+        "town": "Basar",
+        "district": "Lepa Rada",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lohit": {
+        "lat": 27.9426344,
+        "lon": 96.1348731,
+        "name": "Tezu (Lohit district HQ)",
+        "town": "Tezu",
+        "district": "Lohit",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "longding": {
+        "lat": 26.8794546,
+        "lon": 95.3155652,
+        "name": "Longding (Longding district HQ)",
+        "town": "Longding",
+        "district": "Longding",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lower dibang valley": {
+        "lat": 28.1368472,
+        "lon": 95.8430824,
+        "name": "Roing (Lower Dibang Valley district HQ)",
+        "town": "Roing",
+        "district": "Lower Dibang Valley",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lower siang": {
+        "lat": 27.6588306,
+        "lon": 94.6977781,
+        "name": "Likabali (Lower Siang district HQ)",
+        "town": "Likabali",
+        "district": "Lower Siang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lower subansiri": {
+        "lat": 27.538668,
+        "lon": 93.815355,
+        "name": "Ziro (Lower Subansiri district HQ)",
+        "town": "Ziro",
+        "district": "Lower Subansiri",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "namsai": {
+        "lat": 27.7140306,
+        "lon": 96.0159709,
+        "name": "Namsai (Namsai district HQ)",
+        "town": "Namsai",
+        "district": "Namsai",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "pakke kessang": {
+        "lat": 27.1594297,
+        "lon": 93.220666,
+        "name": "Lemmi (Pakke Kessang district HQ)",
+        "town": "Lemmi",
+        "district": "Pakke Kessang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "papum pare": {
+        "lat": 27.1462282,
+        "lon": 93.7205996,
+        "name": "Yupia (Papum Pare district HQ)",
+        "town": "Yupia",
+        "district": "Papum Pare",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "shi yomi": {
+        "lat": 28.53149,
+        "lon": 94.37531,
+        "name": "Tato (Shi Yomi district HQ)",
+        "town": "Tato",
+        "district": "Shi Yomi",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "siang": {
+        "lat": 28.2112611,
+        "lon": 94.9895992,
+        "name": "Pangin (Siang district HQ)",
+        "town": "Pangin",
+        "district": "Siang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tawang": {
+        "lat": 27.5879186,
+        "lon": 91.863733,
+        "name": "Tawang (Tawang district HQ)",
+        "town": "Tawang",
+        "district": "Tawang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tirap": {
+        "lat": 26.9910099,
+        "lon": 95.5061065,
+        "name": "Khonsa (Tirap district HQ)",
+        "town": "Khonsa",
+        "district": "Tirap",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "upper siang": {
+        "lat": 28.6410598,
+        "lon": 95.0276607,
+        "name": "Yingkiong (Upper Siang district HQ)",
+        "town": "Yingkiong",
+        "district": "Upper Siang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "upper subansiri": {
+        "lat": 27.9843402,
+        "lon": 94.2190544,
+        "name": "Daporijo (Upper Subansiri district HQ)",
+        "town": "Daporijo",
+        "district": "Upper Subansiri",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "west kameng": {
+        "lat": 27.264445,
+        "lon": 92.4206519,
+        "name": "Bomdila (West Kameng district HQ)",
+        "town": "Bomdila",
+        "district": "West Kameng",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "west siang": {
+        "lat": 28.1385744,
+        "lon": 94.7634153,
+        "name": "Aalo (West Siang district HQ)",
+        "town": "Aalo",
+        "district": "West Siang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "itanagar": {
+        "lat": 27.0979659,
+        "lon": 93.6237291,
+        "name": "Itanagar (Itanagar district HQ)",
+        "town": "Itanagar",
+        "district": "Itanagar",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    },
+    "assam": {
+      "baksa": {
+        "lat": 26.6620387,
+        "lon": 91.3410716,
+        "name": "Mushalpur (Baksa district HQ)",
+        "town": "Mushalpur",
+        "district": "Baksa",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "barpeta": {
+        "lat": 26.345941,
+        "lon": 91.039708,
+        "name": "Barpeta (Barpeta district HQ)",
+        "town": "Barpeta",
+        "district": "Barpeta",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "biswanath": {
+        "lat": 26.72667,
+        "lon": 93.147765,
+        "name": "Biswanath Chariali (Biswanath district HQ)",
+        "town": "Biswanath Chariali",
+        "district": "Biswanath",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "bongaigaon": {
+        "lat": 26.4800126,
+        "lon": 90.5580387,
+        "name": "Bongaigaon (Bongaigaon district HQ)",
+        "town": "Bongaigaon",
+        "district": "Bongaigaon",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "cachar": {
+        "lat": 24.830302,
+        "lon": 92.7875689,
+        "name": "Silchar (Cachar district HQ)",
+        "town": "Silchar",
+        "district": "Cachar",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "charaideo": {
+        "lat": 27.0557101,
+        "lon": 95.120299,
+        "name": "Sonari (Charaideo district HQ)",
+        "town": "Sonari",
+        "district": "Charaideo",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "chirang": {
+        "lat": 26.513931,
+        "lon": 90.525509,
+        "name": "Kajalgaon (Chirang district HQ)",
+        "town": "Kajalgaon",
+        "district": "Chirang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "darrang": {
+        "lat": 26.4436882,
+        "lon": 92.0373057,
+        "name": "Mangaldai (Darrang district HQ)",
+        "town": "Mangaldai",
+        "district": "Darrang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "dhemaji": {
+        "lat": 27.5945155,
+        "lon": 94.7192098,
+        "name": "Dhemaji (Dhemaji district HQ)",
+        "town": "Dhemaji",
+        "district": "Dhemaji",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "dhubri": {
+        "lat": 26.132275,
+        "lon": 90.1249962,
+        "name": "Dhubri (Dhubri district HQ)",
+        "town": "Dhubri",
+        "district": "Dhubri",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "dibrugarh": {
+        "lat": 27.4844597,
+        "lon": 94.9019447,
+        "name": "Dibrugarh (Dibrugarh district HQ)",
+        "town": "Dibrugarh",
+        "district": "Dibrugarh",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "dima hasao": {
+        "lat": 25.1825103,
+        "lon": 92.8984045,
+        "name": "Haflong (Dima Hasao district HQ)",
+        "town": "Haflong",
+        "district": "Dima Hasao",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "goalpara": {
+        "lat": 26.0491877,
+        "lon": 90.6001859,
+        "name": "Goalpara (Goalpara district HQ)",
+        "town": "Goalpara",
+        "district": "Goalpara",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "golaghat": {
+        "lat": 26.5108262,
+        "lon": 93.9743686,
+        "name": "Golaghat (Golaghat district HQ)",
+        "town": "Golaghat",
+        "district": "Golaghat",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "hailakandi": {
+        "lat": 24.6846916,
+        "lon": 92.5645836,
+        "name": "Hailakandi (Hailakandi district HQ)",
+        "town": "Hailakandi",
+        "district": "Hailakandi",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "hojai": {
+        "lat": 25.9629402,
+        "lon": 92.981829,
+        "name": "Hojai (Hojai district HQ)",
+        "town": "Hojai",
+        "district": "Hojai",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "jorhat": {
+        "lat": 26.7577925,
+        "lon": 94.2079645,
+        "name": "Jorhat (Jorhat district HQ)",
+        "town": "Jorhat",
+        "district": "Jorhat",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kamrup": {
+        "lat": 26.1861581,
+        "lon": 91.6699507,
+        "name": "Amingaon (Kamrup district HQ)",
+        "town": "Amingaon",
+        "district": "Kamrup",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kamrup metropolitan": {
+        "lat": 26.1805978,
+        "lon": 91.753943,
+        "name": "Guwahati (Kamrup Metropolitan district HQ)",
+        "town": "Guwahati",
+        "district": "Kamrup Metropolitan",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "karbi anglong": {
+        "lat": 25.8371941,
+        "lon": 93.4383663,
+        "name": "Diphu (Karbi Anglong district HQ)",
+        "town": "Diphu",
+        "district": "Karbi Anglong",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "karimganj": {
+        "lat": 24.5828196,
+        "lon": 92.3725487,
+        "name": "Karimganj (Karimganj district HQ)",
+        "town": "Karimganj",
+        "district": "Karimganj",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kokrajhar": {
+        "lat": 26.4912104,
+        "lon": 90.1215209,
+        "name": "Kokrajhar (Kokrajhar district HQ)",
+        "town": "Kokrajhar",
+        "district": "Kokrajhar",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lakhimpur": {
+        "lat": 27.254431,
+        "lon": 94.1120339,
+        "name": "North Lakhimpur (Lakhimpur district HQ)",
+        "town": "North Lakhimpur",
+        "district": "Lakhimpur",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "majuli": {
+        "lat": 26.7444419,
+        "lon": 94.2554996,
+        "name": "Garmur (Majuli district HQ)",
+        "town": "Garmur",
+        "district": "Majuli",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "morigaon": {
+        "lat": 26.2545556,
+        "lon": 92.3572669,
+        "name": "Morigaon (Morigaon district HQ)",
+        "town": "Morigaon",
+        "district": "Morigaon",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "nagaon": {
+        "lat": 26.3313646,
+        "lon": 92.7524763,
+        "name": "Nagaon (Nagaon district HQ)",
+        "town": "Nagaon",
+        "district": "Nagaon",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "nalbari": {
+        "lat": 26.3533632,
+        "lon": 91.3983662,
+        "name": "Nalbari (Nalbari district HQ)",
+        "town": "Nalbari",
+        "district": "Nalbari",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "sivasagar": {
+        "lat": 26.9834936,
+        "lon": 94.6394226,
+        "name": "Sivasagar (Sivasagar district HQ)",
+        "town": "Sivasagar",
+        "district": "Sivasagar",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "sonitpur": {
+        "lat": 26.6229928,
+        "lon": 92.7976082,
+        "name": "Tezpur (Sonitpur district HQ)",
+        "town": "Tezpur",
+        "district": "Sonitpur",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "south salmara mankachar": {
+        "lat": 25.7250428,
+        "lon": 89.9003208,
+        "name": "Hatsingimari (South Salmara Mankachar district HQ)",
+        "town": "Hatsingimari",
+        "district": "South Salmara Mankachar",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tinsukia": {
+        "lat": 27.4879722,
+        "lon": 95.3601855,
+        "name": "Tinsukia (Tinsukia district HQ)",
+        "town": "Tinsukia",
+        "district": "Tinsukia",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "udalguri": {
+        "lat": 26.7047238,
+        "lon": 92.0421507,
+        "name": "Udalguri (Udalguri district HQ)",
+        "town": "Udalguri",
+        "district": "Udalguri",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "west karbi anglong": {
+        "lat": 25.8449919,
+        "lon": 92.5748777,
+        "name": "Hamren (West Karbi Anglong district HQ)",
+        "town": "Hamren",
+        "district": "West Karbi Anglong",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    },
+    "manipur": {
+      "bishnupur": {
+        "lat": 24.6267287,
+        "lon": 93.7600454,
+        "name": "Bishnupur (Bishnupur district HQ)",
+        "town": "Bishnupur",
+        "district": "Bishnupur",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "chandel": {
+        "lat": 24.3312009,
+        "lon": 94.0011081,
+        "name": "Chandel (Chandel district HQ)",
+        "town": "Chandel",
+        "district": "Chandel",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "churachandpur": {
+        "lat": 24.3468839,
+        "lon": 93.6994143,
+        "name": "Churachandpur (Churachandpur district HQ)",
+        "town": "Churachandpur",
+        "district": "Churachandpur",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "imphal east": {
+        "lat": 24.8182604,
+        "lon": 93.9738738,
+        "name": "Porompat (Imphal East district HQ)",
+        "town": "Porompat",
+        "district": "Imphal East",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "imphal west": {
+        "lat": 24.800497,
+        "lon": 93.9130758,
+        "name": "Lamphelpat (Imphal West district HQ)",
+        "town": "Lamphelpat",
+        "district": "Imphal West",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "jiribam": {
+        "lat": 24.8023996,
+        "lon": 93.1165145,
+        "name": "Jiribam (Jiribam district HQ)",
+        "town": "Jiribam",
+        "district": "Jiribam",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kakching": {
+        "lat": 24.4974827,
+        "lon": 93.9835543,
+        "name": "Kakching (Kakching district HQ)",
+        "town": "Kakching",
+        "district": "Kakching",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kamjong": {
+        "lat": 24.8559107,
+        "lon": 94.5119827,
+        "name": "Kamjong (Kamjong district HQ)",
+        "town": "Kamjong",
+        "district": "Kamjong",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kangpokpi": {
+        "lat": 25.1527725,
+        "lon": 93.9713691,
+        "name": "Kangpokpi (Kangpokpi district HQ)",
+        "town": "Kangpokpi",
+        "district": "Kangpokpi",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "noney": {
+        "lat": 24.8591099,
+        "lon": 93.6325027,
+        "name": "Noney (Noney district HQ)",
+        "town": "Noney",
+        "district": "Noney",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "pherzawl": {
+        "lat": 24.2595653,
+        "lon": 93.1906004,
+        "name": "Pherzawl (Pherzawl district HQ)",
+        "town": "Pherzawl",
+        "district": "Pherzawl",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "senapati": {
+        "lat": 25.3933697,
+        "lon": 94.1501773,
+        "name": "Senapati (Senapati district HQ)",
+        "town": "Senapati",
+        "district": "Senapati",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tamenglong": {
+        "lat": 24.9858596,
+        "lon": 93.5039967,
+        "name": "Tamenglong (Tamenglong district HQ)",
+        "town": "Tamenglong",
+        "district": "Tamenglong",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tengnoupal": {
+        "lat": 24.2481189,
+        "lon": 94.3028748,
+        "name": "Moreh (Tengnoupal district HQ)",
+        "town": "Moreh",
+        "district": "Tengnoupal",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "thoubal": {
+        "lat": 24.6386954,
+        "lon": 93.996871,
+        "name": "Thoubal (Thoubal district HQ)",
+        "town": "Thoubal",
+        "district": "Thoubal",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "ukhrul": {
+        "lat": 25.0978641,
+        "lon": 94.3610713,
+        "name": "Ukhrul (Ukhrul district HQ)",
+        "town": "Ukhrul",
+        "district": "Ukhrul",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    },
+    "meghalaya": {
+      "east garo hills": {
+        "lat": 25.506085,
+        "lon": 90.60381,
+        "name": "Williamnagar (East Garo Hills district HQ)",
+        "town": "Williamnagar",
+        "district": "East Garo Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "east jaintia hills": {
+        "lat": 25.2453874,
+        "lon": 92.3194771,
+        "name": "Khliehriat (East Jaintia Hills district HQ)",
+        "town": "Khliehriat",
+        "district": "East Jaintia Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "east khasi hills": {
+        "lat": 25.5759931,
+        "lon": 91.8827872,
+        "name": "Shillong (East Khasi Hills district HQ)",
+        "town": "Shillong",
+        "district": "East Khasi Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "north garo hills": {
+        "lat": 25.889284,
+        "lon": 90.5853712,
+        "name": "Resubelpara (North Garo Hills district HQ)",
+        "town": "Resubelpara",
+        "district": "North Garo Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "ri bhoi": {
+        "lat": 25.8989839,
+        "lon": 91.8812907,
+        "name": "Nongpoh (Ri Bhoi district HQ)",
+        "town": "Nongpoh",
+        "district": "Ri Bhoi",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "south garo hills": {
+        "lat": 25.3610902,
+        "lon": 90.6434347,
+        "name": "Baghmara (South Garo Hills district HQ)",
+        "town": "Baghmara",
+        "district": "South Garo Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "south west garo hills": {
+        "lat": 25.4704958,
+        "lon": 89.9367062,
+        "name": "Ampati (South West Garo Hills district HQ)",
+        "town": "Ampati",
+        "district": "South West Garo Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "south west khasi hills": {
+        "lat": 25.3856983,
+        "lon": 91.3460148,
+        "name": "Mawkyrwat (South West Khasi Hills district HQ)",
+        "town": "Mawkyrwat",
+        "district": "South West Khasi Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "west garo hills": {
+        "lat": 25.5125616,
+        "lon": 90.2171526,
+        "name": "Tura (West Garo Hills district HQ)",
+        "town": "Tura",
+        "district": "West Garo Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "west jaintia hills": {
+        "lat": 25.4434703,
+        "lon": 92.1973181,
+        "name": "Jowai (West Jaintia Hills district HQ)",
+        "town": "Jowai",
+        "district": "West Jaintia Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "west khasi hills": {
+        "lat": 25.5726394,
+        "lon": 91.2540803,
+        "name": "Nongstoin (West Khasi Hills district HQ)",
+        "town": "Nongstoin",
+        "district": "West Khasi Hills",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    },
+    "mizoram": {
+      "aizawl": {
+        "lat": 23.7277631,
+        "lon": 92.7179947,
+        "name": "Aizawl (Aizawl district HQ)",
+        "town": "Aizawl",
+        "district": "Aizawl",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "champhai": {
+        "lat": 23.6317319,
+        "lon": 93.3493185,
+        "name": "Champhai (Champhai district HQ)",
+        "town": "Champhai",
+        "district": "Champhai",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kolasib": {
+        "lat": 24.1905469,
+        "lon": 92.7136595,
+        "name": "Kolasib (Kolasib district HQ)",
+        "town": "Kolasib",
+        "district": "Kolasib",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lawngtlai": {
+        "lat": 22.3913377,
+        "lon": 92.7397189,
+        "name": "Lawngtlai (Lawngtlai district HQ)",
+        "town": "Lawngtlai",
+        "district": "Lawngtlai",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "lunglei": {
+        "lat": 22.9519972,
+        "lon": 92.6336207,
+        "name": "Lunglei (Lunglei district HQ)",
+        "town": "Lunglei",
+        "district": "Lunglei",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "mamit": {
+        "lat": 23.7564387,
+        "lon": 92.4515374,
+        "name": "Mamit (Mamit district HQ)",
+        "town": "Mamit",
+        "district": "Mamit",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "saiha": {
+        "lat": 22.2876724,
+        "lon": 93.01336,
+        "name": "Saiha (Saiha district HQ)",
+        "town": "Saiha",
+        "district": "Saiha",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "serchhip": {
+        "lat": 23.3052514,
+        "lon": 92.8455124,
+        "name": "Serchhip (Serchhip district HQ)",
+        "town": "Serchhip",
+        "district": "Serchhip",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    },
+    "nagaland": {
+      "chumukedima": {
+        "lat": 25.8090286,
+        "lon": 93.788116,
+        "name": "Chumukedima (Chumukedima district HQ)",
+        "town": "Chumukedima",
+        "district": "Chumukedima",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "dimapur": {
+        "lat": 25.9041378,
+        "lon": 93.7177609,
+        "name": "Dimapur (Dimapur district HQ)",
+        "town": "Dimapur",
+        "district": "Dimapur",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kiphire": {
+        "lat": 25.8117088,
+        "lon": 94.8474036,
+        "name": "Kiphire (Kiphire district HQ)",
+        "town": "Kiphire",
+        "district": "Kiphire",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "kohima": {
+        "lat": 25.6618755,
+        "lon": 94.1019156,
+        "name": "Kohima (Kohima district HQ)",
+        "town": "Kohima",
+        "district": "Kohima",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "longleng": {
+        "lat": 26.5839315,
+        "lon": 94.8045481,
+        "name": "Longleng (Longleng district HQ)",
+        "town": "Longleng",
+        "district": "Longleng",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "mokokchung": {
+        "lat": 26.4795861,
+        "lon": 94.5105275,
+        "name": "Mokokchung (Mokokchung district HQ)",
+        "town": "Mokokchung",
+        "district": "Mokokchung",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "mon": {
+        "lat": 26.7252584,
+        "lon": 95.0304359,
+        "name": "Mon (Mon district HQ)",
+        "town": "Mon",
+        "district": "Mon",
+        "source": "Mon town, Mon district, Nagaland (OpenStreetMap town node)"
+      },
+      "niuland": {
+        "lat": 25.8504955,
+        "lon": 93.9180019,
+        "name": "Niuland (Niuland district HQ)",
+        "town": "Niuland",
+        "district": "Niuland",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "noklak": {
+        "lat": 26.1123947,
+        "lon": 95.0124041,
+        "name": "Noklak (Noklak district HQ)",
+        "town": "Noklak",
+        "district": "Noklak",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "peren": {
+        "lat": 25.4499691,
+        "lon": 93.6001738,
+        "name": "Peren (Peren district HQ)",
+        "town": "Peren",
+        "district": "Peren",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "phek": {
+        "lat": 25.6700924,
+        "lon": 94.3843925,
+        "name": "Phek (Phek district HQ)",
+        "town": "Phek",
+        "district": "Phek",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "shamator": {
+        "lat": 26.0714153,
+        "lon": 94.8745224,
+        "name": "Shamator (Shamator district HQ)",
+        "town": "Shamator",
+        "district": "Shamator",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tseminyu": {
+        "lat": 25.9266027,
+        "lon": 94.2088016,
+        "name": "Tseminyu (Tseminyu district HQ)",
+        "town": "Tseminyu",
+        "district": "Tseminyu",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tuensang": {
+        "lat": 26.2342107,
+        "lon": 94.741553,
+        "name": "Tuensang (Tuensang district HQ)",
+        "town": "Tuensang",
+        "district": "Tuensang",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "wokha": {
+        "lat": 26.242251,
+        "lon": 94.1921153,
+        "name": "Wokha (Wokha district HQ)",
+        "town": "Wokha",
+        "district": "Wokha",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "zunheboto": {
+        "lat": 26.0123803,
+        "lon": 94.5123719,
+        "name": "Zunheboto (Zunheboto district HQ)",
+        "town": "Zunheboto",
+        "district": "Zunheboto",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    },
+    "sikkim": {
+      "gangtok": {
+        "lat": 27.329046,
+        "lon": 88.6122673,
+        "name": "Gangtok (Gangtok district HQ)",
+        "town": "Gangtok",
+        "district": "Gangtok",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "mangan": {
+        "lat": 27.5167,
+        "lon": 88.5333,
+        "name": "Mangan (Mangan district HQ)",
+        "town": "Mangan",
+        "district": "Mangan",
+        "source": "SSDMA PPR: Mangan town at 27.52N 88.53E"
+      },
+      "namchi": {
+        "lat": 27.3031019,
+        "lon": 88.3785961,
+        "name": "Namchi (Namchi district HQ)",
+        "town": "Namchi",
+        "district": "Namchi",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "gyalshing": {
+        "lat": 27.4185174,
+        "lon": 88.1808338,
+        "name": "Gyalshing (Gyalshing district HQ)",
+        "town": "Gyalshing",
+        "district": "Gyalshing",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "pakyong": {
+        "lat": 27.228935,
+        "lon": 88.6471196,
+        "name": "Pakyong (Pakyong district HQ)",
+        "town": "Pakyong",
+        "district": "Pakyong",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "soreng": {
+        "lat": 27.1901652,
+        "lon": 88.2006735,
+        "name": "Soreng (Soreng district HQ)",
+        "town": "Soreng",
+        "district": "Soreng",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    },
+    "tripura": {
+      "dhalai": {
+        "lat": 23.8356166,
+        "lon": 91.8676613,
+        "name": "Ambassa (Dhalai district HQ)",
+        "town": "Ambassa",
+        "district": "Dhalai",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "gomati": {
+        "lat": 23.5416162,
+        "lon": 91.4917593,
+        "name": "Udaipur (Gomati district HQ)",
+        "town": "Udaipur",
+        "district": "Gomati",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "khowai": {
+        "lat": 23.9563913,
+        "lon": 91.642107,
+        "name": "Khowai (Khowai district HQ)",
+        "town": "Khowai",
+        "district": "Khowai",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "north tripura": {
+        "lat": 24.443968,
+        "lon": 92.2072581,
+        "name": "Dharmanagar (North Tripura district HQ)",
+        "town": "Dharmanagar",
+        "district": "North Tripura",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "sepahijala": {
+        "lat": 23.5984072,
+        "lon": 91.3591951,
+        "name": "Bishramganj (Sepahijala district HQ)",
+        "town": "Bishramganj",
+        "district": "Sepahijala",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "south tripura": {
+        "lat": 23.2182365,
+        "lon": 91.5199219,
+        "name": "Belonia (South Tripura district HQ)",
+        "town": "Belonia",
+        "district": "South Tripura",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "unakoti": {
+        "lat": 24.2784074,
+        "lon": 92.0039927,
+        "name": "Kailashahar (Unakoti district HQ)",
+        "town": "Kailashahar",
+        "district": "Unakoti",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "west tripura": {
+        "lat": 23.8312377,
+        "lon": 91.2823821,
+        "name": "Agartala (West Tripura district HQ)",
+        "town": "Agartala",
+        "district": "West Tripura",
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      }
+    }
+  }
+}

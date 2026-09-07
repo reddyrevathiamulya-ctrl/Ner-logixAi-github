@@ -6,33 +6,85 @@
     <title>NER-LogixAI Operations Console</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
-        :root { --ink:#17252b; --muted:#617078; --paper:#f5f1e8; --panel:#fffdf8; --teal:#0d6b68; --orange:#d56b3f; --line:#d9ddd5; }
+        :root {
+            --ink:#1c2b33; --muted:#5d6b74; --paper:#eef1ea; --panel:#ffffff;
+            --teal:#0d6b68; --teal-dark:#0a5654; --line:#dce2da;
+            --low:#2e8b57; --low-bg:#e9f5ee;
+            --moderate:#d99a1f; --moderate-bg:#fdf3dd;
+            --high:#d56b3f; --high-bg:#fdeee6;
+            --critical:#c0392b; --critical-bg:#fbeae7;
+            --ok:#2e8b57; --warn:#d99a1f; --bad:#c0392b;
+            --shadow:0 10px 32px rgba(20,40,45,.16);
+        }
         * { box-sizing:border-box; }
-        body { margin:0; color:var(--ink); background:var(--paper); font-family:Georgia,serif; }
+        body { margin:0; color:var(--ink); background:var(--paper); font-family:"Segoe UI",Arial,sans-serif; }
         #map { height:100vh; width:100%; }
-        .panel { position:absolute; z-index:1000; top:18px; left:18px; width:min(380px,calc(100vw - 36px)); max-height:calc(100vh - 36px); overflow:auto; padding:20px; background:rgba(255,253,248,.96); border:1px solid var(--line); box-shadow:0 14px 40px rgba(23,37,43,.18); }
-        h1 { margin:0; font-size:25px; } h2 { margin:22px 0 8px; font-size:16px; color:var(--teal); }
+        .panel { position:absolute; z-index:1000; top:14px; left:14px; width:min(390px,calc(100vw - 28px)); max-height:calc(100vh - 28px); overflow:auto; padding:18px 18px 22px; background:rgba(255,255,255,.97); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); }
+        h1 { margin:0; font-size:22px; letter-spacing:.2px; }
+        .subtitle { color:var(--muted); font-size:12.5px; line-height:1.45; margin:6px 0 4px; }
+        .status-pill { display:inline-flex; align-items:center; gap:7px; margin-top:10px; padding:6px 12px; border-radius:20px; font-size:12.5px; font-weight:700; background:var(--low-bg); color:var(--low); border:1px solid transparent; }
+        .status-pill .dot { width:9px; height:9px; border-radius:50%; background:currentColor; }
+        .status-pill.warn { background:var(--warn-bg,#fdf3dd); color:var(--warn); }
+        .status-pill.bad { background:var(--critical-bg); color:var(--critical); }
+        .status-pill.neutral { background:#eef1f3; color:var(--muted); }
+        h2 { margin:20px 0 8px; font-size:14px; color:var(--teal-dark); letter-spacing:.4px; text-transform:uppercase; }
         p { color:var(--muted); line-height:1.4; margin:6px 0 14px; }
-        label { display:block; margin:8px 0 5px; color:var(--muted); font:12px Arial,sans-serif; text-transform:uppercase; }
-        input,button { width:100%; min-height:40px; border:1px solid var(--line); padding:9px 11px; font:14px Arial,sans-serif; }
-        input { margin-bottom:8px; background:#fff; } button { margin-top:8px; cursor:pointer; color:white; background:var(--teal); border-color:var(--teal); font-weight:700; }
-        .result { margin-top:12px; padding:12px; background:#f0f4ef; font:13px Arial,sans-serif; line-height:1.5; }
-        .risk { display:inline-block; padding:3px 7px; color:white; background:var(--orange); font-weight:700; }
-        .metric { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:8px; } .metric div { padding:8px; background:white; border:1px solid var(--line); }
-        .metric strong { display:block; font-size:15px; } .small { color:var(--muted); font-size:11px; }
-        .alert { border-left:4px solid var(--orange); padding:7px 9px; margin-top:7px; background:#fff7ed; font:12px Arial,sans-serif; }
-        @media (max-width:600px) { .panel { top:10px; left:10px; width:calc(100vw - 20px); max-height:72vh; } }
+        label { display:block; margin:8px 0 5px; color:var(--muted); font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; }
+        input, select, button { width:100%; min-height:40px; border:1px solid var(--line); padding:9px 11px; font:14px "Segoe UI",Arial,sans-serif; border-radius:8px; }
+        input, select { margin-bottom:8px; background:#fff; }
+        input:focus, select:focus { outline:2px solid rgba(13,107,104,.25); border-color:var(--teal); }
+        button { margin-top:8px; cursor:pointer; color:white; background:var(--teal); border-color:var(--teal); font-weight:700; transition:background .15s; }
+        button:hover { background:var(--teal-dark); }
+        .result { margin-top:12px; font-size:13px; line-height:1.5; }
+        .result[hidden] { display:none; }
+        /* Verdict banner */
+        .verdict { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; font-weight:700; font-size:15px; color:#fff; }
+        .verdict .big { font-size:26px; line-height:1; }
+        .verdict small { display:block; font-weight:400; font-size:12px; opacity:.92; margin-top:2px; }
+        .verdict.low { background:var(--low); } .verdict.moderate { background:var(--moderate); }
+        .verdict.high { background:var(--high); } .verdict.critical { background:var(--critical); }
+        /* Risk metric grid */
+        .metric { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+        .metric div { padding:9px 10px; background:#fff; border:1px solid var(--line); border-left:4px solid var(--muted); border-radius:8px; }
+        .metric div.low { border-left-color:var(--low); }
+        .metric div.moderate { border-left-color:var(--moderate); }
+        .metric div.high { border-left-color:var(--high); }
+        .metric div.critical { border-left-color:var(--critical); }
+        .metric strong { display:block; font-size:14.5px; color:var(--ink); }
+        .metric .lbl { color:var(--muted); font-size:11px; text-transform:capitalize; }
+        .metric .chip { display:inline-block; margin-left:4px; padding:1px 6px; border-radius:10px; font-size:10px; font-weight:700; color:#fff; }
+        .metric .chip.low { background:var(--low); } .metric .chip.moderate { background:var(--moderate); }
+        .metric .chip.high { background:var(--high); } .metric .chip.critical { background:var(--critical); }
+        .small { color:var(--muted); font-size:11px; }
+        .muted { color:var(--muted); }
+        .kv { display:flex; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px dashed #e4e9e2; font-size:12.5px; }
+        .kv b { font-weight:600; }
+        .note { margin-top:10px; padding:9px 11px; background:#f6f8f4; border:1px solid var(--line); border-radius:8px; font-size:11.5px; color:var(--muted); }
+        .note.warn { background:var(--warn-bg,#fdf3dd); border-color:#f0dcae; color:#8a6a12; }
+        .alert { border-left:4px solid var(--orange,#d56b3f); padding:7px 9px; margin-top:7px; background:#fff7ed; border-radius:6px; font-size:12px; }
+        .stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0; }
+        .stat { background:#f6f8f4; border:1px solid var(--line); border-radius:8px; padding:8px; text-align:center; }
+        .stat b { display:block; font-size:16px; }
+        .stat span { font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+        .route-legend { display:flex; gap:12px; margin-top:8px; font-size:11px; color:var(--muted); }
+        .route-legend i { display:inline-block; width:22px; height:4px; border-radius:2px; margin-right:4px; vertical-align:middle; }
+        .errorbox { background:var(--critical-bg); border:1px solid #ecc9c3; color:var(--critical); padding:10px 12px; border-radius:8px; font-size:12.5px; }
+        .loading { color:var(--muted); font-size:12.5px; }
+        @media (max-width:600px) { .panel { top:8px; left:8px; width:calc(100vw - 16px); max-height:74vh; } }
     </style>
 </head>
 <body>
     <aside class="panel">
         <h1>NER-LogixAI</h1>
-        <p>Decision support for essential-goods movement, emergency access, and safer travel across the North Eastern Region.</p>
+        <p class="subtitle">Decision support for essential-goods movement, emergency access, and safer travel across the North Eastern Region.</p>
+        <span id="systemStatus" class="status-pill neutral"><span class="dot"></span>Checking live sources…</span>
+
         <h2>Check a location</h2>
         <label for="location">Place, village, or district</label>
         <input id="location" placeholder="Shillong, Meghalaya">
         <button id="locationBtn">Assess location risk</button>
         <div id="locationResult" class="result" hidden></div>
+
         <h2>Analyze a delivery route</h2>
         <input id="start" placeholder="From: Guwahati">
         <input id="destination" placeholder="To: Shillong">
@@ -52,6 +104,7 @@
         </select>
         <button id="routeBtn">Analyze route</button>
         <div id="routeResult" class="result" hidden></div>
+
         <h2>Live operations</h2>
         <div id="status" class="small">Loading source status...</div>
         <div id="alerts"></div>
@@ -63,10 +116,39 @@
         const map = L.map("map").setView([25.5, 93.5], 7);
         const street = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution:"© OpenStreetMap contributors" }).addTo(map);
         const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { attribution:"© Esri" });
-        L.control.layers({ "Street map":street, "Satellite":satellite }).addTo(map);
+        const layerControl = L.control.layers({ "Street map":street, "Satellite":satellite }).addTo(map);
+        // NASA GIBS satellite layers (real acquisition dates from /satellite/layers)
+        fetch("http://127.0.0.1:8000/satellite/layers").then(r => r.json()).then(data => {
+            (data.layers || []).forEach(layer => {
+                const template = (layer.tile_url_template || "").replace("{z}", "{z}").replace("{y}", "{y}").replace("{x}", "{x}");
+                if (!template) return;
+                const gibs = L.tileLayer(template, {
+                    attribution: "© NASA GIBS",
+                    maxZoom: 9,
+                    maxNativeZoom: 9,
+                    opacity: 0.85
+                });
+                const label = `${layer.name} · ${layer.date}`;
+                layerControl.addOverlay(gibs, label);
+            });
+        }).catch(() => { /* satellite layers unavailable; base layers still work */ });
         let routeLayer;
         const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char]));
         async function getJson(path, options) { const response = await fetch(`http://127.0.0.1:8000${path}`, options); if (!response.ok) throw new Error(`${response.status}: ${await response.text()}`); return response.json(); }
+
+        // ---- Risk level helpers ----
+        const RISK = { "Low": { cls:"low", icon:"✓" }, "Moderate": { cls:"moderate", icon:"⚠" }, "High": { cls:"high", icon:"⚠" }, "Very High": { cls:"critical", icon:"✕" } };
+        function riskClass(level) { return (RISK[level] || { cls:"moderate" }).cls; }
+        function riskIcon(level) { return (RISK[level] || { cls:"moderate", icon:"⚠" }).icon; }
+        function verdictBanner(level, score, subtitle) {
+            const info = RISK[level] || { cls:"moderate", icon:"⚠" };
+            return `<div class="verdict ${info.cls}"><span class="big">${info.icon}</span><span>${escapeHtml(level)} risk${score != null ? ` · ${escapeHtml(score)} / 100` : ""}<small>${escapeHtml(subtitle || "")}</small></span></div>`;
+        }
+        function metricCard(name, item) {
+            const cls = riskClass(item.risk);
+            return `<div class="${cls}"><strong>${escapeHtml(item.risk)} · ${escapeHtml(item.score)}</strong><span class="lbl">${escapeHtml(name.replaceAll("_"," "))}</span> <span class="chip ${cls}">${riskIcon(item.risk)}</span></div>`;
+        }
+
         async function loadMapData() {
             try { const states = await getJson("/geojson"); L.geoJSON(states, { style:{ color:"#0d6b68", weight:1.5, fillOpacity:.04 } }).addTo(map); } catch (error) { console.warn(error); }
             try { const reports = await getJson("/reports.geojson"); L.geoJSON(reports, { pointToLayer:(feature, latlng) => L.circleMarker(latlng, { radius:7, color:"#d56b3f", fillOpacity:.85 }), onEachFeature:(feature, layer) => layer.bindPopup(`<b>${escapeHtml(feature.properties.incident_type)}</b><br>${escapeHtml(feature.properties.description)}<br>Status: ${escapeHtml(feature.properties.status)}`) }).addTo(map); } catch (error) { console.warn(error); }
@@ -74,17 +156,70 @@
         }
         async function loadOperations() {
             try { const data = await getJson("/data/status"); const sources = Object.values(data.sources).map(source => `${escapeHtml(source.name)}: ${escapeHtml(source.freshness)}`).join(" · "); document.getElementById("status").innerHTML = `Checked ${escapeHtml(data.generated_at)}<br>${sources}`; } catch (error) { document.getElementById("status").textContent = "Source status unavailable"; }
-            try { const data = await getJson("/alerts"); document.getElementById("alerts").innerHTML = data.alerts.length ? data.alerts.map(alert => `<div class="alert"><b>${escapeHtml(alert.title)}</b><br>${escapeHtml(alert.message)}<br><span class="small">${escapeHtml(alert.severity)} · ${escapeHtml(alert.status)}</span></div>`).join("") : "<div class='small'>No active alerts.</div>"; } catch (error) { document.getElementById("alerts").textContent = "Alerts unavailable"; }
-            try { const data = await getJson("/districts/accessibility"); const attention = data.states.filter(state => state.risk_level === "High" || state.risk_level === "Very High").slice(0, 4); document.getElementById("districts").innerHTML = `<h2>District watch</h2>${attention.length ? attention.map(state => `${escapeHtml(state.state)}: ${escapeHtml(state.risk_level)} · accessibility ${escapeHtml(state.accessibility_score)}`).join("<br>") : "No high-risk district evidence currently matched."}<br><span class="small">${escapeHtml(data.warning)}</span>`; } catch (error) { document.getElementById("districts").textContent = "District status unavailable"; }
+            try { const data = await getJson("/alerts"); document.getElementById("alerts").innerHTML = data.alerts.length ? data.alerts.map(alert => `<div class="alert"><b>${escapeHtml(alert.title)}</b><br>${escapeHtml(alert.message)}<br><span class="small">${escapeHtml(alert.severity)} · ${escapeHtml(alert.status)}</span></div>`).join("") : "<div class='small'>No active alerts.</div>"; const hasCritical = data.alerts.some(a => ["high","critical"].includes(String(a.severity).toLowerCase())); const pill = document.getElementById("systemStatus"); if (hasCritical) { pill.className = "status-pill bad"; pill.innerHTML = '<span class="dot"></span>Active high-severity alert'; } else { pill.className = "status-pill low"; pill.innerHTML = '<span class="dot"></span>Systems nominal'; } } catch (error) { document.getElementById("alerts").textContent = "Alerts unavailable"; }
+            try { const data = await getJson("/districts/accessibility"); const attention = data.states.filter(state => state.risk_level === "High" || state.risk_level === "Very High").slice(0, 4); document.getElementById("districts").innerHTML = `<h2>District watch</h2>${attention.length ? attention.map(state => `<div class="kv"><b>${escapeHtml(state.state)}</b><span>${escapeHtml(state.risk_level)} · accessibility ${escapeHtml(state.accessibility_score)}</span></div>`).join("") : "<div class='muted'>No high-risk district evidence currently matched.</div>"}<p class="small">${escapeHtml(data.warning)}</p>`; } catch (error) { document.getElementById("districts").textContent = "District status unavailable"; }
         }
+
         document.getElementById("locationBtn").onclick = async () => {
-            const location = document.getElementById("location").value.trim(); const output = document.getElementById("locationResult"); output.hidden = false; output.textContent = "Assessing weather, terrain, and nearby evidence...";
-            try { const data = await getJson("/location/analyze", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ location }) }); map.setView([data.place.lat, data.place.lon], 11); L.marker([data.place.lat, data.place.lon]).addTo(map).bindPopup(escapeHtml(data.place.name)).openPopup(); const metrics = Object.entries(data.risks).map(([name,item]) => `<div><strong>${escapeHtml(item.risk)} · ${escapeHtml(item.score)}</strong>${escapeHtml(name.replaceAll("_"," "))}</div>`).join(""); const terrain = data.terrain?.local_relief_m == null ? "Terrain relief unavailable" : `Local relief: ${escapeHtml(data.terrain.local_relief_m)} m`; const coverage = data.data_coverage || {}; output.innerHTML = `<b>${escapeHtml(data.place.name)}</b><br><span class="risk">${escapeHtml(data.overall_risk)} · ${escapeHtml(data.overall_score)} / 100</span><div class="metric">${metrics}</div><p class="small">${terrain}<br>Confidence: ${Math.round(data.confidence * 100)}% · Matched evidence: ${data.nearby_evidence_count}<br>Catalog coverage: ${escapeHtml(coverage.catalog_record_count || 0)} records · ${escapeHtml(coverage.point_record_count || 0)} point-located</p><p class="small">${data.warnings.map(escapeHtml).join("<br>")}</p>`; } catch (error) { output.innerHTML = `<span class="risk">Unable to assess</span><br>${escapeHtml(error.message)}`; }
+            const location = document.getElementById("location").value.trim();
+            const output = document.getElementById("locationResult");
+            if (!location) { output.hidden = false; output.innerHTML = `<div class="errorbox">Please enter a place name first.</div>`; return; }
+            output.hidden = false; output.innerHTML = `<div class="loading">Assessing weather, terrain, river level, and nearby evidence…</div>`;
+            try {
+                const data = await getJson("/location/analyze", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ location }) });
+                map.setView([data.place.lat, data.place.lon], 11);
+                L.marker([data.place.lat, data.place.lon]).addTo(map).bindPopup(escapeHtml(data.place.name)).openPopup();
+                const metrics = Object.entries(data.risks).map(([name,item]) => metricCard(name, item)).join("");
+                // At-a-glance problem list: every risk above Low
+                const concerns = Object.entries(data.risks).filter(([,item]) => item.risk !== "Low");
+                const concernLine = concerns.length
+                    ? `<div class="note warn">⚠ ${concerns.map(([name,item]) => `${escapeHtml(name.replaceAll("_"," "))}: ${escapeHtml(item.risk)} (${escapeHtml(item.score)})`).join(" · ")}</div>`
+                    : `<div class="note">✓ No elevated risks at this location right now.</div>`;
+                const terrain = data.terrain?.local_relief_m == null ? "Terrain relief unavailable" : `Local relief: ${escapeHtml(data.terrain.local_relief_m)} m`;
+                const live = data.live_estimates || {};
+                const liveLine = live.rainfall_24h_mm == null ? "Live rainfall: unavailable" : `Live rainfall: ${escapeHtml(live.rainfall_24h_mm)} mm / 24 h`;
+                const river = live.river_flood;
+                const riverLine = river && river.discharge_m3s != null ? `River discharge: ${escapeHtml(river.discharge_m3s)} m³/s (river p90 ${escapeHtml(river.p90_m3s)} m³/s) · ${escapeHtml(river.source || "GloFAS")}` : "";
+                output.innerHTML =
+                    `<div class="kv"><b>${escapeHtml(data.place.name)}</b></div>` +
+                    verdictBanner(data.overall_risk, data.overall_score, "Combined risk from weather, terrain, river level, and recorded hazards") +
+                    `<div class="metric">${metrics}</div>` +
+                    concernLine +
+                    `<div class="note">${terrain}<br>${liveLine}${riverLine ? `<br>${riverLine}` : ""}<br>Confidence: ${Math.round(data.confidence * 100)}% · Evidence matched: ${data.nearby_evidence_count}</div>` +
+                    (data.warnings && data.warnings.length ? `<p class="small muted">${data.warnings.map(escapeHtml).join("<br>")}</p>` : "");
+            } catch (error) { output.innerHTML = `<div class="errorbox"><b>Unable to assess</b><br>${escapeHtml(error.message)}</div>`; }
         };
+
         document.getElementById("routeBtn").onclick = async () => {
-            const output = document.getElementById("routeResult"); output.hidden = false; output.textContent = "Analyzing route segments...";
-            try { const data = await getJson("/route/analyze", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ start:document.getElementById("start").value.trim(), destination:document.getElementById("destination").value.trim(), cargo_type:document.getElementById("cargoType").value, priority:document.getElementById("priority").value }) }); if (routeLayer) map.removeLayer(routeLayer); routeLayer = L.geoJSON(data.route.geometry, { style:{ color:"#d56b3f", weight:5 } }).addTo(map); map.fitBounds(routeLayer.getBounds()); const segment = data.route.segment_risk?.highest_risk; const evidence = data.route.segment_risk?.evidence_summary; const evidenceText = evidence ? `Historical evidence: ${escapeHtml(evidence.historical_hazard_count)} · Current reports: ${escapeHtml(evidence.current_incident_count)} · Verified incidents: ${escapeHtml(evidence.verified_current_incident_count)}<br>${evidence.current_closure_confirmed ? "Verified current incident found; avoid until cleared." : "No verified current closure found; verify locally before departure."}` : "Evidence summary unavailable"; const recommendation = data.route_recommendation?.reason || "Best available route selected."; const decision = data.safety_decision || {}; output.innerHTML = `<b>${escapeHtml(data.start.name)} → ${escapeHtml(data.destination.name)}</b><br><span class="risk">${escapeHtml(decision.status || "Route assessed")}</span><br>${escapeHtml(decision.message || "Review the evidence before departure.")}<br><span class="risk">Recommended route</span><br>${escapeHtml(data.route_recommendation.priority)} ${escapeHtml(data.route_recommendation.cargo_type)}<br>${escapeHtml(recommendation)}<br>Weather safety: ${escapeHtml(data.safety_score)} / 100<br>Risk estimate: ${escapeHtml(data.risk_level)}<br>Checked segments: ${escapeHtml(decision.checked_route_segments || 0)} · Danger segments: ${escapeHtml(decision.danger_segment_count || 0)}<br>Distance: ${escapeHtml(data.route.distance_text)} · ${escapeHtml(data.route.duration_text)}<br>${evidenceText}<br>${segment ? `Highest segment: ${escapeHtml(segment.risk_level)} (${escapeHtml(segment.risk_score)})<br>${segment.evidence.map(escapeHtml).join(" · ")}` : "Segment analysis unavailable"}`; } catch (error) { output.innerHTML = `<span class="risk">Route unavailable</span><br>${escapeHtml(error.message)}`; }
+            const output = document.getElementById("routeResult");
+            const start = document.getElementById("start").value.trim();
+            const destination = document.getElementById("destination").value.trim();
+            if (!start || !destination) { output.hidden = false; output.innerHTML = `<div class="errorbox">Enter both a starting place and a destination.</div>`; return; }
+            output.hidden = false; output.innerHTML = `<div class="loading">Analyzing route segments…</div>`;
+            try {
+                const data = await getJson("/route/analyze", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ start, destination, cargo_type:document.getElementById("cargoType").value, priority:document.getElementById("priority").value }) });
+                if (routeLayer) map.removeLayer(routeLayer);
+                routeLayer = L.geoJSON(data.route.geometry, { style:{ color:"#d56b3f", weight:5 } }).addTo(map);
+                map.fitBounds(routeLayer.getBounds());
+                const segment = data.route.segment_risk?.highest_risk;
+                const evidence = data.route.segment_risk?.evidence_summary;
+                const decision = data.safety_decision || {};
+                const statusMap = { avoid_verified_incident:{ cls:"critical", icon:"✕", title:"Do not take this route" }, high_caution:{ cls:"high", icon:"⚠", title:"Use high caution" }, no_verified_closure:{ cls:"moderate", icon:"⚠", title:"No verified closure found" } };
+                const st = statusMap[decision.status] || { cls:"moderate", icon:"⚠", title:"Route assessed" };
+                const evidenceText = evidence ? `${escapeHtml(evidence.historical_hazard_count)} historical · ${escapeHtml(evidence.current_incident_count)} current · ${escapeHtml(evidence.verified_current_incident_count)} verified` : "Evidence summary unavailable";
+                const recommendation = data.route_recommendation?.reason || "Best available route selected.";
+                output.innerHTML =
+                    `<div class="kv"><b>${escapeHtml(data.start.name)} → ${escapeHtml(data.destination.name)}</b></div>` +
+                    `<div class="verdict ${st.cls}"><span class="big">${st.icon}</span><span>${escapeHtml(st.title)}<small>${escapeHtml(decision.message || "Review the evidence before departure.")}</small></span></div>` +
+                    `<div class="stat-row"><div class="stat"><b>${escapeHtml(data.route.distance_text)}</b><span>Distance</span></div><div class="stat"><b>${escapeHtml(data.route.duration_text)}</b><span>Travel time</span></div><div class="stat"><b>${escapeHtml(decision.danger_segment_count || 0)}</b><span>Danger seg.</span></div></div>` +
+                    `<div class="kv"><b>Recommended route</b><span>${escapeHtml(data.route_recommendation.priority)} ${escapeHtml(data.route_recommendation.cargo_type)}</span></div>` +
+                    `<p class="small muted">${escapeHtml(recommendation)}</p>` +
+                    `<div class="note"><b>Weather safety:</b> ${escapeHtml(data.safety_score)} / 100 · <b>Risk:</b> ${escapeHtml(data.risk_level)}<br><b>Segments checked:</b> ${escapeHtml(decision.checked_route_segments || 0)} · <b>Evidence:</b> ${evidenceText}</div>` +
+                    (segment ? `<div class="note warn"><b>Highest-risk segment:</b> ${escapeHtml(segment.risk_level)} (${escapeHtml(segment.risk_score)})<br><span class="small">${segment.evidence.map(escapeHtml).join(" · ")}</span></div>` : "") +
+                    (evidence && evidence.current_closure_confirmed ? `<div class="note warn">⚠ ${escapeHtml(decision.message || "Verified current incident found; avoid until cleared.")}</div>` : "");
+            } catch (error) { output.innerHTML = `<div class="errorbox"><b>Route unavailable</b><br>${escapeHtml(error.message)}</div>`; }
         };
+
         loadMapData(); loadOperations(); setInterval(loadOperations, 30000);
     </script>
 <!--
@@ -223,4 +358,4 @@
 })();
 </script>
 </body>
-</html>
+</html>

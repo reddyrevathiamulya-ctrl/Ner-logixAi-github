@@ -9,13 +9,53 @@ from typing import Any
 import requests
 
 from backend.services.incident_reports import list_reports
+from backend.gis.ner_places import list_places, normalize, lookup_place
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 RAW_DIR = BASE_DIR / "data" / "raw"
 HAZARD_RADIUS_KM = 15.0
+EXTENDED_HAZARD_RADIUS_KM = 30.0
+DISTRICT_ANCHOR_RADIUS_KM = 60.0
 MAX_SEGMENTS = 24
 ELEVATION_URL = "https://api.open-meteo.com/v1/elevation"
+
+
+_DISTRICT_ANCHORS: list[dict] | None = None
+
+
+def district_anchors() -> list[dict]:
+    """Spatial anchors (district HQ coords) for district-level hazard records.
+
+    Curated for NER places where Nominatim has no town-level record; the
+    fallback entry allows any district name to be resolved later by
+    geocoding. Records without an anchor stay text-only matches.
+    """
+    global _DISTRICT_ANCHORS
+    if _DISTRICT_ANCHORS is None:
+        anchors = []
+        for place in list_places():
+            anchors.append(
+                {
+                    "district": normalize(place["name"].split(" (")[0]),
+                    "name": place["name"],
+                    "latitude": place["lat"],
+                    "longitude": place["lon"],
+                    "source": "curated NER reference table",
+                }
+            )
+        _DISTRICT_ANCHORS = anchors
+    return _DISTRICT_ANCHORS
+
+
+def _anchor_for_district(district: str) -> dict | None:
+    if not isinstance(district, str) or not district.strip():
+        return None
+    normalized_district = normalize(district)
+    for anchor in district_anchors():
+        if anchor["district"] in normalized_district or normalized_district in anchor["district"]:
+            return anchor
+    return None
 
 
 def _haversine_km(first: list[float], second: list[float]) -> float:
@@ -207,7 +247,9 @@ def _event_weight(event_date: Any) -> float:
         try:
             event = datetime.strptime(event_date[:16], format_string).replace(tzinfo=timezone.utc)
             age_years = max(0.0, (datetime.now(timezone.utc) - event).days / 365.25)
-            return max(0.2, math.exp(-age_years / 18.0))
+            # Floor of 0.35 keeps documented historical events meaningful;
+            # a flat 0.2 floor makes every pre-2000 record nearly weightless.
+            return max(0.35, math.exp(-age_years / 18.0))
         except ValueError:
             continue
     return 0.5
@@ -277,11 +319,15 @@ def analyze_location(
     weather_safety_score: float,
     hazards: list[dict[str, Any]],
     location_text: str = "",
+    rainfall_24h_mm: float | None = None,
+    river_flood: dict | None = None,
 ) -> dict[str, Any]:
     """Build an evidence-based risk profile for one map location.
 
-    Boulder/rockfall is a terrain and nearby-hazard susceptibility proxy; it
-    is not a confirmed object detection.
+    Risk blends recorded evidence (historical catalog + current field
+    reports) with a live rainfall/terrain susceptibility model. The model
+    uses real observed rainfall from Open-Meteo and real elevation relief;
+    it is an estimate, never an invented incident record.
     """
     point = [longitude, latitude]
     nearby = [
@@ -289,8 +335,27 @@ def analyze_location(
         if hazard.get("latitude") is not None
         and hazard.get("longitude") is not None
         and _haversine_km(point, [hazard["longitude"], hazard["latitude"]])
-        <= HAZARD_RADIUS_KM
+        <= EXTENDED_HAZARD_RADIUS_KM
     ]
+
+    # District-level records (no coordinates) get anchored to their
+    # district-HQ coordinates so they count as spatial evidence.
+    anchored = []
+    for hazard in hazards:
+        if hazard.get("latitude") is not None or hazard.get("resolution") != "district_or_state":
+            continue
+        anchor = _anchor_for_district(hazard.get("district") or "")
+        if anchor is None:
+            continue
+        distance_km = _haversine_km(point, [anchor["longitude"], anchor["latitude"]])
+        if distance_km <= DISTRICT_ANCHOR_RADIUS_KM:
+            anchored_hazard = dict(hazard)
+            anchored_hazard["latitude"] = anchor["latitude"]
+            anchored_hazard["longitude"] = anchor["longitude"]
+            anchored_hazard["anchor_distance_km"] = distance_km
+            anchored_hazard["resolution"] = "district_anchor"
+            anchored.append(anchored_hazard)
+    nearby.extend(anchored)
     district_matches = [
         hazard for hazard in hazards
         if hazard.get("resolution") == "district_or_state"
@@ -323,32 +388,102 @@ def analyze_location(
         if hazard.get("hazard_type") in {"landslide", "rockfall", "boulder"}
     ]
     terrain_relief_score = _relief_score(local_relief_m)
-    historical_rock_score = min(100.0, len(rock_records) * 15.0)
+    historical_rock_score = min(
+        100.0,
+        sum(
+            15.0
+            * max(
+                0.25,
+                1.0
+                - _haversine_km(point, [record["longitude"], record["latitude"]])
+                / EXTENDED_HAZARD_RADIUS_KM,
+            )
+            for record in rock_records[:12]
+        ),
+    )
+    observed_landslide_score = min(
+        100.0,
+        sum(
+            15.0 * _event_weight(record.get("event_date"))
+            * _resolution_weight(record, location_text)
+            for record in sorted(
+                landslide_records,
+                key=lambda r: r.get("event_date") or "",
+                reverse=True,
+            )[:12]
+        ),
+    )
+
+    # ---- Live rainfall + terrain susceptibility model (real data) ----
+    # Rainfall-triggered landslide susceptibility: steep terrain (relief)
+    # scales how dangerous accumulated rain is. Flat ground stays 0 even in
+    # heavy rain. Rainfall is the live Open-Meteo 24h accumulation.
+    rainfall_available = rainfall_24h_mm is not None
+    rainfall_intensity = min(1.0, (rainfall_24h_mm or 0.0) / 80.0)
+    steepness_factor = min(1.0, terrain_relief_score / 100.0)
+    live_landslide_estimate = round(
+        100.0 * rainfall_intensity * (0.6 + 0.4 * steepness_factor),
+        1,
+    )
+
+    # Historical/observed flood evidence, including district-anchored
+    # records. Anchored records carry a distance penalty.
+    district_flood_weight = sum(
+        15.0
+        * _event_weight(record.get("event_date"))
+        * (0.6 if record.get("resolution") == "district_anchor" else 1.0)
+        * max(
+            0.5,
+            1.0 - record.get("anchor_distance_km", 0.0) / DISTRICT_ANCHOR_RADIUS_KM,
+        )
+        for record in flood_records[:12]
+    )
+    observed_flood_score = min(100.0, district_flood_weight)
+    # Live rainfall raises flood concern independent of catalog coverage.
+    live_flood_estimate = round(
+        0.6 * min(100.0, rainfall_intensity * 100.0)
+        + 0.4 * observed_flood_score,
+        1,
+    )
+
+    # Live river-discharge signal (GloFAS). Discharge at/above the
+    # 90th percentile of the river's own recent history raises flood
+    # concern; p98+ is treated as high.
+    river_flood_score = 0.0
+    river_flood_detail = None
+    if river_flood and isinstance(river_flood, dict):
+        today = river_flood.get("discharge_today_m3s")
+        p90 = river_flood.get("p90_m3s")
+        p98 = river_flood.get("p98_m3s")
+        p99 = river_flood.get("p99_m3s")
+        if isinstance(today, (int, float)) and isinstance(p90, (int, float)) and p90 > 0:
+            if isinstance(p98, (int, float)) and today >= p98:
+                ratio = (today - p98) / max(1.0, p99 - p98) if isinstance(p99, (int, float)) and p99 > p98 else 0.5
+                river_flood_score = min(100.0, 75.0 + 25.0 * max(0.0, ratio))
+            elif today >= p90:
+                river_flood_score = 40.0 + 35.0 * (today - p90) / max(1.0, p98 - p90)
+            else:
+                river_flood_score = 25.0 * max(0.0, today) / p90
+            river_flood_detail = {
+                "discharge_m3s": round(today, 1),
+                "p90_m3s": round(p90, 1),
+                "p98_m3s": round(p98, 1) if isinstance(p98, (int, float)) else None,
+                "source": river_flood.get("source", "GloFAS"),
+            }
+
     landslide_score = min(
-    100.0,
-    sum(
-        15.0 * _event_weight(record.get("event_date"))
-        * _resolution_weight(record, location_text)
-        for record in sorted(
-            landslide_records,
-            key=lambda r: r.get("event_date") or "",
-            reverse=True,
-        )[:12]
-    ),
-)
-    flood_score = min(
-    100.0,
-    sum(
-        15.0 * _event_weight(record.get("event_date"))
-        * _resolution_weight(record, location_text)
-        for record in sorted(
-            flood_records,
-            key=lambda r: r.get("event_date") or "",
-            reverse=True,
-        )[:12]
-    ),
-)
-    
+        100.0,
+        0.6 * observed_landslide_score + 0.4 * live_landslide_estimate,
+    )
+    if river_flood_score > 0:
+        flood_score = min(
+            100.0,
+            0.4 * observed_flood_score
+            + 0.3 * live_flood_estimate
+            + 0.3 * river_flood_score,
+        )
+    else:
+        flood_score = min(100.0, 0.5 * observed_flood_score + 0.5 * live_flood_estimate)
 
     incident_score = min(100.0, len(current) * 25.0)
     weather_score = max(0.0, min(100.0, 100.0 - weather_safety_score))
@@ -370,22 +505,37 @@ def analyze_location(
     warnings = []
     if weather_score > 0:
         evidence.append("Current weather conditions")
+    if rainfall_available and (rainfall_24h_mm or 0) > 0:
+        evidence.append(
+            f"Live rainfall: {rainfall_24h_mm:.0f} mm in the last 24 h (Open-Meteo)"
+        )
     if landslide_records:
-        evidence.append("Historical landslide evidence within 15 km")
+        evidence.append("Historical landslide evidence within 30 km")
     if flood_records:
-        evidence.append("Historical flood evidence within 15 km")
+        evidence.append("Historical flood evidence within 30 km")
+    if river_flood_score > 0 and river_flood_detail:
+        evidence.append(
+            f"Live river discharge {river_flood_detail['discharge_m3s']} m³/s "
+            f"vs p90 {river_flood_detail['p90_m3s']} m³/s (GloFAS)"
+        )
+    if any(record.get("resolution") == "district_anchor" for record in flood_records):
+        evidence.append("District-level flood records anchored to district HQ coordinates")
     if district_level_matches:
         evidence.append("District-level historical flood evidence matched by place text")
     if state_level_matches:
         evidence.append("State-level historical flood evidence matched by place text")
     if current:
-        evidence.append("Current field reports within 15 km")
+        evidence.append("Current field reports within 30 km")
     if elevation is not None:
         evidence.append("Open-Meteo local elevation neighborhood available")
     else:
         warnings.append("Elevation data unavailable; terrain confidence is reduced")
-    if not landslide_records:
+    if not landslide_records and live_landslide_estimate <= 0:
         warnings.append("No nearby historical landslide record was found")
+    if live_landslide_estimate > 0:
+        warnings.append(
+            "Landslide score includes a live rainfall+terrain estimate, not a recorded event"
+        )
     warnings.append(
         "Boulder risk is a terrain susceptibility estimate, not live object detection"
     )
@@ -419,6 +569,18 @@ def analyze_location(
             "boulder_or_rockfall": {"score": round(boulder_score, 1), "risk": _risk_level(boulder_score)},
             "flood": {"score": round(flood_score, 1), "risk": _risk_level(flood_score)},
             "current_incident": {"score": round(incident_score, 1), "risk": _risk_level(incident_score)},
+        },
+        "live_estimates": {
+            "rainfall_24h_mm": round(rainfall_24h_mm, 1) if rainfall_available else None,
+            "landslide": {
+                "score": live_landslide_estimate,
+                "basis": "live rainfall (Open-Meteo 24h) + terrain relief (Open-Meteo elevation)",
+            },
+            "flood": {
+                "score": live_flood_estimate,
+                "basis": "live rainfall (Open-Meteo 24h) + observed district flood evidence",
+            },
+            "river_flood": river_flood_detail,
         },
         "nearby_evidence_count": len(nearby),
         "current_incident_count": len(current),
