@@ -85,7 +85,142 @@
             const output = document.getElementById("routeResult"); output.hidden = false; output.textContent = "Analyzing route segments...";
             try { const data = await getJson("/route/analyze", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ start:document.getElementById("start").value.trim(), destination:document.getElementById("destination").value.trim(), cargo_type:document.getElementById("cargoType").value, priority:document.getElementById("priority").value }) }); if (routeLayer) map.removeLayer(routeLayer); routeLayer = L.geoJSON(data.route.geometry, { style:{ color:"#d56b3f", weight:5 } }).addTo(map); map.fitBounds(routeLayer.getBounds()); const segment = data.route.segment_risk?.highest_risk; const evidence = data.route.segment_risk?.evidence_summary; const evidenceText = evidence ? `Historical evidence: ${escapeHtml(evidence.historical_hazard_count)} · Current reports: ${escapeHtml(evidence.current_incident_count)} · Verified incidents: ${escapeHtml(evidence.verified_current_incident_count)}<br>${evidence.current_closure_confirmed ? "Verified current incident found; avoid until cleared." : "No verified current closure found; verify locally before departure."}` : "Evidence summary unavailable"; const recommendation = data.route_recommendation?.reason || "Best available route selected."; const decision = data.safety_decision || {}; output.innerHTML = `<b>${escapeHtml(data.start.name)} → ${escapeHtml(data.destination.name)}</b><br><span class="risk">${escapeHtml(decision.status || "Route assessed")}</span><br>${escapeHtml(decision.message || "Review the evidence before departure.")}<br><span class="risk">Recommended route</span><br>${escapeHtml(data.route_recommendation.priority)} ${escapeHtml(data.route_recommendation.cargo_type)}<br>${escapeHtml(recommendation)}<br>Weather safety: ${escapeHtml(data.safety_score)} / 100<br>Risk estimate: ${escapeHtml(data.risk_level)}<br>Checked segments: ${escapeHtml(decision.checked_route_segments || 0)} · Danger segments: ${escapeHtml(decision.danger_segment_count || 0)}<br>Distance: ${escapeHtml(data.route.distance_text)} · ${escapeHtml(data.route.duration_text)}<br>${evidenceText}<br>${segment ? `Highest segment: ${escapeHtml(segment.risk_level)} (${escapeHtml(segment.risk_score)})<br>${segment.evidence.map(escapeHtml).join(" · ")}` : "Segment analysis unavailable"}`; } catch (error) { output.innerHTML = `<span class="risk">Route unavailable</span><br>${escapeHtml(error.message)}`; }
         };
-        loadMapData(); loadOperations(); setInterval(loadOperations, 300000);
+        loadMapData(); loadOperations(); setInterval(loadOperations, 30000);
     </script>
+<!--
+  MULTILINGUAL TOGGLE - DROP-IN BLOCK
+  ====================================
+  HOW TO INSTALL:
+  1. Open mobile/web/ml/gis/index.html
+  2. Paste this ENTIRE block right before the closing </body> tag
+  3. Save, refresh the browser - no other changes needed anywhere else
+
+  HOW IT WORKS:
+  This does NOT require knowing your app's internal JS functions. It scans
+  all visible text on the page, and swaps known English phrases for Hindi
+  or Assamese translations when you click the toggle. It automatically
+  re-scans whenever new content appears (like a risk result loading in),
+  using a MutationObserver.
+
+  LIMITATION (be upfront about this if asked): this translates fixed UI
+  labels and known result phrases only - not place names, raw numbers, or
+  any text not in the dictionary below. That's a deliberate scope choice
+  for speed; expanding the dictionary just means adding more entries below.
+-->
+
+<style>
+  #lang-toggle-bar {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    z-index: 9999;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    font-family: sans-serif;
+    font-size: 13px;
+  }
+  #lang-toggle-bar button {
+    border: none;
+    background: transparent;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  #lang-toggle-bar button.active {
+    background: #16697A;
+    color: white;
+  }
+</style>
+
+<div id="lang-toggle-bar">
+  <button data-lang="en" class="active">EN</button>
+  <button data-lang="hi">हिं</button>
+  <button data-lang="as">অস</button>
+</div>
+
+<script>
+(function () {
+  // Longest phrases first, so "Very High" is replaced before "High" alone
+  var DICTIONARY = [
+    { en: "No verified closure was found; this is not a guarantee of safe travel.",
+      hi: "कोई सत्यापित मार्ग बंद होने की पुष्टि नहीं हुई; यह सुरक्षित यात्रा की गारंटी नहीं है।",
+      as: "কোনো সত্যাপিত বন্ধ হোৱাৰ প্ৰমাণ পোৱা নাযায়; এইটো নিৰাপদ যাত্ৰাৰ নিশ্চয়তা নহয়।" },
+    { en: "No nearby historical landslide record was found",
+      hi: "आस-पास कोई ऐतिहासिक भूस्खलन रिकॉर्ड नहीं मिला",
+      as: "ওচৰত কোনো ঐতিহাসিক ভূমিস্খলনৰ তথ্য পোৱা নাযায়" },
+    { en: "Boulder risk is a terrain susceptibility estimate, not live object detection",
+      hi: "चट्टान गिरने का जोखिम भूभाग-आधारित अनुमान है, वास्तविक वस्तु पहचान नहीं",
+      as: "শিল খহনৰ বিপদ ভূ-খণ্ডৰ আধাৰত অনুমান, প্ৰকৃত বস্তু চিনাক্তকৰণ নহয়" },
+    { en: "Analyze a delivery route", hi: "डिलीवरी मार्ग का विश्लेषण करें", as: "ডেলিভাৰী পথ বিশ্লেষণ কৰক" },
+    { en: "Assess location risk", hi: "स्थान जोखिम का आकलन करें", as: "স্থানৰ বিপদ মূল্যায়ন কৰক" },
+    { en: "Check a location", hi: "स्थान जांचें", as: "স্থান পৰীক্ষা কৰক" },
+    { en: "boulder or rockfall", hi: "पत्थर या चट्टान गिरना", as: "শিল বা শিলা-খহনীয়া" },
+    { en: "current incident", hi: "वर्तमान घटना", as: "বৰ্তমান ঘটনা" },
+    { en: "Recommended route", hi: "अनुशंसित मार्ग", as: "চুপাৰিছ কৰা পথ" },
+    { en: "Analyze route", hi: "मार्ग का विश्लेषण करें", as: "পথ বিশ্লেষণ কৰক" },
+    { en: "Very High", hi: "अत्यधिक उच्च", as: "অতি উচ্চ" },
+    { en: "landslide", hi: "भूस्खलन", as: "ভূমিস্খলন" },
+    { en: "Moderate", hi: "मध्यम", as: "মধ্যম" },
+    { en: "flood", hi: "बाढ़", as: "বান পানী" },
+    { en: "High", hi: "उच्च", as: "উচ্চ" },
+    { en: "Low", hi: "कम", as: "কম" }
+  ];
+
+  var currentLang = "en";
+  var originalTextMap = new WeakMap(); // node -> original English text
+
+  function walkTextNodes(root, callback) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var node;
+    while ((node = walker.nextNode())) {
+      if (node.parentElement && node.parentElement.closest("#lang-toggle-bar")) continue;
+      callback(node);
+    }
+  }
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    walkTextNodes(document.body, function (node) {
+      if (!originalTextMap.has(node)) {
+        originalTextMap.set(node, node.nodeValue);
+      }
+      var original = originalTextMap.get(node);
+      if (lang === "en") {
+        node.nodeValue = original;
+        return;
+      }
+      var replaced = original;
+      DICTIONARY.forEach(function (entry) {
+        var translation = entry[lang];
+        if (!translation) return;
+        // Global, case-sensitive replace of the English phrase
+        replaced = replaced.split(entry.en).join(translation);
+      });
+      node.nodeValue = replaced;
+    });
+  }
+
+  // Re-apply current language whenever new content is added to the page
+  // (e.g. a risk result loading in after clicking "Assess location risk")
+  var observer = new MutationObserver(function () {
+    if (currentLang !== "en") applyLanguage(currentLang);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  document.querySelectorAll("#lang-toggle-bar button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("#lang-toggle-bar button").forEach(function (b) {
+        b.classList.remove("active");
+      });
+      btn.classList.add("active");
+      applyLanguage(btn.getAttribute("data-lang"));
+    });
+  });
+})();
+</script>
 </body>
 </html>

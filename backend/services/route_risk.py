@@ -211,7 +211,24 @@ def _event_weight(event_date: Any) -> float:
         except ValueError:
             continue
     return 0.5
-
+def _resolution_weight(record: dict, location_text: str) -> float:
+    """
+    Returns a weight multiplier based on how spatially precise a hazard
+    record's match actually is. Point/radius matches (real coordinates,
+    within 15km) are the most trustworthy signal. District-level text
+    matches are much coarser. State-level text matches are the coarsest
+    of all - a single state-level match says almost nothing about risk
+    at one specific point.
+    """
+    resolution = record.get("resolution")
+    if resolution == "point":
+        return 1.0
+    match_type = _match_resolution(record, location_text)
+    if match_type == "district":
+        return 0.35
+    if match_type == "state":
+        return 0.06
+    return 0.2
 
 def _matches_text(hazard: dict[str, Any], location_text: str) -> bool:
     normalized = " ".join(location_text.lower().replace(",", " ").split())
@@ -308,13 +325,31 @@ def analyze_location(
     terrain_relief_score = _relief_score(local_relief_m)
     historical_rock_score = min(100.0, len(rock_records) * 15.0)
     landslide_score = min(
-        100.0,
-        sum(15.0 * _event_weight(record.get("event_date")) for record in landslide_records),
-    )
+    100.0,
+    sum(
+        15.0 * _event_weight(record.get("event_date"))
+        * _resolution_weight(record, location_text)
+        for record in sorted(
+            landslide_records,
+            key=lambda r: r.get("event_date") or "",
+            reverse=True,
+        )[:12]
+    ),
+)
     flood_score = min(
-        100.0,
-        sum(15.0 * _event_weight(record.get("event_date")) for record in flood_records),
-    )
+    100.0,
+    sum(
+        15.0 * _event_weight(record.get("event_date"))
+        * _resolution_weight(record, location_text)
+        for record in sorted(
+            flood_records,
+            key=lambda r: r.get("event_date") or "",
+            reverse=True,
+        )[:12]
+    ),
+)
+    
+
     incident_score = min(100.0, len(current) * 25.0)
     weather_score = max(0.0, min(100.0, 100.0 - weather_safety_score))
     boulder_score = min(
