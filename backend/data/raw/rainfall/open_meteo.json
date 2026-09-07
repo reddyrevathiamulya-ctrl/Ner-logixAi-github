@@ -1,13 +1,13 @@
 {
   "source": "Open-Meteo",
-  "collected_at": "2026-09-07T07:33:07.112850+00:00",
+  "collected_at": "2026-09-07T09:30:34.155258+00:00",
   "observation_count": 8,
   "observations": [
     {
       "state": "Arunachal Pradesh",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "rainfall": 0.0,
       "hourly": {
         "time": [
@@ -215,8 +215,8 @@
     {
       "state": "Assam",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "rainfall": 0.0,
       "hourly": {
         "time": [
@@ -424,9 +424,9 @@
     {
       "state": "Manipur",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
-      "rainfall": 0.1,
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
+      "rainfall": 0.0,
       "hourly": {
         "time": [
           "2026-09-07T00:00",
@@ -633,9 +633,9 @@
     {
       "state": "Meghalaya",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
-      "rainfall": 0.3,
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
+      "rainfall": 0.1,
       "hourly": {
         "time": [
           "2026-09-07T00:00",
@@ -842,8 +842,8 @@
     {
       "state": "Mizoram",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "rainfall": 0.0,
       "hourly": {
         "time": [
@@ -1051,9 +1051,9 @@
     {
       "state": "Nagaland",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
-      "rainfall": 0.1,
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
+      "rainfall": 0.0,
       "hourly": {
         "time": [
           "2026-09-07T00:00",
@@ -1260,9 +1260,9 @@
     {
       "state": "Sikkim",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
-      "rainfall": 0.4,
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
+      "rainfall": 0.3,
       "hourly": {
         "time": [
           "2026-09-07T00:00",
@@ -1469,8 +1469,8 @@
     {
       "state": "Tripura",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "rainfall": 0.0,
       "hourly": {
         "time": [

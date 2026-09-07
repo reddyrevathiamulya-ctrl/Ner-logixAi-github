@@ -1,24 +1,24 @@
 {
   "source": "Open-Meteo",
-  "collected_at": "2026-09-07T07:33:07.112850+00:00",
+  "collected_at": "2026-09-07T09:30:34.155258+00:00",
   "observation_count": 8,
   "observations": [
     {
       "state": "Arunachal Pradesh",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 28.218,
       "longitude": 94.7278,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 27.3,
-        "relative_humidity_2m": 80,
-        "precipitation": 0.0,
+        "temperature_2m": 27.6,
+        "relative_humidity_2m": 79,
+        "precipitation": 0.1,
         "rain": 0.0,
-        "weather_code": 2,
-        "wind_speed_10m": 1.9
+        "weather_code": 51,
+        "wind_speed_10m": 2.5
       },
       "hourly": {
         "time": [
@@ -276,19 +276,19 @@
     {
       "state": "Assam",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 26.2006,
       "longitude": 92.9376,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 31.3,
+        "temperature_2m": 30.9,
         "relative_humidity_2m": 74,
         "precipitation": 0.0,
         "rain": 0.0,
-        "weather_code": 3,
-        "wind_speed_10m": 3.4
+        "weather_code": 1,
+        "wind_speed_10m": 4.4
       },
       "hourly": {
         "time": [
@@ -546,19 +546,19 @@
     {
       "state": "Manipur",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 24.6637,
       "longitude": 93.9063,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 29.5,
-        "relative_humidity_2m": 69,
-        "precipitation": 0.1,
-        "rain": 0.1,
-        "weather_code": 51,
-        "wind_speed_10m": 6.9
+        "temperature_2m": 29.3,
+        "relative_humidity_2m": 68,
+        "precipitation": 0.0,
+        "rain": 0.0,
+        "weather_code": 2,
+        "wind_speed_10m": 4.1
       },
       "hourly": {
         "time": [
@@ -816,19 +816,19 @@
     {
       "state": "Meghalaya",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 25.467,
       "longitude": 91.3662,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 21.3,
-        "relative_humidity_2m": 87,
-        "precipitation": 0.5,
-        "rain": 0.3,
-        "weather_code": 80,
-        "wind_speed_10m": 8.1
+        "temperature_2m": 21.9,
+        "relative_humidity_2m": 86,
+        "precipitation": 0.1,
+        "rain": 0.1,
+        "weather_code": 51,
+        "wind_speed_10m": 7.8
       },
       "hourly": {
         "time": [
@@ -1086,19 +1086,19 @@
     {
       "state": "Mizoram",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 23.1645,
       "longitude": 92.9376,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 28.5,
-        "relative_humidity_2m": 68,
+        "temperature_2m": 28.6,
+        "relative_humidity_2m": 65,
         "precipitation": 0.0,
         "rain": 0.0,
-        "weather_code": 1,
-        "wind_speed_10m": 5.1
+        "weather_code": 2,
+        "wind_speed_10m": 3.7
       },
       "hourly": {
         "time": [
@@ -1356,19 +1356,19 @@
     {
       "state": "Nagaland",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 26.1584,
       "longitude": 94.5624,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 24.1,
+        "temperature_2m": 24.0,
         "relative_humidity_2m": 85,
-        "precipitation": 0.1,
-        "rain": 0.1,
-        "weather_code": 51,
-        "wind_speed_10m": 5.2
+        "precipitation": 0.0,
+        "rain": 0.0,
+        "weather_code": 2,
+        "wind_speed_10m": 2.9
       },
       "hourly": {
         "time": [
@@ -1626,19 +1626,19 @@
     {
       "state": "Sikkim",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 27.533,
       "longitude": 88.5122,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 27.7,
-        "relative_humidity_2m": 90,
-        "precipitation": 1.0,
-        "rain": 0.4,
-        "weather_code": 96,
-        "wind_speed_10m": 3.2
+        "temperature_2m": 26.1,
+        "relative_humidity_2m": 93,
+        "precipitation": 0.3,
+        "rain": 0.3,
+        "weather_code": 55,
+        "wind_speed_10m": 2.0
       },
       "hourly": {
         "time": [
@@ -1896,19 +1896,19 @@
     {
       "state": "Tripura",
       "source": "Open-Meteo",
-      "collected_at": "2026-09-07T07:33:07.112850+00:00",
-      "observed_at": "2026-09-07T07:30",
+      "collected_at": "2026-09-07T09:30:34.155258+00:00",
+      "observed_at": "2026-09-07T09:30",
       "latitude": 23.9408,
       "longitude": 91.9882,
       "current": {
-        "time": "2026-09-07T07:30",
+        "time": "2026-09-07T09:30",
         "interval": 900,
-        "temperature_2m": 31.8,
-        "relative_humidity_2m": 70,
-        "precipitation": 0.0,
+        "temperature_2m": 31.0,
+        "relative_humidity_2m": 74,
+        "precipitation": 0.1,
         "rain": 0.0,
-        "weather_code": 1,
-        "wind_speed_10m": 7.0
+        "weather_code": 95,
+        "wind_speed_10m": 8.7
       },
       "hourly": {
         "time": [
