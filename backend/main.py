@@ -174,6 +174,20 @@ def home():
     return FileResponse(index_file)
 
 
+@app.get("/field")
+def field_app():
+    """Mobile-optimized field incident reporter (works offline, syncs later)."""
+    field_file = BASE_DIR / "mobile" / "web" / "ml" / "gis" / "field.html"
+
+    if not field_file.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"field.html not found at {field_file}"
+        )
+
+    return FileResponse(field_file)
+
+
 @app.get("/health")
 def health():
     return {
@@ -408,7 +422,7 @@ class RouteRequest(BaseModel):
 # GEOCODING
 # ============================================================
 
-from backend.gis.ner_places import lookup_place
+from backend.gis.ner_places import lookup_place, search_places
 
 
 def _prefer_town_result(results: list[dict]) -> dict | None:
@@ -520,6 +534,21 @@ def geocode_place(place: str):
         "lat": float(chosen["lat"]),
         "lon": float(chosen["lon"]),
         "source": "Nominatim (OpenStreetMap)",
+    }
+
+
+@app.get("/places/autocomplete")
+def places_autocomplete(q: str = "", limit: int = 8):
+    """Suggest curated NER places (district HQs + demo villages/towns).
+
+    Matching runs entirely against the local reference table, so the
+    suggestion list keeps working offline (or when Nominatim is down).
+    """
+    places = search_places(q, max(1, min(limit, 25)))
+    return {
+        "query": q.strip(),
+        "count": len(places),
+        "places": places,
     }
 
 
@@ -1121,20 +1150,35 @@ def analyze_route(request: RouteRequest):
         duration = route_result.get("duration") or fastest_duration or 1
         time_penalty = max(0.0, (duration - fastest_duration) / duration) * 30
         route_result["route_risk_score"] = round(highest_segment_score, 1)
-        risk_weight = {
+        # Mission-aware weighting: the delivery PRIORITY sets the base
+        # safety-vs-speed balance, and the CARGO then shifts it further.
+        # Life-critical loads (medicines, emergency supplies) lean even harder
+        # toward the safer corridor; routine or bulk cargo (food, construction
+        # material, produce) tolerates slightly more risk to keep moving.
+        priority_risk_weight = {
             "standard": 0.7,
             "urgent": 0.75,
             "emergency": 0.85,
             "perishable": 0.55,
         }[priority]
-        time_weight = 1.0 - risk_weight
+        cargo_risk_adjustment = {
+            "medicine": 0.10,
+            "emergency_supply": 0.06,
+            "other": 0.0,
+            "agricultural_produce": -0.03,
+            "food": -0.05,
+            "construction_material": -0.05,
+        }[cargo_type]
+        risk_weight = max(0.40, min(0.95, priority_risk_weight + cargo_risk_adjustment))
+        time_weight = round(1.0 - risk_weight, 2)
         route_result["optimization_score"] = round(
             highest_segment_score * risk_weight + time_penalty * (time_weight / 0.3),
             1,
         )
         route_result["optimization_basis"] = (
             f"{round(risk_weight * 100)}% route risk, "
-            f"{round(time_weight * 100)}% travel-time preference for {priority} delivery"
+            f"{round(time_weight * 100)}% travel-time preference for "
+            f"{cargo_type} with {priority} delivery"
         )
 
     route_results.sort(key=lambda route: route["optimization_score"])

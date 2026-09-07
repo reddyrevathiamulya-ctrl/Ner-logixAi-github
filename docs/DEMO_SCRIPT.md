@@ -111,3 +111,10 @@ route-risk + travel-time score").
 Mangan (Sikkim) · Guwahati (Assam) · Imphal (Manipur) · Aizawl (Mizoram) ·
 Kohima (Nagaland) · Itanagar (Arunachal) · Agartala (Tripura) · Shillong
 (Meghalaya) · plus all 124 district HQs (e.g. "Anjaw" → Hawai, "Mon").
+
+Village/town-level demo picks (curated in the reference table, no network
+needed to geocode): Cherrapunji (Sohra) · Mawsynram · Dawki (Meghalaya),
+Chungthang · Singtam (Sikkim, Teesta river), Khonoma · Phesama (Nagaland),
+Moirang (Manipur, Loktak), Sualkuchi · Kamalabari (Assam), Mechuka · Miao
+(Arunachal), Sabroom · Sonamura (Tripura), Zokhawthar (Mizoram, Myanmar
+border).

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NER-LogixAI Field Reporter</title>
+    <style>
+        :root {
+            --ink:#1c2b33; --muted:#5d6b74; --paper:#eef1ea; --panel:#ffffff;
+            --teal:#0d6b68; --teal-dark:#0a5654; --line:#dce2da;
+            --low:#2e8b57; --low-bg:#e9f5ee;
+            --moderate:#d99a1f; --moderate-bg:#fdf3dd;
+            --high:#d56b3f; --high-bg:#fdeee6;
+            --critical:#c0392b; --critical-bg:#fbeae7;
+            --ok:#2e8b57; --warn:#d99a1f; --bad:#c0392b;
+            --shadow:0 10px 32px rgba(20,40,45,.16);
+        }
+        * { box-sizing:border-box; }
+        body { margin:0; color:var(--ink); background:var(--paper); font-family:"Segoe UI",Arial,sans-serif; }
+        .app { max-width:520px; margin:0 auto; padding:16px 14px 60px; }
+        header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
+        h1 { margin:0; font-size:20px; letter-spacing:.2px; }
+        .subtitle { color:var(--muted); font-size:12.5px; line-height:1.45; margin:6px 0 12px; }
+        /* language toggle */
+        #langToggle { display:inline-flex; background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+        #langToggle button { border:none; background:transparent; min-height:30px; width:42px; margin:0; padding:4px 6px; font-size:12px; cursor:pointer; color:var(--muted); }
+        #langToggle button.active { background:var(--teal); color:#fff; font-weight:700; }
+        /* status card */
+        .status-card { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); margin-bottom:14px; }
+        .status-pill { display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:20px; font-size:12.5px; font-weight:700; background:var(--low-bg); color:var(--low); border:1px solid transparent; }
+        .status-pill .dot { width:9px; height:9px; border-radius:50%; background:currentColor; }
+        .status-pill.warn { background:var(--moderate-bg,#fdf3dd); color:var(--warn); }
+        .status-pill.bad { background:var(--critical-bg); color:var(--critical); }
+        .status-pill.neutral { background:#eef1f3; color:var(--muted); }
+        .queue-count { font-size:12.5px; color:var(--muted); }
+        .queue-count b { color:var(--critical); }
+        .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px; box-shadow:var(--shadow); }
+        h2 { margin:0 0 10px; font-size:14px; color:var(--teal-dark); letter-spacing:.4px; text-transform:uppercase; }
+        label { display:block; margin:10px 0 5px; color:var(--muted); font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; }
+        input, select, textarea, button { width:100%; min-height:44px; border:1px solid var(--line); padding:10px 12px; font:14px "Segoe UI",Arial,sans-serif; border-radius:8px; background:#fff; color:var(--ink); }
+        input, select, textarea { margin-bottom:4px; }
+        textarea { min-height:84px; resize:vertical; }
+        input:focus, select:focus, textarea:focus { outline:2px solid rgba(13,107,104,.25); border-color:var(--teal); }
+        button { margin-top:10px; cursor:pointer; color:white; background:var(--teal); border-color:var(--teal); font-weight:700; transition:background .15s; }
+        button:hover { background:var(--teal-dark); }
+        button:disabled { opacity:.55; cursor:not-allowed; }
+        button.secondary { background:#fff; color:var(--teal); border-color:var(--teal); }
+        button.small { min-height:34px; width:auto; padding:5px 12px; font-size:12.5px; margin-top:0; }
+        .loc-row { display:flex; gap:8px; align-items:flex-end; }
+        .loc-row .loc-btn { flex:0 0 auto; }
+        .coord-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .photo-box { margin-top:4px; }
+        .photo-preview { margin-top:8px; border-radius:8px; overflow:hidden; border:1px solid var(--line); background:#f6f8f4; display:none; }
+        .photo-preview img { display:block; width:100%; max-height:220px; object-fit:cover; }
+        .result { margin-top:10px; font-size:13px; line-height:1.5; }
+        .result[hidden] { display:none; }
+        .okbox { background:var(--low-bg); border:1px solid #c9e4d3; color:var(--low); padding:10px 12px; border-radius:8px; font-size:12.5px; }
+        .warnbox { background:var(--moderate-bg,#fdf3dd); border:1px solid #f0dcae; color:#8a6a12; padding:10px 12px; border-radius:8px; font-size:12.5px; }
+        .errorbox { background:var(--critical-bg); border:1px solid #ecc9c3; color:var(--critical); padding:10px 12px; border-radius:8px; font-size:12.5px; }
+        .muted { color:var(--muted); }
+        .small { color:var(--muted); font-size:11px; }
+        /* queued report list */
+        .report-item { border:1px solid var(--line); border-left:4px solid var(--muted); border-radius:8px; padding:9px 11px; margin-top:8px; background:#fff; font-size:12.5px; }
+        .report-item.critical { border-left-color:var(--critical); }
+        .report-item.high { border-left-color:var(--high); }
+        .report-item.moderate { border-left-color:var(--moderate); }
+        .report-item.low { border-left-color:var(--low); }
+        .report-item b { display:block; text-transform:capitalize; }
+        .report-item .tag { display:inline-block; margin-top:4px; padding:2px 8px; border-radius:10px; font-size:10.5px; font-weight:700; color:#fff; background:var(--muted); }
+        .report-item .tag.synced { background:var(--low); }
+        .report-item .tag.pending { background:var(--moderate); }
+        .report-item .tag.failed { background:var(--critical); }
+        .kv { display:flex; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px dashed #e4e9e2; font-size:12.5px; }
+        .kv b { font-weight:600; }
+        .note { margin-top:8px; padding:9px 11px; background:#f6f8f4; border:1px solid var(--line); border-radius:8px; font-size:11.5px; color:var(--muted); }
+        .note.warn { background:var(--moderate-bg,#fdf3dd); border-color:#f0dcae; color:#8a6a12; }
+        footer { text-align:center; margin-top:10px; }
+        footer a { color:var(--teal); font-size:12.5px; font-weight:600; text-decoration:none; }
+        @media (min-width:540px) { .app { padding-top:28px; } }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header>
+        <h1>NER-LogixAI <span class="muted" style="font-weight:400;">Field Reporter</span></h1>
+        <div id="langToggle">
+            <button data-lang="en" class="active">EN</button>
+            <button data-lang="hi">हिं</button>
+            <button data-lang="as">অস</button>
+        </div>
+    </header>
+    <p class="subtitle" data-i18n="subtitle">Report geo-tagged road, bridge, and landslide incidents from remote locations — works even with no network.</p>
+
+    <div class="status-card">
+        <span id="connPill" class="status-pill neutral"><span class="dot"></span><span data-i18n="checking">Checking…</span></span>
+        <span class="queue-count" data-i18n="queueCount" data-queue-template="Pending offline reports: {n}">Pending offline reports: <b id="queueBadge">0</b></span>
+    </div>
+
+    <div class="panel">
+        <h2 data-i18n="newReport">New incident report</h2>
+        <label for="incidentType" data-i18n="incidentType">Incident type</label>
+        <select id="incidentType">
+            <option value="blocked_road" data-i18n="t_blocked_road">Blocked road</option>
+            <option value="landslide" data-i18n="t_landslide">Landslide</option>
+            <option value="rockfall" data-i18n="t_rockfall">Rockfall</option>
+            <option value="boulder" data-i18n="t_boulder">Boulder on road</option>
+            <option value="rock_debris" data-i18n="t_rock_debris">Rock / debris</option>
+            <option value="flood" data-i18n="t_flood">Flooding</option>
+            <option value="bridge_damage" data-i18n="t_bridge_damage">Bridge damage</option>
+            <option value="road_damage" data-i18n="t_road_damage">Road damage</option>
+            <option value="traffic" data-i18n="t_traffic">Traffic congestion</option>
+            <option value="other" data-i18n="t_other">Other</option>
+        </select>
+
+        <label for="severity" data-i18n="severity">Severity</label>
+        <select id="severity">
+            <option value="low" data-i18n="sev_low">Low</option>
+            <option value="moderate" data-i18n="sev_moderate">Moderate</option>
+            <option value="high" data-i18n="sev_high">High</option>
+            <option value="critical" data-i18n="sev_critical">Critical</option>
+        </select>
+
+        <label data-i18n="location">Location (GPS)</label>
+        <div class="loc-row">
+            <button type="button" id="locateBtn" class="small loc-btn" data-i18n="useMyLocation">📍 Use my location</button>
+            <span id="locStatus" class="small"></span>
+        </div>
+        <div class="coord-row">
+            <div><label for="latitude" data-i18n="latitude">Latitude</label><input id="latitude" type="number" step="any" placeholder="25.57"></div>
+            <div><label for="longitude" data-i18n="longitude">Longitude</label><input id="longitude" type="number" step="any" placeholder="91.88"></div>
+        </div>
+
+        <label for="description" data-i18n="description">Description</label>
+        <textarea id="description" placeholder="e.g. Landslide blocking NH-6 near Byrnihat"></textarea>
+
+        <label for="photo" data-i18n="photo">Photo evidence</label>
+        <div class="photo-box">
+            <input type="file" id="photo" accept="image/*" capture="environment">
+            <div class="photo-preview" id="photoPreview"><img id="photoImg" alt=""></div>
+        </div>
+
+        <button id="submitBtn" data-i18n="submitReport">Save incident report</button>
+        <div id="submitResult" class="result" hidden></div>
+    </div>
+
+    <div class="panel" id="queuePanel">
+        <h2 data-i18n="myReports">My reports</h2>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <button type="button" id="syncBtn" class="small" data-i18n="syncNow">⇄ Sync now</button>
+            <button type="button" id="refreshBtn" class="small secondary" data-i18n="refresh">Refresh</button>
+            <span id="syncStatus" class="small"></span>
+        </div>
+        <div id="reportList"></div>
+    </div>
+
+    <footer>
+        <a href="/" data-i18n="openConsole">← Open the NER-LogixAI Operations Console</a>
+    </footer>
+</div>
+
+<script>
+(function () {
+    "use strict";
+    const API = "http://127.0.0.1:8000";
+    const QUEUE_KEY = "fieldQueueV1";
+    const LANGS = { en: "en", hi: "hi", as: "as" };
+
+    // ---------- I18N ----------
+    const I18N = {
+        subtitle: { en:"Report geo-tagged road, bridge, and landslide incidents from remote locations — works even with no network.",
+                    hi:"दूरस्थ क्षेत्रों से सड़क, पुल और भूस्खलन की घटनाओं की जियो-टैग रिपोर्ट करें — नेटवर्क न होने पर भी काम करता है।",
+                    as:"দূৰ-দূৰণি অঞ্চলৰ পৰা পথ, দলং আৰু ভূমিস্খলন ঘটনাৰ জিঅ'-টেগ ৰিপ'ৰ্ট কৰক — নেটৱৰ্ক নাথাকিলেও কাম কৰে।" },
+        checking: { en:"Checking…", hi:"जाँच हो रही है…", as:"পৰীক্ষা হৈ আছে…" },
+        online: { en:"Online", hi:"ऑनलाइन", as:"অনলাইন" },
+        offline: { en:"Offline — queueing", hi:"ऑफ़लाइन — कतार में", as:"অফলাইন — কিউত আছে" },
+        queueCount: { en:"Pending offline reports: {n}", hi:"लंबित ऑफ़लाइन रिपोर्ट: {n}", as:"বাকী অফলাইন ৰিপ'ৰ্ট: {n}" },
+        newReport: { en:"New incident report", hi:"नई घटना रिपोर्ट", as:"নতুন ঘটনা ৰিপ'ৰ্ট" },
+        incidentType: { en:"Incident type", hi:"घटना का प्रकार", as:"ঘটনাৰ প্ৰকাৰ" },
+        severity: { en:"Severity", hi:"गंभीरता", as:"গুৰুত্ব" },
+        location: { en:"Location (GPS)", hi:"स्थान (GPS)", as:"অৱস্থান (GPS)" },
+        useMyLocation: { en:"📍 Use my location", hi:"📍 मेरा स्थान उपयोग करें", as:"📍 মোৰ অৱস্থান ব্যৱহাৰ কৰক" },
+        latitude: { en:"Latitude", hi:"अक्षांश", as:"অক্ষাংশ" },
+        longitude: { en:"Longitude", hi:"देशांतर", as:"দ্রাঘিমাংশ" },
+        description: { en:"Description", hi:"विवरण", as:"বিৱৰণ" },
+        photo: { en:"Photo evidence", hi:"फोटो प्रमाण", as:"ফটো প্ৰমাণ" },
+        submitReport: { en:"Save incident report", hi:"घटना रिपोर्ट सहेजें", as:"ঘটনা ৰিপ'ৰ্ট সংৰক্ষণ কৰক" },
+        myReports: { en:"My reports", hi:"मेरी रिपोर्टें", as:"মোৰ ৰিপ'ৰ্টসমূহ" },
+        syncNow: { en:"⇄ Sync now", hi:"⇄ अभी सिंक करें", as:"⇄ এতিয়া সিংক কৰক" },
+        refresh: { en:"Refresh", hi:"रीफ़्रेश", as:"ৰিফ্রেছ" },
+        openConsole: { en:"← Open the NER-LogixAI Operations Console", hi:"← NER-LogixAI ऑपरेशन्स कंसोल खोलें", as:"← NER-LogixAI অপাৰেচনছ কনছ'ল খোলক" },
+        locating: { en:"Locating…", hi:"स्थान खोजा जा रहा है…", as:"অৱস্থান বিচাৰি আছে…" },
+        locOk: { en:"Location captured ✓", hi:"स्थान प्राप्त ✓", as:"অৱস্থান লাভ হ'ল ✓" },
+        locErr: { en:"Could not get GPS. Enter coordinates manually.", hi:"GPS उपलब्ध नहीं। निर्देशांक मैन्युअल दर्ज करें।", as:"GPS পোৱা নগ'ল। স্থানাংক হাতেৰে দিয়ক।" },
+        saved: { en:"✓ Report saved", hi:"✓ रिपोर्ट सहेजी गई", as:"✓ ৰিপ'ৰ্ট সংৰক্ষিত" },
+        savedOffline: { en:"No network — report stored on this device and will sync automatically.", hi:"नेटवर्क नहीं — रिपोर्ट इस डिवाइस पर सहेजी गई, अपने आप सिंक होगी।", as:"নেটৱৰ্ক নাই — ৰিপ'ৰ্ট এই ডিভাইচত সংৰক্ষিত হ'ল, স্বয়ংক্ৰিয়ভাৱে সিংক হ'ব।" },
+        fillAll: { en:"Fill in incident type, severity, and valid coordinates first.", hi:"पहले घटना प्रकार, गंभीरता और सही निर्देशांक भरें।", as:"আগতে ঘটনাৰ প্ৰকাৰ, গুৰুত্ব আৰু শুদ্ধ স্থানাংক দিয়ক।" },
+        synced: { en:"Synced ✓", hi:"सिंक हुआ ✓", as:"সিংক হ'ল ✓" },
+        syncedCount: { en:"{n} report(s) sent to the operations center.", hi:"{n} रिपोर्ट ऑपरेशन केंद्र भेजी गई।", as:"{n} টা ৰিপ'ৰ্ট অপাৰেচন কেন্দ্ৰলৈ পঠোৱা হ'ল।" },
+        noPending: { en:"No pending reports on this device.", hi:"इस डिवाइस पर कोई लंबित रिपोर्ट नहीं।", as:"এই ডিভাইচত কোনো বাকী ৰিপ'ৰ্ট নাই।" },
+        empty: { en:"No reports yet. Submit one above.", hi:"अभी तक कोई रिपोर्ट नहीं। ऊपर एक सबमिट करें।", as:"এতিয়ালৈ কোনো ৰিপ'ৰ্ট নাই। ওপৰত এখন দিয়ক।" },
+        loadFailed: { en:"Could not load reports from server.", hi:"सर्वर से रिपोर्ट लोड नहीं हो सकीं।", as:"চাৰ্ভাৰৰ পৰা ৰিপ'ৰ্ট লোড কৰিব পৰা নগ'ল।" },
+        pending: { en:"pending", hi:"लंबित", as:"বাকী" },
+        syncedTag: { en:"synced", hi:"सिंक हुआ", as:"সিংক হ'ল" },
+        failed: { en:"failed", hi:"विफल", as:"ব্যৰ্থ" },
+        unverified: { en:"unverified", hi:"असत्यापित", as:"অসত্যাপিত" },
+        verified: { en:"verified", hi:"सत्यापित", as:"সত্যাপিত" },
+        rejected: { en:"rejected", hi:"अस्वीकृत", as:"অস্বীকৃত" },
+        t_blocked_road: { en:"Blocked road", hi:"सड़क अवरुद्ध", as:"পথ বন্ধ" },
+        t_landslide: { en:"Landslide", hi:"भूस्खलन", as:"ভূমিস্খলন" },
+        t_rockfall: { en:"Rockfall", hi:"चट्टान गिरना", as:"শিল খহন" },
+        t_boulder: { en:"Boulder on road", hi:"सड़क पर बड़ा पत्थर", as:"পথত ডাঙৰ শিল" },
+        t_rock_debris: { en:"Rock / debris", hi:"पत्थर / मलबा", as:"শিল / ধ্বংসাৱশেষ" },
+        t_flood: { en:"Flooding", hi:"बाढ़", as:"বান" },
+        t_bridge_damage: { en:"Bridge damage", hi:"पुल क्षति", as:"দলং ক্ষতিগ্রস্ত" },
+        t_road_damage: { en:"Road damage", hi:"सड़क क्षति", as:"পথ ক্ষতিগ্রস্ত" },
+        t_traffic: { en:"Traffic congestion", hi:"यातायात जाम", as:"যানজট" },
+        t_other: { en:"Other", hi:"अन्य", as:"অন্যান্য" },
+        sev_low: { en:"Low", hi:"कम", as:"কম" },
+        sev_moderate: { en:"Moderate", hi:"मध्यम", as:"মধ্যম" },
+        sev_high: { en:"High", hi:"उच्च", as:"উচ্চ" },
+        sev_critical: { en:"Critical", hi:"गंभीर", as:"গুৰুতৰ" },
+    };
+    let currentLang = "en";
+    function tr(key, vars) {
+        let text = (I18N[key] && I18N[key][currentLang]) || (I18N[key] && I18N[key].en) || key;
+        if (vars) Object.keys(vars).forEach(k => { text = text.replace("{" + k + "}", vars[k]); });
+        return text;
+    }
+    function applyLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+            const key = el.getAttribute("data-i18n");
+            if (el.tagName === "OPTION" || el.tagName === "BUTTON" || el.tagName === "TEXTAREA" || el.tagName === "SELECT") {
+                el.textContent = tr(key);
+            } else {
+                el.textContent = tr(key);
+            }
+        });
+        renderQueue();
+        renderServerReports();
+        document.querySelectorAll("#langToggle button").forEach(b => b.classList.toggle("active", b.getAttribute("data-lang") === lang));
+    }
+    document.querySelectorAll("#langToggle button").forEach(btn => {
+        btn.addEventListener("click", () => applyLanguage(btn.getAttribute("data-lang")));
+    });
+
+    // ---------- State ----------
+    function loadQueue() {
+        try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch (e) { return []; }
+    }
+    function saveQueue(queue) {
+        localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+        renderQueue();
+    }
+    const $ = id => document.getElementById(id);
+    let isOnline = navigator.onLine;
+
+    function setConnPill() {
+        const pill = $("connPill");
+        if (isOnline) { pill.className = "status-pill low"; pill.innerHTML = `<span class="dot"></span>${tr("online")}`; }
+        else { pill.className = "status-pill bad"; pill.innerHTML = `<span class="dot"></span>${tr("offline")}`; }
+        $("queueBadge").textContent = loadQueue().length;
+    }
+    function updateQueueCount() {
+        const n = loadQueue().length;
+        $("queueBadge").textContent = n;
+        $("queueCount") && ($("queueCount").textContent = tr("queueCount", { n }));
+    }
+
+    // ---------- Geolocation ----------
+    $("locateBtn").addEventListener("click", () => {
+        $("locStatus").textContent = tr("locating");
+        if (!navigator.geolocation) { $("locStatus").textContent = tr("locErr"); return; }
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                $("latitude").value = pos.coords.latitude.toFixed(6);
+                $("longitude").value = pos.coords.longitude.toFixed(6);
+                $("locStatus").textContent = tr("locOk");
+            },
+            () => { $("locStatus").textContent = tr("locErr"); },
+            { enableHighAccuracy: true, timeout: 12000 }
+        );
+    });
+
+    // ---------- Photo (downscale to fit localStorage) ----------
+    let pendingPhotoData = null;
+    $("photo").addEventListener("change", event => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) { pendingPhotoData = null; $("photoPreview").style.display = "none"; return; }
+        const reader = new FileReader();
+        reader.onload = () => {
+            const img = new Image();
+            img.onload = () => {
+                const maxW = 1024, maxH = 768;
+                let w = img.width, h = img.height;
+                if (w > maxW) { h = h * maxW / w; w = maxW; }
+                if (h > maxH) { w = w * maxH / h; h = maxH; }
+                const canvas = document.createElement("canvas");
+                canvas.width = w; canvas.height = h;
+                canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+                pendingPhotoData = canvas.toDataURL("image/jpeg", 0.72);
+                $("photoImg").src = pendingPhotoData;
+                $("photoPreview").style.display = "block";
+            };
+            img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // ---------- Submit ----------
+    function reportPayload() {
+        const incident_type = $("incidentType").value;
+        const severity = $("severity").value;
+        const latitude = parseFloat($("latitude").value);
+        const longitude = parseFloat($("longitude").value);
+        const description = $("description").value.trim();
+        if (!incident_type || !severity || isNaN(latitude) || isNaN(longitude)) return null;
+        return {
+            incident_type,
+            severity,
+            latitude,
+            longitude,
+            description,
+            offline_id: "dev-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+            reported_at: new Date().toISOString(),
+            source: "field_app",
+            _photo: pendingPhotoData || null,
+        };
+    }
+    async function postPhoto(dataUrl) {
+        const blob = await (await fetch(dataUrl)).blob();
+        const form = new FormData();
+        form.append("file", blob, "incident.jpg");
+        const response = await fetch(`${API}/reports/photos`, { method: "POST", body: form });
+        if (!response.ok) throw new Error("photo upload failed");
+        return (await response.json()).url;
+    }
+    async function postReport(payload) {
+        const body = { ...payload };
+        delete body._photo;
+        const response = await fetch(`${API}/reports`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        });
+        if (!response.ok) throw new Error(`${response.status}: ${await response.text()}`);
+        return response.json();
+    }
+
+    $("submitBtn").addEventListener("click", async () => {
+        const payload = reportPayload();
+        const result = $("submitResult");
+        result.hidden = false;
+        if (!payload) { result.innerHTML = `<div class="errorbox">${tr("fillAll")}</div>`; return; }
+        result.innerHTML = `<div class="loading small">…</div>`;
+        const queue = loadQueue();
+        try {
+            let photoUrl = null;
+            if (payload._photo) photoUrl = await postPhoto(payload._photo);
+            payload.photo_url = photoUrl;
+            await postReport(payload);
+            updateQueueCount();
+            result.innerHTML = `<div class="okbox">${tr("saved")}</div>`;
+        } catch (error) {
+            // Network or server failure: keep the report on the device.
+            const { _photo, ...stored } = payload;
+            stored._photo = _photo;
+            queue.push(stored);
+            saveQueue(queue);
+            result.innerHTML = `<div class="warnbox">${tr("savedOffline")}</div>`;
+            isOnline = false;
+            setConnPill();
+        }
+        $("description").value = "";
+        $("photo").value = "";
+        pendingPhotoData = null;
+        $("photoPreview").style.display = "none";
+    });
+
+    // ---------- Sync ----------
+    async function syncNow() {
+        const status = $("syncStatus");
+        const queue = loadQueue();
+        if (!queue.length) { status.textContent = tr("noPending"); return; }
+        status.textContent = "…";
+        const synced = [], failed = [];
+        for (const item of queue) {
+            try {
+                let photoUrl = null;
+                if (item._photo) photoUrl = await postPhoto(item._photo);
+                const body = { ...item, photo_url: photoUrl || item.photo_url || null };
+                delete body._photo;
+                const response = await fetch(`${API}/sync/reports`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify([body]),
+                });
+                if (!response.ok) throw new Error(`${response.status}`);
+                const data = await response.json();
+                if (data.rejected_count > 0 && data.accepted_count === 0) throw new Error("rejected");
+                synced.push(item.offline_id);
+            } catch (error) {
+                failed.push(item.offline_id);
+            }
+        }
+        const remaining = queue.filter(item => failed.includes(item.offline_id));
+        saveQueue(remaining);
+        isOnline = failed.length === 0;
+        setConnPill();
+        status.textContent = synced.length ? tr("syncedCount", { n: synced.length }) : tr("noPending");
+        renderServerReports();
+    }
+    $("syncBtn").addEventListener("click", syncNow);
+    $("refreshBtn").addEventListener("click", renderServerReports);
+
+    // ---------- Rendering ----------
+    function renderQueue() {
+        const queue = loadQueue();
+        $("queueBadge").textContent = queue.length;
+        const panel = $("reportList");
+        if (!queue.length) {
+            if (!panel.dataset.hasServer) panel.innerHTML = `<div class="muted small">${tr("empty")}</div>`;
+            return;
+        }
+        const html = queue.map(item => {
+            const cls = item.severity || "moderate";
+            const typeLabel = tr("t_" + item.incident_type) || item.incident_type;
+            return `<div class="report-item ${cls}"><b>${typeLabel}</b>${escapeHtml(item.description ? " — " + item.description : "")}
+                <div><span class="tag pending">${tr("pending")}</span>
+                <span class="small">${Number(item.latitude).toFixed(4)}, ${Number(item.longitude).toFixed(4)} · ${new Date(item.reported_at).toLocaleString()}</span></div></div>`;
+        }).join("");
+        panel.innerHTML = html;
+    }
+    async function renderServerReports() {
+        const panel = $("reportList");
+        panel.dataset.hasServer = "1";
+        try {
+            const data = await (await fetch(`${API}/reports?limit=8`)).json();
+            const queueIds = new Set(loadQueue().map(q => q.offline_id));
+            const reports = (data.reports || []).filter(r => r.source === "field_app");
+            if (!reports.length) { panel.innerHTML = `<div class="muted small">${tr("empty")}</div>`; return; }
+            panel.innerHTML = reports.map(r => {
+                const cls = r.severity || "moderate";
+                const statusMap = { unverified: tr("unverified"), verified: tr("verified"), rejected: tr("rejected") };
+                const tag = queueIds.has(r.offline_id) ? `<span class="tag pending">${tr("pending")}</span>` : `<span class="tag synced">${tr("syncedTag")} · ${statusMap[r.status] || r.status}</span>`;
+                return `<div class="report-item ${cls}"><b>${escapeHtml(r.incident_type)}</b>${escapeHtml(r.description ? " — " + r.description : "")}
+                    <div>${tag} <span class="small">${Number(r.latitude).toFixed(4)}, ${Number(r.longitude).toFixed(4)}</span></div></div>`;
+            }).join("");
+        } catch (error) {
+            panel.innerHTML = `<div class="muted small">${tr("loadFailed")}</div>`;
+        }
+    }
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[ch]));
+    }
+
+    // ---------- Connectivity watchdog ----------
+    async function checkConnection() {
+        try {
+            const response = await fetch(`${API}/health`, { method: "GET" });
+            isOnline = response.ok;
+        } catch (error) {
+            isOnline = false;
+        }
+        setConnPill();
+        updateQueueCount();
+    }
+    window.addEventListener("online", checkConnection);
+    window.addEventListener("offline", () => { isOnline = false; setConnPill(); });
+    setInterval(checkConnection, 20000);
+
+    // ---------- Init ----------
+    updateQueueCount();
+    renderQueue();
+    renderServerReports();
+    checkConnection();
+})();
+</script>
+</body>
+</html>

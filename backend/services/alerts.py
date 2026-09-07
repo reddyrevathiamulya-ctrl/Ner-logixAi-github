@@ -15,6 +15,7 @@ def _alert(
     evidence: list[str],
     latitude: float | None = None,
     longitude: float | None = None,
+    simulated: bool = False,
 ) -> dict[str, Any]:
     return {
         "alert_id": f"{alert_type}-{int(datetime.now(timezone.utc).timestamp())}",
@@ -27,6 +28,7 @@ def _alert(
         "longitude": longitude,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "status": "active",
+        "simulated": simulated,
     }
 
 
@@ -47,6 +49,7 @@ def get_active_alerts() -> dict[str, Any]:
                 ],
             ))
 
+    seen_incidents: set[tuple[Any, Any, Any]] = set()
     for report in list_reports(500):
         if report.get("status") == "rejected":
             continue
@@ -54,17 +57,35 @@ def get_active_alerts() -> dict[str, Any]:
         if severity not in {"high", "critical"}:
             continue
         verification = report.get("status", "unverified")
+        simulated = bool(report.get("simulated"))
+        incident_type = report.get("incident_type", "Incident").replace("_", " ").title()
+        title = f"{incident_type} reported"
+        message = report.get("description") or "A high-severity field incident was reported nearby."
+        # Multiple simulated reports describing the same incident would
+        # otherwise surface as duplicate alerts.
+        dedupe_key = (simulated, severity, message)
+        if dedupe_key in seen_incidents:
+            continue
+        seen_incidents.add(dedupe_key)
+        evidence = [
+            f"Field report status: {verification}",
+            f"Reported at: {report.get('reported_at')}",
+        ]
+        if simulated:
+            title = f"Simulated: {title}"
+            evidence.append(
+                "Simulated demo entry, not a live field submission. "
+                "Live reports submitted from /field appear here unlabelled."
+            )
         alerts.append(_alert(
             "field_incident",
             severity,
-            f"{report.get('incident_type', 'Incident').replace('_', ' ').title()} reported",
-            report.get("description") or "A high-severity field incident was reported nearby.",
-            [
-                f"Field report status: {verification}",
-                f"Reported at: {report.get('reported_at')}",
-            ],
+            title,
+            message,
+            evidence,
             report.get("latitude"),
             report.get("longitude"),
+            simulated=simulated,
         ))
 
     severity_order = {"critical": 4, "high": 3, "moderate": 2, "low": 1}

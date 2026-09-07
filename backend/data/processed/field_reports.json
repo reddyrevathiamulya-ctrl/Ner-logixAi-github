@@ -11,7 +11,8 @@
     "reported_at": "2026-09-06T15:03:16.062261+00:00",
     "received_at": "2026-09-06T15:03:16.062261+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "9ed9480c-dc97-4f78-b6d6-5f8f22979eaf",
@@ -20,12 +21,13 @@
     "severity": "high",
     "latitude": 25.57,
     "longitude": 91.88,
-    "description": "Landslide reported near Shillong-Guwahati highway",
+    "description": "[Simulated] Landslide reported near Shillong-Guwahati highway",
     "photo_url": null,
     "reported_at": "2026-09-06T15:03:29.482185+00:00",
     "received_at": "2026-09-06T15:03:29.482185+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "b752405f-9b24-48ff-a750-b923ed618137",
@@ -34,12 +36,13 @@
     "severity": "moderate",
     "latitude": 27.48,
     "longitude": 94.91,
-    "description": "Flooding near Dibrugarh riverside road",
+    "description": "[Simulated] Flooding near Dibrugarh riverside road",
     "photo_url": null,
     "reported_at": "2026-09-06T15:03:29.501375+00:00",
     "received_at": "2026-09-06T15:03:29.501375+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "a661b364-404f-4e0c-bf22-594129194be0",
@@ -48,12 +51,13 @@
     "severity": "critical",
     "latitude": 24.81,
     "longitude": 93.94,
-    "description": "Bridge damage reported near Imphal",
+    "description": "[Simulated] Bridge damage reported near Imphal",
     "photo_url": null,
     "reported_at": "2026-09-06T15:03:29.518551+00:00",
     "received_at": "2026-09-06T15:03:29.518551+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "03b7cd26-cc33-46bd-a37e-cc1057a89b6e",
@@ -62,12 +66,13 @@
     "severity": "high",
     "latitude": 23.73,
     "longitude": 92.72,
-    "description": "Landslide near Aizawl-Silchar road",
+    "description": "[Simulated] Landslide near Aizawl-Silchar road",
     "photo_url": null,
     "reported_at": "2026-09-06T15:28:52.806040+00:00",
     "received_at": "2026-09-06T15:28:52.806040+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "3a548b34-1940-439a-9549-1606bb9aa386",
@@ -76,12 +81,13 @@
     "severity": "moderate",
     "latitude": 25.67,
     "longitude": 94.11,
-    "description": "Road damage near Kohima",
+    "description": "[Simulated] Road damage near Kohima",
     "photo_url": null,
     "reported_at": "2026-09-06T15:28:52.813509+00:00",
     "received_at": "2026-09-06T15:28:52.813509+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "0e126953-e015-4e01-85d2-b807dc7a498b",
@@ -90,12 +96,13 @@
     "severity": "high",
     "latitude": 23.83,
     "longitude": 91.28,
-    "description": "Flooding near Agartala",
+    "description": "[Simulated] Flooding near Agartala",
     "photo_url": null,
     "reported_at": "2026-09-06T15:28:52.835590+00:00",
     "received_at": "2026-09-06T15:28:52.835590+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "ebd0fb26-2504-4bd8-8b8c-72c50702dc91",
@@ -104,12 +111,13 @@
     "severity": "moderate",
     "latitude": 27.33,
     "longitude": 88.61,
-    "description": "Rockfall risk near Gangtok highway",
+    "description": "[Simulated] Rockfall risk near Gangtok highway",
     "photo_url": null,
     "reported_at": "2026-09-06T15:28:52.854259+00:00",
     "received_at": "2026-09-06T15:28:52.854259+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "f7d1a9c5-4344-4f9d-b25f-41d4e13470f9",
@@ -123,7 +131,8 @@
     "reported_at": "2026-09-06T15:30:44.264925+00:00",
     "received_at": "2026-09-06T15:30:44.264925+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   },
   {
     "report_id": "418cfce1-d8d1-4253-b463-12068a0af057",
@@ -137,6 +146,7 @@
     "reported_at": "2026-09-07T05:04:12.611610+00:00",
     "received_at": "2026-09-07T05:04:12.611610+00:00",
     "source": "field_app",
-    "status": "unverified"
+    "status": "unverified",
+    "simulated": true
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "_note": "Curated reference coordinates for the 8 North Eastern Region states: one entry per district, at the district headquarters town. Coordinates were resolved from OpenStreetMap for each HQ town (with state disambiguation) and cross-checked against state government district lists; entries where Nominatim returns an administrative centroid instead of the town carry an explicit curated override (e.g. Mangan town per SSDMA, Mon town per OSM town node). Used as a geocoding fallback and as spatial anchors for district-level flood/landslide records that lack coordinates.",
+  "_note": "Curated reference coordinates for the 8 North Eastern Region states: one entry per district, at the district headquarters town. Coordinates were resolved from OpenStreetMap for each HQ town (with state disambiguation) and cross-checked against state government district lists; entries where Nominatim returns an administrative centroid instead of the town carry an explicit curated override (e.g. Mangan town per SSDMA, Mon town per OSM town node). Used as a geocoding fallback and as spatial anchors for district-level flood/landslide records that lack coordinates. Additional curated demo entries (real towns/villages beyond the district HQ list) are appended per state and carry a source beginning 'Curated demo place' so demo lookups resolve deterministically without a network geocoder.",
   "places": {
     "arunachal pradesh": {
       "anjaw": {
@@ -209,6 +209,25 @@
         "town": "Itanagar",
         "district": "Itanagar",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "mechuka": {
+        "lat": 28.5987453,
+        "lon": 94.1335827,
+        "name": "Mechuka (Shi Yomi district)",
+        "town": "Mechuka",
+        "district": "Shi Yomi",
+        "aliases": [
+          "Mechukha"
+        ],
+        "source": "Curated demo place: Mechuka valley town in Shi Yomi on the landslide-prone Mechuka road; alternate spelling Mechukha (OpenStreetMap)"
+      },
+      "miao": {
+        "lat": 27.4873015,
+        "lon": 96.2063386,
+        "name": "Miao (Changlang district)",
+        "town": "Miao",
+        "district": "Changlang",
+        "source": "Curated demo place: Miao town in Changlang, gateway town to Namdapha Tiger Reserve (OpenStreetMap)"
       }
     },
     "assam": {
@@ -475,6 +494,22 @@
         "town": "Hamren",
         "district": "West Karbi Anglong",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "sualkuchi": {
+        "lat": 26.1699129,
+        "lon": 91.5708517,
+        "name": "Sualkuchi (Kamrup district)",
+        "town": "Sualkuchi",
+        "district": "Kamrup",
+        "source": "Curated demo place: Sualkuchi silk-weaving town on the Brahmaputra river, Kamrup (OpenStreetMap)"
+      },
+      "kamalabari": {
+        "lat": 26.9465639,
+        "lon": 94.1657745,
+        "name": "Kamalabari (Majuli district)",
+        "town": "Kamalabari",
+        "district": "Majuli",
+        "source": "Curated demo place: Kamalabari village on Majuli river island, repeatedly flood-hit (OpenStreetMap)"
       }
     },
     "manipur": {
@@ -605,6 +640,14 @@
         "town": "Ukhrul",
         "district": "Ukhrul",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "moirang": {
+        "lat": 24.5005506,
+        "lon": 93.7767476,
+        "name": "Moirang (Bishnupur district)",
+        "town": "Moirang",
+        "district": "Bishnupur",
+        "source": "Curated demo place: Moirang town on the fringe of Loktak lake, Bishnupur (OpenStreetMap)"
       }
     },
     "meghalaya": {
@@ -695,6 +738,42 @@
         "town": "Nongstoin",
         "district": "West Khasi Hills",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "byrnihat": {
+        "lat": 26.0543348,
+        "lon": 91.8696498,
+        "name": "Byrnihat (Ri Bhoi district)",
+        "town": "Byrnihat",
+        "district": "Ri Bhoi",
+        "source": "Curated demo place: Byrnihat town on NH-6 at the Assam-Meghalaya border (OpenStreetMap)"
+      },
+      "mawsynram": {
+        "lat": 25.2988198,
+        "lon": 91.5824514,
+        "name": "Mawsynram (East Khasi Hills district)",
+        "town": "Mawsynram",
+        "district": "East Khasi Hills",
+        "source": "Curated demo place: Mawsynram, reputedly the wettest place on Earth, East Khasi Hills (OpenStreetMap, Mawsynram block centre)"
+      },
+      "sohra": {
+        "lat": 25.2777336,
+        "lon": 91.7292416,
+        "name": "Sohra / Cherrapunji (East Khasi Hills district)",
+        "town": "Sohra",
+        "district": "East Khasi Hills",
+        "aliases": [
+          "Cherrapunji",
+          "Cherrapunjee"
+        ],
+        "source": "Curated demo place: Sohra (Cherrapunji) town, East Khasi Hills; alternate spellings accepted as aliases (OpenStreetMap)"
+      },
+      "dawki": {
+        "lat": 25.1856343,
+        "lon": 92.0215717,
+        "name": "Dawki (West Jaintia Hills district)",
+        "town": "Dawki",
+        "district": "West Jaintia Hills",
+        "source": "Curated demo place: Dawki village on the Umngot river at the India-Bangladesh border, West Jaintia Hills (OpenStreetMap)"
       }
     },
     "mizoram": {
@@ -761,6 +840,41 @@
         "town": "Serchhip",
         "district": "Serchhip",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "tlangnuam": {
+        "lat": 23.7080773,
+        "lon": 92.716906,
+        "name": "Tlangnuam (Aizawl district)",
+        "town": "Tlangnuam",
+        "district": "Aizawl",
+        "aliases": [
+          "Tiangnuam"
+        ],
+        "source": "Curated demo place: Tlangnuam suburb of Aizawl (OpenStreetMap, postal 796190); 'Tiangnuam' accepted as a spelling alias"
+      },
+      "lengpui": {
+        "lat": 23.8314147,
+        "lon": 92.6287719,
+        "name": "Lengpui (Mamit district)",
+        "town": "Lengpui",
+        "district": "Mamit",
+        "source": "Curated demo place: Lengpui town on the Aizawl airport road (OpenStreetMap)"
+      },
+      "sairang": {
+        "lat": 23.810344,
+        "lon": 92.652259,
+        "name": "Sairang (Aizawl district)",
+        "town": "Sairang",
+        "district": "Aizawl",
+        "source": "Curated demo place: Sairang town on NH-6 west of Aizawl (OpenStreetMap)"
+      },
+      "zokhawthar": {
+        "lat": 23.36595,
+        "lon": 93.383898,
+        "name": "Zokhawthar (Champhai district)",
+        "town": "Zokhawthar",
+        "district": "Champhai",
+        "source": "Curated demo place: Zokhawthar border town in Champhai at the India-Myanmar land border (OpenStreetMap)"
       }
     },
     "nagaland": {
@@ -891,6 +1005,22 @@
         "town": "Zunheboto",
         "district": "Zunheboto",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "khonoma": {
+        "lat": 25.6542904,
+        "lon": 94.0220132,
+        "name": "Khonoma (Kohima district)",
+        "town": "Khonoma",
+        "district": "Kohima",
+        "source": "Curated demo place: Khonoma eco-village near Kohima, Nagaland (OpenStreetMap)"
+      },
+      "phesama": {
+        "lat": 25.6299314,
+        "lon": 94.1153409,
+        "name": "Phesama (Kohima district)",
+        "town": "Phesama",
+        "district": "Kohima",
+        "source": "Curated demo place: Phesama village on NH-29 in Kohima district; named in the bundled flood evidence (OpenStreetMap)"
       }
     },
     "sikkim": {
@@ -941,6 +1071,22 @@
         "town": "Soreng",
         "district": "Soreng",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "chungthang": {
+        "lat": 27.604236,
+        "lon": 88.6465196,
+        "name": "Chungthang (Mangan district)",
+        "town": "Chungthang",
+        "district": "Mangan",
+        "source": "Curated demo place: Chungthang village on the Teesta in North Sikkim, Mangan district (OpenStreetMap)"
+      },
+      "singtam": {
+        "lat": 27.2319975,
+        "lon": 88.4970841,
+        "name": "Singtam (Gangtok district)",
+        "town": "Singtam",
+        "district": "Gangtok",
+        "source": "Curated demo place: Singtam town on the Teesta river in Gangtok district (OpenStreetMap)"
       }
     },
     "tripura": {
@@ -1007,6 +1153,22 @@
         "town": "Agartala",
         "district": "West Tripura",
         "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+      },
+      "sabroom": {
+        "lat": 23.0031179,
+        "lon": 91.7294043,
+        "name": "Sabroom (South Tripura district)",
+        "town": "Sabroom",
+        "district": "South Tripura",
+        "source": "Curated demo place: Sabroom town in South Tripura at the Bangladesh border, southern freight gate (OpenStreetMap)"
+      },
+      "sonamura": {
+        "lat": 23.4757939,
+        "lon": 91.2653482,
+        "name": "Sonamura (Sepahijala district)",
+        "town": "Sonamura",
+        "district": "Sepahijala",
+        "source": "Curated demo place: Sonamura town on the Gomati river in Sepahijala district (OpenStreetMap)"
       }
     }
   }

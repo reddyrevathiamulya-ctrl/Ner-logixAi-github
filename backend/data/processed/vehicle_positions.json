@@ -11,7 +11,8 @@
     "delivery_id": null,
     "observed_at": "2026-09-06T15:03:43.707315+00:00",
     "received_at": "2026-09-06T15:03:43.707315+00:00",
-    "source": "gps_device"
+    "source": "gps_device",
+    "simulated": true
   },
   "MED-101": {
     "vehicle_id": "MED-101",
@@ -25,7 +26,8 @@
     "delivery_id": null,
     "observed_at": "2026-09-06T15:14:38.812644+00:00",
     "received_at": "2026-09-06T15:14:38.812644+00:00",
-    "source": "gps_device"
+    "source": "gps_device",
+    "simulated": true
   },
   "MED-103": {
     "vehicle_id": "MED-103",
@@ -39,7 +41,8 @@
     "delivery_id": null,
     "observed_at": "2026-09-06T15:27:54.067459+00:00",
     "received_at": "2026-09-06T15:27:54.067459+00:00",
-    "source": "gps_device"
+    "source": "gps_device",
+    "simulated": true
   },
   "FOOD-104": {
     "vehicle_id": "FOOD-104",
@@ -53,7 +56,8 @@
     "delivery_id": null,
     "observed_at": "2026-09-06T15:27:54.105460+00:00",
     "received_at": "2026-09-06T15:27:54.105460+00:00",
-    "source": "gps_device"
+    "source": "gps_device",
+    "simulated": true
   },
   "CONST-105": {
     "vehicle_id": "CONST-105",
@@ -67,7 +71,8 @@
     "delivery_id": null,
     "observed_at": "2026-09-06T15:27:54.130525+00:00",
     "received_at": "2026-09-06T15:27:54.130525+00:00",
-    "source": "gps_device"
+    "source": "gps_device",
+    "simulated": true
   },
   "EMER-106": {
     "vehicle_id": "EMER-106",
@@ -81,7 +86,8 @@
     "delivery_id": null,
     "observed_at": "2026-09-06T15:27:54.151066+00:00",
     "received_at": "2026-09-06T15:27:54.151066+00:00",
-    "source": "gps_device"
+    "source": "gps_device",
+    "simulated": true
   },
   "AGRI-107": {
     "vehicle_id": "AGRI-107",
@@ -95,6 +101,7 @@
     "delivery_id": null,
     "observed_at": "2026-09-06T15:27:54.170633+00:00",
     "received_at": "2026-09-06T15:27:54.170633+00:00",
-    "source": "gps_device"
+    "source": "gps_device",
+    "simulated": true
   }
 }

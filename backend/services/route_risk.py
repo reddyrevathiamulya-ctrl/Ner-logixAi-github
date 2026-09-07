@@ -133,6 +133,7 @@ def load_current_incident_hazards() -> list[dict[str, Any]]:
             "severity": severity_scores.get(report.get("severity"), 1),
             "is_current": True,
             "verification_status": report.get("status", "unverified"),
+            "simulated": bool(report.get("simulated")),
         })
     return hazards
 
@@ -525,7 +526,15 @@ def analyze_location(
     if state_level_matches:
         evidence.append("State-level historical flood evidence matched by place text")
     if current:
-        evidence.append("Current field reports within 30 km")
+        simulated_current = [hazard for hazard in current if hazard.get("simulated")]
+        if simulated_current and len(simulated_current) == len(current):
+            evidence.append(
+                "Simulated demo field reports within 30 km (not live submissions)"
+            )
+        else:
+            evidence.append("Current field reports within 30 km")
+        if simulated_current and len(simulated_current) != len(current):
+            evidence.append("Some current field reports are simulated demo entries")
     if elevation is not None:
         evidence.append("Open-Meteo local elevation neighborhood available")
     else:
@@ -658,7 +667,12 @@ def analyze_route_geometry(
         if "landslide" in hazard_types:
             evidence.append("Historical landslide evidence within 15 km")
         if current_count:
-            evidence.append("Current field incident report within 15 km")
+            if all(hazard.get("simulated") for hazard in current_hazards):
+                evidence.append(
+                    "Simulated demo field report within 15 km (not a live submission)"
+                )
+            else:
+                evidence.append("Current field incident report within 15 km")
         if any(
             hazard.get("verification_status") != "verified"
             for hazard in current_hazards
