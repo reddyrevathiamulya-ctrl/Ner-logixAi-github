@@ -219,3 +219,8 @@ __marimo__/
 
 # Freebuff runtime logs (server output, not project files)
 .freebuff/*.log*
+
+# local tunnel binary (never commit)
+cloudflared.exe
+cf.log
+ngrok.log
