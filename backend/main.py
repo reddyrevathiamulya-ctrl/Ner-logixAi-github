@@ -719,21 +719,41 @@ def calculate_weather_risk(weather):
     wind = weather.get("wind_speed") or 0
     weather_code = weather.get("weather_code")
 
+    # 24h accumulation is the primary hydrological signal; the current-
+    # hour values are only a fallback when the hourly series is missing.
+    rainfall_24h = weather.get("rainfall_24h_mm")
+    effective_rain = (
+        rainfall_24h if isinstance(rainfall_24h, (int, float))
+        else max(precipitation, rain)
+    )
+    if rainfall_24h is not None:
+        rain_scale = f"24h {rainfall_24h:g} mm"
+    else:
+        rain_scale = "current-hour"
+
     # -----------------------------------------------------
-    # Rain risk
+    # Rain risk (24h accumulation when available)
     # -----------------------------------------------------
 
-    if rain >= 10 or precipitation >= 10:
+    if effective_rain >= 115.6:  # IMD heavy-to-extreme rainfall band
+        score -= 45
+        hazards.append("Extreme rainfall (24h)")
+
+    elif effective_rain >= 64.5:
         score -= 35
-        hazards.append("Heavy rainfall")
+        hazards.append("Heavy rainfall (24h)")
 
-    elif rain >= 5 or precipitation >= 5:
-        score -= 20
-        hazards.append("Moderate rainfall")
+    elif effective_rain >= 15.6:
+        score -= 25
+        hazards.append("Moderate rainfall (24h)")
 
-    elif rain > 0 or precipitation > 0:
-        score -= 8
-        hazards.append("Rain")
+    elif effective_rain >= 2.5:
+        score -= 10
+        hazards.append("Light rainfall")
+
+    elif effective_rain > 0:
+        score -= 5
+        hazards.append("Trace rain")
 
     # -----------------------------------------------------
     # Wind risk
@@ -775,6 +795,13 @@ def calculate_weather_risk(weather):
             hazards.append(hazard)
 
     score = max(0, min(100, score))
+
+    # Persist the basis so UI/log can show WHY the score is what it is.
+    weather["_calc_basis"] = {
+        "rain_input": rain_scale,
+        "effective_rain_mm": round(effective_rain, 1) if isinstance(effective_rain, (int, float)) else effective_rain,
+        "current_rain_mm": precipitation or rain,
+    }
 
     if score >= 80:
         risk_level = "Low"
@@ -1017,6 +1044,26 @@ def analyze_route(request: RouteRequest):
     destination = geocode_place(
         request.destination.strip()
     )
+
+    # Different spellings can resolve to the same place (e.g. "mizoram"
+    # and "aizwal" both mapping to Aizawl). A zero-length route carries
+    # no analyzable segments, so refuse it explicitly rather than
+    # returning a fabricated risk score for 0 m of road.
+    same_place = (
+        start.get("name") == destination.get("name")
+        or (
+            abs(start["lat"] - destination["lat"]) < 0.01
+            and abs(start["lon"] - destination["lon"]) < 0.01
+        )
+    )
+    if same_place:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Start and destination resolve to the same place "
+                f"({start['name']}). Enter two distinct locations."
+            )
+        )
 
     # -----------------------------------------------------
     # 3. GET REAL ROAD ROUTES

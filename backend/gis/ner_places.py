@@ -28,6 +28,18 @@ def _state_mentioned(query: str, state_key: str) -> bool:
     return state_word in normalize(query)
 
 
+STATE_CAPITALS = {
+    "assam": "Dispur",
+    "arunachal pradesh": "Itanagar",
+    "meghalaya": "Shillong",
+    "manipur": "Imphal",
+    "mizoram": "Aizawl",
+    "nagaland": "Kohima",
+    "tripura": "Agartala",
+    "sikkim": "Gangtok",
+}
+
+
 def lookup_place(query: str) -> dict | None:
     """Return a curated NER place record for a matching district or HQ town.
 
@@ -42,6 +54,36 @@ def lookup_place(query: str) -> dict | None:
     if not query:
         return None
     normalized = normalize(query)
+
+    # A bare state name is ambiguous for geocoders (they return airports
+    # or boundary centroids). Resolve it to the state capital instead.
+    if normalized in STATE_CAPITALS:
+        capital = normalize(STATE_CAPITALS[normalized])
+        for state_key, state_places in _load_places().items():
+            for district_key, record in state_places.items():
+                haystacks = [
+                    normalize(record.get("town", "")),
+                    normalize(record.get("name", "")),
+                    normalize(district_key),
+                ]
+                haystacks.extend(
+                    normalize(alias)
+                    for alias in record.get("aliases", [])
+                    if isinstance(alias, str) and alias.strip()
+                )
+                if any(
+                    words and (words in capital or capital in words)
+                    for words in haystacks
+                ):
+                    return {
+                        "name": record["name"],
+                        "lat": record["lat"],
+                        "lon": record["lon"],
+                        "source": record.get(
+                            "source", "curated NER reference table"
+                        ),
+                        "district": record.get("district", district_key),
+                    }
 
     district_matches = []
     town_matches = []

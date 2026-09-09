@@ -783,7 +783,10 @@
         "name": "Aizawl (Aizawl district HQ)",
         "town": "Aizawl",
         "district": "Aizawl",
-        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists"
+        "source": "District HQ town geocoded from OpenStreetMap, cross-checked against state government district lists",
+        "aliases": [
+          "aizwal"
+        ]
       },
       "champhai": {
         "lat": 23.6317319,

@@ -156,10 +156,27 @@ def _text(value: Any, default: str = "") -> str:
     return str(value).strip()
 
 
+import re
+
+
+def _camel_to_snake(value: str) -> str:
+    """riskLevel -> risk_level, rainfallMm -> rainfall_mm."""
+    return re.sub(
+        r"(?<=[a-z0-9])(?=[A-Z])",
+        "_",
+        value,
+    )
+
+
 def _key(value: Any) -> str:
-    """Normalize dictionary keys."""
+    """Normalize dictionary keys (snake_case, case-insensitive).
+
+    Handles camelCase and PascalCase inputs so live API fields such as
+    "riskLevel" or "precipitationMm" are detected instead of silently
+    ignored.
+    """
     return (
-        _text(value)
+        _camel_to_snake(_text(value))
         .lower()
         .replace("-", "_")
         .replace(" ", "_")
@@ -339,6 +356,27 @@ def _category_from_key(key: Any) -> Optional[str]:
 
     normalized = _key(key)
 
+    # Previously-maintained key lists, now actually used: a key that
+    # exactly matches (or ends with) one of these belongs to the category
+    # even when no substring token matches.
+    if any(
+        normalized == entry or normalized.endswith("_" + entry)
+        for entry in RAIN_KEYS
+    ):
+        return "rainfall"
+
+    if any(
+        normalized == entry or normalized.endswith("_" + entry)
+        for entry in FLOOD_KEYS
+    ):
+        return "flood"
+
+    if any(
+        normalized == entry or normalized.endswith("_" + entry)
+        for entry in LANDSLIDE_KEYS
+    ):
+        return "landslide"
+
     if any(
         token in normalized
         for token in (
@@ -352,12 +390,14 @@ def _category_from_key(key: Any) -> Optional[str]:
     if (
         "flood" in normalized
         or "river_level" in normalized
+        or "water_level" in normalized
     ):
         return "flood"
 
     if (
         "landslide" in normalized
         or "land_slide" in normalized
+        or "slope_risk" in normalized
     ):
         return "landslide"
 
@@ -493,10 +533,17 @@ def _rainfall_numeric_score(value: Any) -> int:
     return 0
 
 
-def _generic_numeric_score(value: Any) -> int:
+def _generic_numeric_score(
+    value: Any,
+    allow_rescale: bool = False,
+) -> int:
     """
-    Interpret existing flood/landslide score/index values
-    when they are already on a 0-4 scale.
+    Interpret flood/landslide score/index values.
+
+    Accepts values already on a 0-4 scale. Values on 0-10 or 0-100
+    scales are rescaled ONLY when the parent key names a score/index/
+    percent field -- raw physical units (river level in meters, mm of
+    displacement) are never invented into a score.
     """
 
     if isinstance(value, dict):
@@ -507,11 +554,19 @@ def _generic_numeric_score(value: Any) -> int:
 
             normalized = _key(key)
 
-            if any(
+            child_allow_rescale = allow_rescale or any(
                 token in normalized
                 for token in (
-                    "score",
+                    "percent",
+                    "pct",
                     "index",
+                    "score",
+                )
+            )
+
+            if child_allow_rescale or any(
+                token in normalized
+                for token in (
                     "risk",
                     "severity",
                     "level",
@@ -520,7 +575,10 @@ def _generic_numeric_score(value: Any) -> int:
 
                 best = max(
                     best,
-                    _generic_numeric_score(child),
+                    _generic_numeric_score(
+                        child,
+                        allow_rescale=child_allow_rescale,
+                    ),
                 )
 
         return best
@@ -529,7 +587,10 @@ def _generic_numeric_score(value: Any) -> int:
 
         return max(
             (
-                _generic_numeric_score(item)
+                _generic_numeric_score(
+                    item,
+                    allow_rescale=allow_rescale,
+                )
                 for item in value
             ),
             default=0,
@@ -543,7 +604,56 @@ def _generic_numeric_score(value: Any) -> int:
     if 0 <= number <= 4:
         return int(round(number))
 
+    if allow_rescale:
+
+        if 0 < number <= 10:
+            # 0-10 style index -> rescale onto 0-4.
+            return int(round(number / 10 * 4))
+
+        if 0 < number <= 100:
+            # Percentage-style index -> rescale onto 0-4.
+            return int(round(number / 100 * 4))
+
+    # Outside any recognized scale: deliberately 0, never guessed.
     return 0
+
+
+def _explain_unscaled_values(
+    state_data: Dict[str, Any],
+    category: str,
+) -> List[str]:
+    """Surface flood/landslide numbers that were found but not scored.
+
+    Makes the previously silent drops visible: a river level of 5.2 m or
+    an unnormalized index now appears as an evidence note instead of
+    vanishing without a trace.
+    """
+
+    notes: List[str] = []
+
+    for key, value in _find_category_values(state_data, category):
+
+        normalized_key = _key(key)
+
+        # Index/score/percent fields are rescaled by
+        # _generic_numeric_score, so they are not "unscored".
+        if any(
+            token in normalized_key
+            for token in ("index", "score", "percent", "pct")
+        ):
+            continue
+
+        for number in _numeric_values(value):
+
+            if number > 4:
+
+                notes.append(
+                    f"{key}={number:g} found but not scored: "
+                    f"raw physical value, not a 0-4 hazard score"
+                )
+                break
+
+    return notes
 
 
 # ============================================================
@@ -774,11 +884,19 @@ def calculate_risk(
         )
     )
 
+    flood_evidence.extend(
+        _explain_unscaled_values(state_data, "flood")
+    )
+
     landslide_score, landslide_evidence = (
         _calculate_category(
             state_data,
             "landslide",
         )
+    )
+
+    landslide_evidence.extend(
+        _explain_unscaled_values(state_data, "landslide")
     )
 
     category_scores = {
