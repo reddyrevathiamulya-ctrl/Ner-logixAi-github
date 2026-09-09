@@ -129,7 +129,7 @@
         const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { attribution:"© Esri" });
         const layerControl = L.control.layers({ "Street map":street, "Satellite":satellite }).addTo(map);
         // NASA GIBS satellite layers (real acquisition dates from /satellite/layers)
-        fetch("http://127.0.0.1:8000/satellite/layers").then(r => r.json()).then(data => {
+        fetch("/satellite/layers").then(r => r.json()).then(data => {
             (data.layers || []).forEach(layer => {
                 const template = (layer.tile_url_template || "").replace("{z}", "{z}").replace("{y}", "{y}").replace("{x}", "{x}");
                 if (!template) return;
@@ -145,7 +145,7 @@
         }).catch(() => { /* satellite layers unavailable; base layers still work */ });
         let routeLayer, altLayer;
         const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char]));
-        async function getJson(path, options) { const response = await fetch(`http://127.0.0.1:8000${path}`, options); if (!response.ok) throw new Error(`${response.status}: ${await response.text()}`); return response.json(); }
+        async function getJson(path, options) { const response = await fetch(`${path}`, options); if (!response.ok) throw new Error(`${response.status}: ${await response.text()}`); return response.json(); }
 
         // ---- Curated place autocomplete (district HQs + demo villages) ----
         function wireAutocomplete(input) {
