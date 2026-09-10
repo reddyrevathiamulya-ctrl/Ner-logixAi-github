@@ -1247,9 +1247,60 @@ def analyze_route(request: RouteRequest):
     evidence_summary = recommended_route.get("segment_risk", {}).get(
         "evidence_summary", {}
     )
+
+    # Does any alternative route avoid every verified-incident segment?
+    # An alternative is "clean" when none of its segments carries a
+    # verified current incident.
+    def _has_verified(seg_list):
+        return any(
+            seg.get("verified_current_incident_count", 0) > 0
+            for seg in seg_list
+        )
+
+    # SAFETY-FIRST PROMOTION: when the top-ranked route crosses a verified
+    # incident but another corridor is clean, promote the clean corridor to
+    # be the recommendation. A blocked trunk road must not stay "recommended"
+    # just because it was faster; the traveller asked for a safe route.
+    reranked = False
+    if evidence_summary.get("current_closure_confirmed"):
+        clean_alternatives = [
+            route for route in route_results[1:]
+            if not _has_verified(
+                route.get("segment_risk", {}).get("segments", [])
+            )
+        ]
+        if clean_alternatives:
+            cleanest = min(
+                clean_alternatives,
+                key=lambda route: max(
+                    (
+                        seg.get("risk_score", 0)
+                        for seg in route.get("segment_risk", {}).get("segments", [])
+                    ),
+                    default=0,
+                ),
+            )
+            route_results.remove(cleanest)
+            route_results.insert(0, cleanest)
+            recommended_route = cleanest
+            recommended_segments = cleanest.get("segment_risk", {}).get("segments", [])
+            danger_segments = [
+                segment for segment in recommended_segments
+                if segment.get("risk_score", 0) >= 50
+            ]
+            evidence_summary = cleanest.get("segment_risk", {}).get(
+                "evidence_summary", {}
+            )
+            reranked = True
+
     if evidence_summary.get("current_closure_confirmed"):
         safety_decision = "avoid_verified_incident"
-        safety_decision_text = "Avoid this route until the verified incident is cleared."
+        safety_decision_text = (
+            "Take caution: a verified incident is on this route and may block "
+            "the carriageway. No alternative road corridor exists between these "
+            "points, so confirm road status locally before travelling and be "
+            "prepared to wait or turn back."
+        )
     elif safety_score < 40 or danger_segments:
         safety_decision = "high_caution"
         safety_decision_text = "Use caution and verify local road conditions before departure."
@@ -1260,6 +1311,30 @@ def analyze_route(request: RouteRequest):
         "Recommended because it has the lowest combined route-risk and "
         "travel-time score among available alternatives."
     )
+    if reranked:
+        blocked = next(
+            (
+                route for route in route_results[1:]
+                if route.get("segment_risk", {}).get("evidence_summary", {}).get(
+                    "current_closure_confirmed"
+                )
+            ),
+            None,
+        )
+        blocked_note = (
+            f" Route {blocked['route_number']} crosses a verified incident "
+            f"({blocked['distance_text']}, {blocked['duration_text']}) and is NOT advised."
+            if blocked
+            else " A faster route crosses a verified incident and is NOT advised."
+        )
+        recommendation_reason = (
+            "Recommended because it avoids the verified incident that blocks "
+            "the faster route." + blocked_note
+        )
+        safety_decision_text = (
+            "Take caution: the recommended route avoids the verified incident; "
+            "the faster alternative crosses it and is not advised."
+        )
 
     ai_message = "Deterministic route analysis returned."
     if ENABLE_AI_EXPLANATION:

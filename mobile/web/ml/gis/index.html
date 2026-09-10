@@ -292,7 +292,7 @@
                 const segment = data.route.segment_risk?.highest_risk;
                 const evidence = data.route.segment_risk?.evidence_summary;
                 const decision = data.safety_decision || {};
-                const statusMap = { avoid_verified_incident:{ cls:"critical", icon:"✕", title:"Do not take this route" }, high_caution:{ cls:"high", icon:"⚠", title:"Use high caution" }, no_verified_closure:{ cls:"moderate", icon:"⚠", title:"No verified closure found" } };
+                const statusMap = { avoid_verified_incident:{ cls:"high", icon:"⚠", title:"Take caution — verified incident on route" }, high_caution:{ cls:"high", icon:"⚠", title:"Use high caution" }, no_verified_closure:{ cls:"moderate", icon:"⚠", title:"No verified closure found" } };
                 const st = statusMap[decision.status] || { cls:"moderate", icon:"⚠", title:"Route assessed" };
                 const evidenceText = evidence ? `${escapeHtml(evidence.historical_hazard_count)} historical · ${escapeHtml(evidence.current_incident_count)} current · ${escapeHtml(evidence.verified_current_incident_count)} verified` : "Evidence summary unavailable";
                 const recommendation = data.route_recommendation?.reason || "Best available route selected.";
