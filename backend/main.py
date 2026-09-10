@@ -422,7 +422,11 @@ class RouteRequest(BaseModel):
 # GEOCODING
 # ============================================================
 
-from backend.gis.ner_places import lookup_place, search_places
+from backend.gis.ner_places import (
+    lookup_place,
+    resolve_state_anchor,
+    search_places,
+)
 
 
 def _prefer_town_result(results: list[dict]) -> dict | None:
@@ -1041,9 +1045,14 @@ def analyze_route(request: RouteRequest):
     # 2. FIND DESTINATION
     # -----------------------------------------------------
 
-    destination = geocode_place(
-        request.destination.strip()
-    )
+    destination_query = request.destination.strip()
+    destination = geocode_place(destination_query)
+
+    # A bare state name resolves to the state capital; when the destination
+    # IS that capital ("nagaland" -> Kohima, destination "kohima"), re-resolve
+    # the state to its transport gateway (Dimapur) instead of refusing.
+    if resolve_state_anchor(request.start.strip(), destination_query):
+        start = resolve_state_anchor(request.start.strip(), destination_query)
 
     # Different spellings can resolve to the same place (e.g. "mizoram"
     # and "aizwal" both mapping to Aizawl). A zero-length route carries

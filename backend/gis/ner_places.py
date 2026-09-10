@@ -39,6 +39,88 @@ STATE_CAPITALS = {
     "sikkim": "Gangtok",
 }
 
+# A bare state name is ambiguous for geocoders, but so is the capital when the
+# destination IS the capital ("nagaland" -> Kohima + destination "kohima" = a
+# zero-length route). Resolve a state to its main transport gateway instead
+# when the capital would collide with the destination; the gateway is a real,
+# distinct origin for in-state routes.
+STATE_GATEWAYS = {
+    "assam": "Guwahati",
+    "arunachal pradesh": "Naharlagun",
+    "meghalaya": "Shillong",
+    "manipur": "Thoubal",
+    "mizoram": "Lunglei",
+    "nagaland": "Dimapur",
+    "tripura": "Ambassa",
+    "sikkim": "Namchi",
+}
+
+
+def _find_state_place(state_key: str, place_name: str) -> dict | None:
+    """Find a curated record for place_name within the given state."""
+    target = normalize(place_name)
+    for s_key, state_places in _load_places().items():
+        if s_key != state_key:
+            continue
+        for district_key, record in state_places.items():
+            haystacks = [
+                normalize(record.get("town", "")),
+                normalize(record.get("name", "")),
+                normalize(district_key),
+            ]
+            haystacks.extend(
+                normalize(alias)
+                for alias in record.get("aliases", [])
+                if isinstance(alias, str) and alias.strip()
+            )
+            if any(
+                words and (words in target or target in words)
+                for words in haystacks
+            ):
+                return {
+                    "name": record["name"],
+                    "lat": record["lat"],
+                    "lon": record["lon"],
+                    "source": record.get(
+                        "source", "curated NER reference table"
+                    ),
+                    "district": record.get("district", district_key),
+                }
+    return None
+
+
+def resolve_state_anchor(query: str, other_place: str | None = None) -> dict | None:
+    """Resolve a bare state name to a usable origin/destination point.
+
+    Normally the state capital. When the other endpoint of a route would be
+    the same place (e.g. "nagaland" -> Kohima while destination is Kohima),
+    fall back to the state's main transport gateway (Dimapur) so in-state
+    routes still work instead of being refused.
+    """
+    normalized = normalize(query)
+    if normalized not in STATE_CAPITALS:
+        return None
+
+    capital = STATE_CAPITALS[normalized]
+    resolved = _find_state_place(normalized, capital)
+    if resolved is None:
+        return None
+
+    if other_place:
+        other = _find_state_place(normalized, other_place)
+        if other is not None and other["name"] == resolved["name"]:
+            gateway = STATE_GATEWAYS.get(normalized)
+            if gateway:
+                gateway_resolved = _find_state_place(normalized, gateway)
+                if gateway_resolved is not None and gateway_resolved["name"] != other["name"]:
+                    return gateway_resolved
+    return resolved
+
+
+def _resolve_state_anchor(state_key: str, capital_name: str) -> dict | None:
+    """Backward-compatible single-place resolution (no destination context)."""
+    return _find_state_place(state_key, capital_name)
+
 
 def lookup_place(query: str) -> dict | None:
     """Return a curated NER place record for a matching district or HQ town.
@@ -58,32 +140,10 @@ def lookup_place(query: str) -> dict | None:
     # A bare state name is ambiguous for geocoders (they return airports
     # or boundary centroids). Resolve it to the state capital instead.
     if normalized in STATE_CAPITALS:
-        capital = normalize(STATE_CAPITALS[normalized])
-        for state_key, state_places in _load_places().items():
-            for district_key, record in state_places.items():
-                haystacks = [
-                    normalize(record.get("town", "")),
-                    normalize(record.get("name", "")),
-                    normalize(district_key),
-                ]
-                haystacks.extend(
-                    normalize(alias)
-                    for alias in record.get("aliases", [])
-                    if isinstance(alias, str) and alias.strip()
-                )
-                if any(
-                    words and (words in capital or capital in words)
-                    for words in haystacks
-                ):
-                    return {
-                        "name": record["name"],
-                        "lat": record["lat"],
-                        "lon": record["lon"],
-                        "source": record.get(
-                            "source", "curated NER reference table"
-                        ),
-                        "district": record.get("district", district_key),
-                    }
+        return _resolve_state_anchor(
+            normalized,
+            STATE_CAPITALS[normalized],
+        )
 
     district_matches = []
     town_matches = []

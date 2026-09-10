@@ -661,6 +661,12 @@ def analyze_route_geometry(
             + weather_score * 0.3
             + terrain_score * 0.2,
         )
+        # A VERIFIED current incident means responders confirmed the hazard
+        # on the ground. That segment is dangerous regardless of how the
+        # weather/terrain blend happens to land, so floor the score at the
+        # High threshold (50). Unverified reports stay in the blend.
+        if verified_current_count > 0:
+            score = max(score, 55.0 + min(15.0, (verified_current_count - 1) * 5.0))
         evidence = ["Endpoint weather conditions applied"]
         if "flood" in hazard_types:
             evidence.append("Historical flood evidence within 15 km")
